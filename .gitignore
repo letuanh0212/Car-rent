@@ -1,0 +1,43 @@
+# dependencies
+node_modules/
+
+# env
+.env
+
+# logs
+logs
+*.log
+npm-debug.log*
+
+# build
+dist/
+build/
+
+# vite
+.vite/
+
+# coverage
+coverage/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# temporary
+tmp/
+temp/
+
+# lock files (optional)
+package-lock.json
+yarn.lock
+
+# uploads
+uploads/
+
+# cache
+.cache/
+.env
