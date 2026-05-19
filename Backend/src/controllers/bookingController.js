@@ -92,6 +92,24 @@ const bookingController = {
         }
     },
 
+    async getBookingsByListingId(req, res) {
+        try {
+            const { listingId } = req.params;
+            const bookings = await bookingRepository.getBookingsByListingId(listingId);
+
+            return res.status(200).json({
+                success: true,
+                data: bookings
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            });
+        }
+    },
+
     async getBookingById(req, res) {
 
         try {

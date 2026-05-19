@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import bookingService from "../../services/bookingsService.js";
+import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { TextField } from "@mui/material";
 
 import { useAuth } from "../../AuthContext.jsx";
 
@@ -20,6 +25,9 @@ export default function CreatedBooking({ car }) {
     const [totalDays, setTotalDays] = useState(0);
 
     const [totalPrice, setTotalPrice] = useState(0);
+    const [startValue, setStartValue] = useState(null);
+    const [endValue, setEndValue] = useState(null);
+    const [bookedSlots, setBookedSlots] = useState([]);
     const [isAvailable, setIsAvailable] = useState(null);
     const [availabilityMessage, setAvailabilityMessage] = useState("");
 
@@ -56,47 +64,64 @@ export default function CreatedBooking({ car }) {
     }, [booking.start_date, booking.end_date, car]);
 
     useEffect(() => {
+        const fetchBookedSlots = async () => {
+            if (!car?.id) {
+                setBookedSlots([]);
+                return;
+            }
+
+            try {
+                const response = await bookingService.getBookingsByListingId(car.id);
+                const slots = response.data?.data?.map((bookingItem) => ({
+                    start: dayjs(bookingItem.start_date),
+                    end: dayjs(bookingItem.end_date)
+                })) || [];
+                setBookedSlots(slots);
+            } catch (error) {
+                console.error("Fetch booked slots error:", error);
+                setBookedSlots([]);
+            }
+        };
+
+        fetchBookedSlots();
+    }, [car?.id]);
+
+    useEffect(() => {
         if (!booking.start_date || !booking.end_date) {
             setIsAvailable(null);
             setAvailabilityMessage("");
             return;
         }
 
-        const startDate = new Date(booking.start_date);
-        const endDate = new Date(booking.end_date);
+        const startDate = dayjs(booking.start_date);
+        const endDate = dayjs(booking.end_date);
 
-        if (startDate >= endDate) {
+        if (!startDate.isValid() || !endDate.isValid() || !startDate.isBefore(endDate)) {
             setIsAvailable(false);
             setAvailabilityMessage("Ngày trả phải sau ngày nhận.");
             return;
         }
 
-        const checkAvailability = async () => {
-            try {
-                const availabilityCheck = await bookingService.checkCarAvailability(
-                    car?.id,
-                    booking.start_date,
-                    booking.end_date
-                );
+        const hasOverlap = bookedSlots.some((slot) =>
+            startDate.isBefore(slot.end) && endDate.isAfter(slot.start)
+        );
 
-                if (availabilityCheck?.data?.data?.isAvailable) {
-                    setIsAvailable(true);
-                    setAvailabilityMessage("Khoảng thời gian này hiện đang có thể đặt.");
-                } else {
-                    setIsAvailable(false);
-                    setAvailabilityMessage(
-                        "Khoảng thời gian này đã bị đặt. Vui lòng chọn thời gian khác."
-                    );
-                }
-            } catch (error) {
-                console.error("Availability error:", error);
-                setIsAvailable(false);
-                setAvailabilityMessage("Không thể kiểm tra lịch, vui lòng thử lại.");
-            }
-        };
+        if (hasOverlap) {
+            setIsAvailable(false);
+            setAvailabilityMessage("Khoảng thời gian này đã bị đặt. Vui lòng chọn thời gian khác.");
+        } else {
+            setIsAvailable(true);
+            setAvailabilityMessage("Khoảng thời gian này hiện đang có thể đặt.");
+        }
+    }, [booking.start_date, booking.end_date, bookedSlots]);
 
-        checkAvailability();
-    }, [booking.start_date, booking.end_date, car?.id]);
+    const isDateBlocked = (date) => {
+        return bookedSlots.some((slot) =>
+            date.isSame(slot.start, "day") ||
+            date.isSame(slot.end, "day") ||
+            (date.isAfter(slot.start, "day") && date.isBefore(slot.end, "day"))
+        );
+    };
 
     const handleChange = (e) => {
 
@@ -193,21 +218,29 @@ export default function CreatedBooking({ car }) {
                     Ngày nhận xe
                 </label>
 
-                <input
-                    type="datetime-local"
-                    name="start_date"
-                    value={booking.start_date}
-                    onChange={handleChange}
-                    min={new Date().toISOString().slice(0, 16)}
-                    className="
-                        w-full
-                        border
-                        rounded-xl
-                        p-3
-                        mt-2
-                    "
-                    required
-                />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker
+                        label="Ngày nhận xe"
+                        value={startValue}
+                        minDateTime={dayjs()}
+                        shouldDisableDate={isDateBlocked}
+                        onChange={(newValue) => {
+                            setStartValue(newValue);
+                            setBooking((prev) => ({
+                                ...prev,
+                                start_date: newValue ? newValue.format("YYYY-MM-DDTHH:mm") : ""
+                            }));
+                        }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                required
+                                fullWidth
+                                className="mt-2"
+                            />
+                        )}
+                    />
+                </LocalizationProvider>
 
             </div>
 
@@ -218,21 +251,29 @@ export default function CreatedBooking({ car }) {
                     Ngày trả xe
                 </label>
 
-                <input
-                    type="datetime-local"
-                    name="end_date"
-                    value={booking.end_date}
-                    onChange={handleChange}
-                    min={booking.start_date}
-                    className="
-                        w-full
-                        border
-                        rounded-xl
-                        p-3
-                        mt-2
-                    "
-                    required
-                />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker
+                        label="Ngày trả xe"
+                        value={endValue}
+                        minDateTime={startValue || dayjs()}
+                        shouldDisableDate={isDateBlocked}
+                        onChange={(newValue) => {
+                            setEndValue(newValue);
+                            setBooking((prev) => ({
+                                ...prev,
+                                end_date: newValue ? newValue.format("YYYY-MM-DDTHH:mm") : ""
+                            }));
+                        }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                required
+                                fullWidth
+                                className="mt-2"
+                            />
+                        )}
+                    />
+                </LocalizationProvider>
 
             </div>
 

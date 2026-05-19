@@ -112,6 +112,23 @@ const bookingRepository = {
         }
     },
 
+    async getBookingsByListingId(listing_id) {
+        const query = `
+            SELECT *
+            FROM bookings
+            WHERE listing_id = $1
+            AND status IN ('pending', 'confirmed')
+            ORDER BY start_date ASC
+        `;
+
+        try {
+            const res = await db.query(query, [listing_id]);
+            return res.rows;
+        } catch (err) {
+            throw err;
+        }
+    },
+
     async findById(id) {
 
         const query = `
@@ -220,8 +237,28 @@ const bookingRepository = {
         );
 
         return result.rows.length === 0;
-    }
+    },
+    async getBookingsByUserId(user_id) {
 
+        const query = `
+            SELECT *
+            FROM bookings
+            WHERE user_id = $1
+            ORDER BY created_at DESC
+        `;
+        const values = [user_id];
+
+        try {
+            const res = await db.query(
+                query,
+                values
+            );
+            return res.rows;
+        } catch (err) {
+            throw err;
+        }
+    }    
+    
 
 };
 

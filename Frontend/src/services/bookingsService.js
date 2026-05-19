@@ -24,6 +24,12 @@ const bookingsService = {
         );
     },
 
+    getBookingsByListingId(listingId) {
+        return instance.get(
+            `/bookings/listing/${listingId}`
+        );
+    },
+
     getBookingById(id) {
 
         return instance.get(
