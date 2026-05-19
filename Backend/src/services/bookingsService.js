@@ -16,14 +16,7 @@ const BookService = {
             throw err;
         }
     },
-    // async getBookById(id) {
-    //     try {
-    //         const book = await bookRepository.getBookById(id);
-    //         return book;
-    //     } catch (err) {
-    //         throw err;
-    //     }
-    // },
+
     async updateBook(id, data) {
         try {
             const updatedBook = await bookRepository.update(id, data);
@@ -47,6 +40,14 @@ const BookService = {
         } catch (err) {
             throw err;
         }
-    }
+    },
+    async checkAvailability(car_id, start_date, end_date) {
+        try{    
+            const isAvailable = await bookingRepository.checkCarAvailability(car_id, start_date, end_date);
+            return isAvailable;
+        } catch (err) {
+            throw err;
+        }
+    },
 };
 export default BookService;

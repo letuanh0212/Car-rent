@@ -53,6 +53,13 @@ const bookingController = {
 
             console.log(error);
 
+            if (error.message?.includes("Xe đã được đặt")) {
+                return res.status(409).json({
+                    success: false,
+                    message: error.message
+                });
+            }
+
             return res.status(500).json({
                 success: false,
                 message: "Internal server error"
@@ -213,9 +220,20 @@ const bookingController = {
                 message: "Internal server error"
             });
         }   
-    }
+    },
+    async checkCarAvailability(req, res) {
+        try {
+            const { car_id, start_date, end_date } = req.body;
+            const isAvailable = await bookingRepository.checkCarAvailability(car_id, start_date, end_date);
+            return res.status(200).json({
+                success: true,
+                data: { isAvailable }
+            });
+        } catch (error) {
+            throw error;
+        }
+    },    
 
-
-};
+}; 
 
 export default bookingController;

@@ -14,6 +14,39 @@ const bookingRepository = {
             status
         } = data;
 
+        // CHECK XE ĐÃ ĐƯỢC BOOK CHƯA
+        const checkQuery = `
+            SELECT *
+            FROM bookings
+            WHERE listing_id = $1
+            AND status IN ('pending', 'confirmed')
+            AND (
+                start_date::timestamp < $3::timestamp
+                AND end_date::timestamp > $2::timestamp
+            )
+        `;
+
+        const checkValues = [
+            listing_id,
+            start_date,
+            end_date
+        ];
+
+        const checkResult = await db.query(
+            checkQuery,
+            checkValues
+        );
+
+        // NẾU BỊ TRÙNG THỜI GIAN
+        if (checkResult.rows.length > 0) {
+
+            throw new Error(
+                "Xe đã được đặt trong khoảng thời gian này"
+            );
+
+        }
+
+        // INSERT BOOKING
         const query = `
             INSERT INTO bookings (
                 user_id,
@@ -173,19 +206,20 @@ const bookingRepository = {
 
         }
     },
-    async getBookingsByUserId(user_id) {
-        try {
-            const query = `
-                SELECT *
-                FROM bookings
-                WHERE user_id = $1
-                ORDER BY created_at DESC
-            `;
-            const res = await db.query(query, [user_id]);
-            return res.rows;
-        } catch (err) {
-            throw err;
-        }
+    async checkCarAvailability(car_id, start_date, end_date) {
+        const result = await db.query(
+            `
+            SELECT 1
+            FROM bookings
+            WHERE listing_id = $1
+            AND (status IN ('pending', 'confirmed') OR status IS NULL)
+            AND ($2::timestamp < end_date::timestamp AND $3::timestamp > start_date::timestamp)
+            LIMIT 1
+            `,
+            [car_id, start_date, end_date]
+        );
+
+        return result.rows.length === 0;
     }
 
 

@@ -44,8 +44,13 @@ const bookingsService = {
         return instance.delete(
             `/bookings/${id}`
         );
+    },
+    checkCarAvailability(car_id, start_date, end_date) {
+        return instance.post(
+            "/bookings/check-availability",
+            { car_id, start_date, end_date }
+        );
     }
-
 };
 
 export default bookingsService;
