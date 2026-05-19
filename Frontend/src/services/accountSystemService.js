@@ -11,7 +11,6 @@ const loginAccountSystem = async (formData) => {
 const logout = () => {
     localStorage.removeItem("adminAccessToken");
 };
-
 const register = async (formData) => {
     try {
         const response = await api.post("/accounts/register", formData);

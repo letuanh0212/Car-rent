@@ -23,8 +23,10 @@ import {
 
 import { useAuth } from "../../AuthContext.jsx";
 import bookingsService from "../../services/bookingsService.js";
+import { useNavigate } from "react-router-dom";
 
 export default function CustomerBooking() {
+    const navigate = useNavigate();
 
     const { user } = useAuth();
 
@@ -607,6 +609,11 @@ export default function CustomerBooking() {
 
                                                         px: 3
                                                     }}
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `/booking/${booking.bk_id}`
+                                                        )
+                                                    }
                                                 >
                                                     Details
                                                 </Button>

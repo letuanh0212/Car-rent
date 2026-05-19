@@ -31,6 +31,15 @@ export default function CreatedBooking({ car }) {
     const [isAvailable, setIsAvailable] = useState(null);
     const [availabilityMessage, setAvailabilityMessage] = useState("");
 
+    useEffect(() => {
+        if (car?.location) {
+            setBooking((prev) => ({
+                ...prev,
+                pickup_location: car.location
+            }));
+        }
+    }, [car?.location]);
+
     const calculateDays = (start, end) => {
 
         if (!start || !end) return 0;
@@ -165,17 +174,11 @@ export default function CreatedBooking({ car }) {
             }
 
             const payload = {
-
                 listing_id: car.id,
-
                 start_date: booking.start_date,
-
                 end_date: booking.end_date,
-
-                pickup_location: booking.pickup_location,
-
+                pickup_location: car.location || booking.pickup_location,
                 return_location: booking.return_location,
-
                 total_price: totalPrice
             };
 
@@ -288,16 +291,16 @@ export default function CreatedBooking({ car }) {
                     type="text"
                     name="pickup_location"
                     value={booking.pickup_location}
-                    onChange={handleChange}
-                    placeholder="Nhập điểm nhận xe"
+                    readOnly
+                    placeholder="Địa điểm nhận xe lấy từ vị trí đăng xe"
                     className="
                         w-full
                         border
                         rounded-xl
                         p-3
                         mt-2
+                        bg-zinc-100
                     "
-                    required
                 />
 
             </div>
