@@ -7,7 +7,9 @@ const instance = axios.create({
 
 instance.interceptors.request.use((config) => {
 
-    const token = localStorage.getItem("accessToken");
+    const adminToken = localStorage.getItem("adminAccessToken");
+    const customerToken = localStorage.getItem("customerAccessToken");
+    const token = adminToken || customerToken;
 
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -34,7 +36,7 @@ instance.interceptors.response.use(
             try {
 
                 const refreshToken =
-                    localStorage.getItem("refreshToken");
+                    localStorage.getItem("customerRefreshToken");
 
                 const response = await axios.post(
                     "http://localhost:5080/api/v1/customer/refresh-token",

@@ -1,7 +1,7 @@
 import {
     Link,
     useLocation,
-    useNavigate
+
 } from "react-router-dom";
 
 import {
@@ -12,42 +12,14 @@ import {
     ShieldAlert,
     Star,
     Settings,
-    LogOut
-} from "lucide-react";
 
-import accountSystemService from "../../services/accountSystemService.js";
+} from "lucide-react";
 
 export default function AdminSidebar() {
 
-    const navigate = useNavigate();
 
     const location = useLocation();
 
-    const handleLogout = async () => {
-
-        try {
-
-            localStorage.removeItem("adminAccessToken");
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            localStorage.removeItem("adminUser");
-
-            if (
-                accountSystemService.logout
-            ) {
-
-                await accountSystemService.logout();
-            }
-
-            navigate("/loginsystem");
-
-        } catch (error) {
-
-            console.error(error);
-
-            alert("Logout failed");
-        }
-    };
 
     const menuItems = [
         {
@@ -258,51 +230,7 @@ export default function AdminSidebar() {
 
             {/* BOTTOM */}
 
-            <div>
-                {/* LOGOUT */}
 
-                <button
-
-                    onClick={handleLogout}
-
-                    className="
-                        w-full
-                        flex
-                        items-center
-                        gap-4
-                        px-4
-                        py-4
-                        rounded-2xl
-                        transition-all
-                        duration-200
-                    "
-                    style={{
-                        background: "#223548",
-                        color: "#f8fafc"
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.background =
-                            "#dc2626";
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.background =
-                            "#223548";
-                    }}
-                >
-
-                    <LogOut size={20} />
-
-                    <span
-                        className="
-                            font-medium
-                        "
-                    >
-                        Logout
-                    </span>
-
-                </button>
-
-            </div>
 
         </aside>
     );

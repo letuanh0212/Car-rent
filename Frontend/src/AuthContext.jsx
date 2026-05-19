@@ -2,19 +2,34 @@ import { createContext, useState, useContext, useCallback, useEffect } from 'rea
 import instance from "./api/api.js";
 import accountSystemService from './services/accountSystemService.js';
 import customerService from './services/customerService.js';
+
+
 const AuthContext = createContext();
 
 // Function to decode JWT without external library
 const decodeJWT = (token) => {
   try {
-    const base64Url = token.split('.')[1];
+    // console.log('DEBUG decodeJWT input token:', token?.substring(0, 50) + '...');
+    
+    const parts = token.split('.');
+      // console.log('DEBUG token parts count:', parts.length);
+    // console.log('DEBUG token parts:', parts);
+    if (parts.length !== 3) {
+      console.error('ERROR: Invalid JWT format, parts count:', parts.length);
+      return null;
+    }
+    
+    const base64Url = parts[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) => {
       return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
-    return JSON.parse(jsonPayload);
+    
+    const decoded = JSON.parse(jsonPayload);
+    // console.log('DEBUG decodeJWT decoded:', decoded);
+    return decoded;
   } catch (error) {
-    console.error('Failed to decode JWT:', error);
+    console.error('ERROR decodeJWT:', error.message);
     return null;
   }
 };
@@ -30,13 +45,19 @@ export const AuthProvider = ({ children }) => {
     const adminToken = localStorage.getItem("adminAccessToken");
     const customerToken = localStorage.getItem("customerAccessToken");
 
+    // console.log('DEBUG AuthProvider mount:', { adminToken: !!adminToken, customerToken: !!customerToken });
+
     if (adminToken) {
-      setUser(decodeJWT(adminToken));
+      const decoded = decodeJWT(adminToken);
+      console.log('DEBUG: Found adminToken, decoded:', decoded);
+      setUser(decoded);
       setAuthType("admin");
       setIsAuthenticated(true);
     } 
     else if (customerToken) {
-      setUser(decodeJWT(customerToken));
+      const decoded = decodeJWT(customerToken);
+      console.log('DEBUG: Found customerToken, decoded:', decoded);
+      setUser(decoded);
       setAuthType("customer");
       setIsAuthenticated(true);
     }
@@ -44,49 +65,81 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    // console.log('DEBUG AuthContext state after update:', { user, isAuthenticated, authType, loading });
+  }, [user, isAuthenticated, authType, loading]);
+
   {/* Login and logout functions for both customer and admin */}
   const loginCustomer = async (email, password) => {
-    const res = await customerService.loginService({ email, password });
+    const res = await customerService.login({ email, password });
 
-    const { accessToken, refreshToken } = res.data.data;
+    // console.log('DEBUG loginCustomer response:', res);
+
+    // customerService trả về response.data, nên không cần .data nữa
+    const { accessToken, refreshToken } = res.data || res;
+
+    // console.log('DEBUG accessToken:', accessToken, 'refreshToken:', refreshToken);
+
+    if (!accessToken) {
+      console.error('ERROR: accessToken is undefined!');
+      return;
+    }
 
     localStorage.setItem('customerAccessToken', accessToken);
     localStorage.setItem('customerRefreshToken', refreshToken);
 
     const decoded = decodeJWT(accessToken);
 
+    // console.log('DEBUG decoded user:', decoded);
+
     setUser(decoded);
     setAuthType("customer");
     setIsAuthenticated(true);
+
+   // console.log('DEBUG after setIsAuthenticated - state updated');
   };
   const logoutcustomer = useCallback(() => {
     localStorage.removeItem('customerAccessToken');
     localStorage.removeItem('customerRefreshToken');
     setUser(null);
+    setAuthType(null);
     setIsAuthenticated(false);
   }, []);
 
 
   {/* Admin login and logout functions */}
   const loginAdmin = async (email, password) => {
-    const res = await accountSystemService.loginService({ email, password });
 
-    const { accessToken, refreshToken } = res.data.data;
+      const res =
+          await accountSystemService.loginAccountSystem({
+              email,
+              password
+          });
 
-    localStorage.setItem('adminAccessToken', accessToken);
-    localStorage.setItem('adminRefreshToken', refreshToken);
+      const accessToken =
+          res.data.accessTokenaccount;
 
-    const decoded = decodeJWT(accessToken);
+      localStorage.setItem(
+          "adminAccessToken",
+          accessToken
+      );
 
-    setUser(decoded);
-    setAuthType("admin");
-    setIsAuthenticated(true);
+      const decoded = decodeJWT(accessToken);
+
+      setUser(decoded);
+
+      setAuthType("admin");
+
+      setIsAuthenticated(true);
+
+      return res;
   };
   
   const logoutadmin = useCallback(() => {
     localStorage.removeItem('adminAccessToken');
     localStorage.removeItem('adminRefreshToken');
     setUser(null);
+    setAuthType(null);
     setIsAuthenticated(false);
   }, []);
 
@@ -119,8 +172,11 @@ export const AuthProvider = ({ children }) => {
     setUser,
     isAuthenticated,
     setIsAuthenticated,
+    authType,
     loginCustomer,
     logoutcustomer,
+    loginAdmin,
+    logoutadmin,
     refreshAccessToken,
     loading
   };

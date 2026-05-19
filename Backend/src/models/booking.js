@@ -172,7 +172,22 @@ const bookingRepository = {
             throw err;
 
         }
+    },
+    async getBookingsByUserId(user_id) {
+        try {
+            const query = `
+                SELECT *
+                FROM bookings
+                WHERE user_id = $1
+                ORDER BY created_at DESC
+            `;
+            const res = await db.query(query, [user_id]);
+            return res.rows;
+        } catch (err) {
+            throw err;
+        }
     }
+
 
 };
 

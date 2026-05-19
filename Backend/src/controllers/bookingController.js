@@ -197,7 +197,24 @@ const bookingController = {
             });
 
         }
+    },
+    async getBookingsByUserId(req, res) {
+        try {
+            const user_id = req.customer.id;
+            const bookings = await bookingRepository.getBookingsByUserId(user_id);
+            return res.status(200).json({
+                success: true,
+                data: bookings
+            });
+        } catch (error) {   
+            console.log(error);
+            return res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            });
+        }   
     }
+
 
 };
 

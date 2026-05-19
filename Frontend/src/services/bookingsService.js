@@ -18,10 +18,9 @@ const bookingsService = {
         );
     },
 
-    getMyBookings() {
-
+    getBookingsByUserId(userId) {
         return instance.get(
-            "/bookings/my-bookings"
+            `/bookings/customer/${userId}`
         );
     },
 

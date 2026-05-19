@@ -1,32 +1,53 @@
-import { useState ,} from "react";
+import { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
     TextField,
     Button,
     Paper,
     Typography,
-
+    Box,
+    InputAdornment,
+    IconButton
 } from "@mui/material";
 
 import {
-
-    AdminPanelSettings
+    AdminPanelSettings,
+    Visibility,
+    VisibilityOff
 } from "@mui/icons-material";
 
-import accountSystemService from "../../services/accountSystemService.js";
 import { useAuth } from "../../AuthContext";
 
 export default function AdminLogin() {
+
     const navigate = useNavigate();
-    const { setIsAuthenticated } = useAuth();
+
+    const {
+        loginAdmin,
+        isAuthenticated,
+        authType
+
+    } = useAuth();
+
     const [formData, setFormData] = useState({
         email: "",
         password: ""
     });
 
+    useEffect(() => {
+
+        if (
+            isAuthenticated &&
+            authType === "admin"
+        ) {
+            navigate("/dashboard");
+        }
+
+    }, [isAuthenticated, authType, navigate]);
     const [loading, setLoading] = useState(false);
 
-
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (e) => {
 
@@ -44,16 +65,12 @@ export default function AdminLogin() {
 
             setLoading(true);
 
-            const response =
-                await accountSystemService.loginAccountSystem(
-                    formData
-                );
+            await loginAdmin(
+                formData.email,
+                formData.password
+            );
 
-            console.log(response);
-
-            // Persist admin login state for protected routes
-            localStorage.setItem("adminAccessToken", "true");
-            setIsAuthenticated(true);
+            alert("Login success");
 
             navigate("/dashboard");
 
@@ -62,7 +79,8 @@ export default function AdminLogin() {
             console.error(error);
 
             alert(
-                error.response?.data?.message ||
+                error?.response?.data?.message ||
+                error?.message ||
                 "Login failed"
             );
 
@@ -71,168 +89,267 @@ export default function AdminLogin() {
             setLoading(false);
         }
     };
+
     return (
-        <div className="min-h-screen bg-black flex items-center justify-center p-4">
+
+        <Box
+            sx={{
+                minHeight: "100vh",
+                background:
+                    "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                p: 2
+            }}
+        >
 
             <Paper
-                elevation={10}
-                className="
-                    w-full
-                    max-w-md
-                    rounded-3xl
-                    p-8
-                    bg-zinc-900
-                    text-white
-                    border
-                    border-zinc-800
-                "
+                elevation={12}
+                sx={{
+                    width: "100%",
+                    maxWidth: 450,
+                    borderRadius: 5,
+                    p: 5,
+                    background: "rgba(255,255,255,0.15)",
+                    backdropFilter: "blur(16px)",
+                    border: "1px solid rgba(255,255,255,0.2)",
+                    boxShadow: "0 20px 50px rgba(0,0,0,0.15)"
+                }}
             >
 
-                <div className="flex flex-col items-center mb-8">
+                {/* HEADER */}
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        mb: 5
+                    }}
+                >
 
-                    <div
-                        className="
-                            w-16
-                            h-16
-                            rounded-full
-                            bg-white
-                            flex
-                            items-center
-                            justify-center
-                            mb-4
-                        "
+                    <Box
+                        sx={{
+                            width: 75,
+                            height: 75,
+                            borderRadius: "50%",
+                            background:
+                                "linear-gradient(135deg, #4f46e5, #7c3aed)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            mb: 3,
+                            boxShadow:
+                                "0 10px 30px rgba(79,70,229,0.4)"
+                        }}
                     >
+
                         <AdminPanelSettings
-                            className="text-black"
-                            fontSize="large"
+                            sx={{
+                                color: "white",
+                                fontSize: 38
+                            }}
                         />
-                    </div>
+
+                    </Box>
 
                     <Typography
                         variant="h4"
-                        className="font-bold"
+                        fontWeight="bold"
+                        sx={{
+                            color: "white"
+                        }}
                     >
                         Admin Portal
                     </Typography>
 
                     <Typography
                         variant="body2"
-                        className="text-gray-400 mt-2"
+                        sx={{
+                            color: "rgba(255,255,255,0.8)",
+                            mt: 1
+                        }}
                     >
                         Internal Management System
                     </Typography>
 
-                </div>
+                </Box>
 
-                <form
-                    onSubmit={handleLogin}
-                    className="flex flex-col gap-5"
-                >
+                {/* FORM */}
+                <form onSubmit={handleLogin}>
 
-                    <TextField
-                        label="Admin Email"
-                        name="email"
-                        type="email"
-                        fullWidth
-                        value={formData.email}
-                        onChange={handleChange}
-
-                        InputLabelProps={{
-                            style: {
-                                color: "#aaa"
-                            }
-                        }}
-
+                    <Box
                         sx={{
-                            "& .MuiOutlinedInput-root": {
-
-                                color: "black",
-
-                                "& fieldset": {
-                                    borderColor: "#444"
-                                },
-
-                                "&:hover fieldset": {
-                                    borderColor: "#777"
-                                },
-
-                                "&.Mui-focused fieldset": {
-                                    borderColor: "white"
-                                }
-                            }
-                        }}
-                    />
-                    <TextField
-                        label="Password"
-                        name="password"
-
-                            type="password"
-
-                        fullWidth
-                        value={formData.password}
-                        onChange={handleChange}
-
-                        InputLabelProps={{
-                            style: {
-                                color: "#aaa"
-                            }
-                        }}
-
-                        sx={{
-                            "& .MuiOutlinedInput-root": {
-
-                                color: "black",
-
-                                "& fieldset": {
-                                    borderColor: "#444"
-                                },
-
-                                "&:hover fieldset": {
-                                    borderColor: "#777"
-                                },
-
-                                "&.Mui-focused fieldset": {
-                                    borderColor: "white"
-                                }
-                            }
-                        }}
-                    />
-
-
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        size="large"
-                        disabled={loading}
-
-                        sx={{
-                            backgroundColor: "white",
-                            color: "black",
-                            fontWeight: "bold",
-                            paddingY: 1.5,
-                            borderRadius: "12px",
-
-                            "&:hover": {
-                                backgroundColor: "#ddd"
-                            }
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 3
                         }}
                     >
 
-                        {
-                            loading
-                                ? "Loading..."
-                                : "Admin Login"
-                        }
+                        {/* EMAIL */}
+                        <TextField
+                            label="Admin Email"
+                            name="email"
+                            type="email"
+                            fullWidth
+                            autoComplete="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            InputLabelProps={{
+                                style: {
+                                    color: "rgba(255,255,255,0.8)"
+                                }
+                            }}
+                            sx={{
+                                "& .MuiOutlinedInput-root": {
 
-                    </Button>
+                                    color: "white",
+                                    borderRadius: 3,
+
+                                    "& fieldset": {
+                                        borderColor:
+                                            "rgba(255,255,255,0.3)"
+                                    },
+
+                                    "&:hover fieldset": {
+                                        borderColor:
+                                            "rgba(255,255,255,0.5)"
+                                    },
+
+                                    "&.Mui-focused fieldset": {
+                                        borderColor: "white"
+                                    }
+                                }
+                            }}
+                        />
+
+                        {/* PASSWORD */}
+                        <TextField
+                            label="Password"
+                            name="password"
+                            type={
+                                showPassword
+                                    ? "text"
+                                    : "password"
+                            }
+                            fullWidth
+                            autoComplete="current-password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            InputLabelProps={{
+                                style: {
+                                    color: "rgba(255,255,255,0.8)"
+                                }
+                            }}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+
+                                        <IconButton
+                                            onClick={() =>
+                                                setShowPassword(
+                                                    !showPassword
+                                                )
+                                            }
+                                            edge="end"
+                                            sx={{
+                                                color:
+                                                    "rgba(255,255,255,0.7)"
+                                            }}
+                                        >
+
+                                            {
+                                                showPassword
+                                                    ? <VisibilityOff />
+                                                    : <Visibility />
+                                            }
+
+                                        </IconButton>
+
+                                    </InputAdornment>
+                                )
+                            }}
+                            sx={{
+                                "& .MuiOutlinedInput-root": {
+
+                                    color: "white",
+                                    borderRadius: 3,
+
+                                    "& fieldset": {
+                                        borderColor:
+                                            "rgba(255,255,255,0.3)"
+                                    },
+
+                                    "&:hover fieldset": {
+                                        borderColor:
+                                            "rgba(255,255,255,0.5)"
+                                    },
+
+                                    "&.Mui-focused fieldset": {
+                                        borderColor: "white"
+                                    }
+                                }
+                            }}
+                        />
+
+                        {/* BUTTON */}
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            size="large"
+                            disabled={loading}
+                            sx={{
+                                background:
+                                    "linear-gradient(135deg, #4f46e5, #7c3aed)",
+
+                                color: "white",
+
+                                fontWeight: "bold",
+
+                                py: 1.6,
+
+                                borderRadius: 3,
+
+                                textTransform: "none",
+
+                                fontSize: 16,
+
+                                boxShadow:
+                                    "0 10px 30px rgba(79,70,229,0.4)",
+
+                                "&:hover": {
+                                    background:
+                                        "linear-gradient(135deg, #4338ca, #6d28d9)"
+                                }
+                            }}
+                        >
+
+                            {
+                                loading
+                                    ? "Loading..."
+                                    : "Admin Login"
+                            }
+
+                        </Button>
+
+                    </Box>
 
                 </form>
 
-                <div className="mt-6 text-center text-sm text-gray-500">
+                {/* FOOTER */}
+                <Typography
+                    align="center"
+                    sx={{
+                        mt: 4,
+                        fontSize: 13,
+                        color: "rgba(255,255,255,0.7)"
+                    }}
+                >
                     Restricted access for authorized staff only
-                </div>
+                </Typography>
 
             </Paper>
-        </div>
+
+        </Box>
     );
 }

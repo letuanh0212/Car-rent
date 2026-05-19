@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../../AuthContext";
 import {
     TextField,
     InputAdornment,
@@ -37,6 +38,7 @@ function HideOnScroll(props) {
 export default function Navbar() {
     const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
+    const { isAuthenticated, logoutcustomer } = useAuth();
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -213,7 +215,7 @@ export default function Navbar() {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
 
                         {
-                            localStorage.getItem("accessToken") ? (
+                            isAuthenticated ? (
                                 <>
                                     {/* PROFILE BUTTON */}
                                     <Button
@@ -271,12 +273,11 @@ export default function Navbar() {
                                         <Divider />
 
                                         <MenuItem onClick={() => {
-                                            localStorage.removeItem("accessToken");
-                                            localStorage.removeItem("refreshToken");
+                                            logoutcustomer();
                                             handleMenuClose();
                                             navigate("/login");
                                         }}>
-                                            🔓 Logout
+                                             Logout
                                         </MenuItem>
                                     </Menu>
                                 </>

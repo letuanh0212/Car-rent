@@ -16,14 +16,14 @@ const BookService = {
             throw err;
         }
     },
-    async getBookById(id) {
-        try {
-            const book = await bookRepository.getBookById(id);
-            return book;
-        } catch (err) {
-            throw err;
-        }
-    },
+    // async getBookById(id) {
+    //     try {
+    //         const book = await bookRepository.getBookById(id);
+    //         return book;
+    //     } catch (err) {
+    //         throw err;
+    //     }
+    // },
     async updateBook(id, data) {
         try {
             const updatedBook = await bookRepository.update(id, data);
@@ -36,6 +36,14 @@ const BookService = {
         try {
             await bookRepository.delete(id);
             return;
+        } catch (err) {
+            throw err;
+        }
+    },
+    async getBookingsByUserId(user_id) {
+        try {
+            const bookings = await bookingRepository.getBookingsByUserId(user_id);
+            return bookings;
         } catch (err) {
             throw err;
         }

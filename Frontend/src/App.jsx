@@ -17,7 +17,7 @@ import CarDetail from "./page/car_articles/cardetail.jsx";
 import CarSearch from "./components/search/CarSearch.jsx";
 import Bookings from "./page/bookings/booking.jsx";
 import ProfilePage from "./page/customer/profile.jsx";
-
+import CustomerBooking from "./page/bookings/customerBooking.jsx";
 
 import LoginSystem from "./page/accountsystem/Login.jsx";
 import RegisterSystem from "./page/accountsystem/createManagerSystem.jsx";
@@ -95,6 +95,18 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+                                {/* CREATE CAR */}
+
+                <Route
+                    path="/create-car"
+                    element={
+                        <ProtectedRoute>
+                            <MainLayout>
+                                <CreatedCar />
+                            </MainLayout>
+                        </ProtectedRoute>
+                    }
+                />
                 {/* HOME */}
 
                 <Route
@@ -116,14 +128,13 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
-                {/* CREATE CAR */}
-
+                {/* BOOKING */}
                 <Route
-                    path="/create-car"
+                    path="/my-bookings"
                     element={
                         <ProtectedRoute>
                             <MainLayout>
-                                <CreatedCar />
+                                <CustomerBooking />
                             </MainLayout>
                         </ProtectedRoute>
                     }

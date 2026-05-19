@@ -21,7 +21,7 @@ import { useAuth } from "../../AuthContext";
 export default function Login() {
 
     const navigate = useNavigate();
-    const { login, isAuthenticated } = useAuth();
+    const { loginCustomer, isAuthenticated } = useAuth();
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -55,7 +55,7 @@ export default function Login() {
 
             setLoading(true);
 
-            await login(formData.email, formData.password);
+            await loginCustomer(formData.email, formData.password);
 
             alert("Login success");
 
