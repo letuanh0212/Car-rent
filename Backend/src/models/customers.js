@@ -32,7 +32,7 @@ const CustomerRepository = {
     },
     async getById(id) {
         try {
-            const query = 'SELECT  C.full_name, C.email, C.phone FROM customer C WHERE C.id = $1';
+            const query = 'SELECT  C.full_name, C.email, C.phone, c.is_verified  FROM customer C WHERE C.id = $1';
             const res = await DB.query(query, [id]);
             return res.rows[0];
         } catch (err) {

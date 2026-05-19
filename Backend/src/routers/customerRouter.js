@@ -7,5 +7,5 @@ router.post('/register', customerController.registerCustomerController);
 router.post('/login', customerController.loginCustomerController);
 
 router.get('/', authMiddleware, customerController.getAllCustomersController);
-router.get('/:id', authMiddleware, customerController.getCustomerByIdController);
+router.get('/:id',authMiddleware, customerController.getCustomerByIdController);
 export default router;

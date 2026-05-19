@@ -1,156 +1,269 @@
 import { useEffect, useState } from "react";
+
 import {
     Box,
-    TextField,
-    Button,
     Typography,
     Paper,
-    Divider
+    Divider,
+    Avatar,
+    CircularProgress,
+    Chip
 } from "@mui/material";
 
+import PersonIcon from "@mui/icons-material/Person";
+import EmailIcon from "@mui/icons-material/Email";
+import PhoneIcon from "@mui/icons-material/Phone";
+import VerifiedIcon from "@mui/icons-material/Verified";
+
 import customerService from "../../services/customerService.js";
-
+import { useAuth } from "../../AuthContext.jsx";
 export default function ProfilePage() {
+    const { user } = useAuth();
 
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [profile, setProfile] = useState(null);
 
-    const [form, setForm] = useState({
-        full_name: "",
-        email: "",
-        phone: ""
-    });
+    const [loading, setLoading] = useState(true);
 
-    // GET PROFILE
     useEffect(() => {
+         if (!user?.id) return;
+
         fetchProfile();
-    }, []);
+
+    }, [user?.id]);
 
     const fetchProfile = async () => {
+
         try {
-            const res = await customerService.getProfile(); 
-            setUser(res.data);
 
-            setForm({
-                full_name: res.data.full_name || "",
-                email: res.data.email || "",
-                phone: res.data.phone || ""
-            });
-
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
-    const handleChange = (e) => {
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value
-        });
-    };
-
-    // UPDATE PROFILE
-    const handleUpdate = async () => {
-        try {
             setLoading(true);
 
-            await customerService.updateProfile(form);
+            const res = await customerService.getCustomerById(user.id);
 
-            alert("Cập nhật thành công!");
+            setProfile(res.data.data || res.data);
 
-            fetchProfile();
+        } catch (error) {
 
-        } catch (err) {
-            console.log(err);
+            console.log(error);
+
         } finally {
+
             setLoading(false);
+
         }
     };
 
-    if (!user) {
-        return <div className="p-10">Loading...</div>;
-    }
+    if (loading) {
 
-    return (
-        <Box className="min-h-screen bg-zinc-100 p-10 flex justify-center">
-            <Paper
-                elevation={5}
+        return (
+
+            <Box
                 sx={{
-                    width: 500,
-                    p: 4,
-                    borderRadius: 4
+                    minHeight: "100vh",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
                 }}
             >
 
-                <Typography variant="h5" fontWeight={700} mb={2}>
-                    My Profile
-                </Typography>
+                <CircularProgress />
 
-                <Divider sx={{ mb: 3 }} />
+            </Box>
+        );
+    }
 
-                {/* FULL NAME */}
-                <TextField
-                    fullWidth
-                    label="Full Name"
-                    name="full_name"
-                    value={form.full_name}
-                    onChange={handleChange}
-                    sx={{ mb: 2 }}
-                />
+    return (
 
-                {/* EMAIL */}
-                <TextField
-                    fullWidth
-                    label="Email"
-                    name="email"
-                    value={form.email}
-                    disabled
-                    sx={{ mb: 2 }}
-                />
+        <Box
+            sx={{
+                minHeight: "100vh",
+                background: "#f5f7fb",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                p: 3
+            }}
+        >
 
-                {/* PHONE */}
-                <TextField
-                    fullWidth
-                    label="Phone"
-                    name="phone"
-                    value={form.phone}
-                    onChange={handleChange}
-                    sx={{ mb: 3 }}
-                />
+            <Paper
+                elevation={0}
+                sx={{
+                    width: "100%",
+                    maxWidth: 550,
+                    borderRadius: 5,
+                    overflow: "hidden",
+                    border: "1px solid #e5e7eb"
+                }}
+            >
 
-                {/* INFO */}
+                {/* HEADER */}
                 <Box
                     sx={{
-                        mb: 3,
-                        p: 2,
-                        bgcolor: "#f5f5f5",
-                        borderRadius: 2
+                        background:
+                            "linear-gradient(135deg,#667eea,#764ba2)",
+                        p: 5,
+                        color: "white",
+                        textAlign: "center"
                     }}
                 >
-                    <Typography fontSize={14}>
-                        Account created: {new Date(user.created_at).toLocaleDateString()}
+
+                    <Avatar
+                        sx={{
+                            width: 90,
+                            height: 90,
+                            mx: "auto",
+                            mb: 2,
+                            fontSize: 36,
+                            bgcolor: "white",
+                            color: "#667eea",
+                            fontWeight: "bold"
+                        }}
+                    >
+
+                        {
+                            profile?.full_name?.charAt(0)
+                        }
+
+                    </Avatar>
+
+                    <Typography
+                        variant="h4"
+                        fontWeight="bold"
+                    >
+                        {profile?.full_name}
                     </Typography>
-                    <Typography fontSize={14}>
-                        Verified: {user.is_verified ? "Yes" : "No"}
+
+                    <Typography
+                        sx={{
+                            opacity: 0.9,
+                            mt: 1
+                        }}
+                    >
+                        Customer Account
                     </Typography>
+
                 </Box>
 
-                {/* BUTTON */}
-                <Button
-                    fullWidth
-                    variant="contained"
-                    onClick={handleUpdate}
-                    disabled={loading}
+                {/* BODY */}
+                <Box
                     sx={{
-                        py: 1.2,
-                        borderRadius: 2,
-                        background: "linear-gradient(135deg, #667eea, #764ba2)"
+                        p: 4
                     }}
                 >
-                    {loading ? "Updating..." : "Update Profile"}
-                </Button>
+
+                    {/* EMAIL */}
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 2,
+                            mb: 3
+                        }}
+                    >
+
+                        <EmailIcon color="primary" />
+
+                        <Box>
+
+                            <Typography
+                                fontWeight={700}
+                            >
+                                Email
+                            </Typography>
+
+                            <Typography
+                                color="text.secondary"
+                            >
+                                {profile?.email}
+                            </Typography>
+
+                        </Box>
+
+                    </Box>
+
+                    <Divider sx={{ mb: 3 }} />
+
+                    {/* PHONE */}
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 2,
+                            mb: 3
+                        }}
+                    >
+
+                        <PhoneIcon color="primary" />
+
+                        <Box>
+
+                            <Typography
+                                fontWeight={700}
+                            >
+                                Phone
+                            </Typography>
+
+                            <Typography
+                                color="text.secondary"
+                            >
+                                {
+                                    profile?.phone ||
+                                    "No phone number"
+                                }
+                            </Typography>
+
+                        </Box>
+
+                    </Box>
+
+                    <Divider sx={{ mb: 3 }} />
+
+                    {/* VERIFIED */}
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between"
+                        }}
+                    >
+
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 2
+                            }}
+                        >
+
+                            <VerifiedIcon color="success" />
+
+                            <Typography
+                                fontWeight={700}
+                            >
+                                Account Status
+                            </Typography>
+
+                        </Box>
+
+                        <Chip
+                            label={
+                                profile?.is_verified
+                                    ? "Verified"
+                                    : "Not Verified"
+                            }
+
+                            color={
+                                profile?.is_verified
+                                    ? "success"
+                                    : "warning"
+                            }
+                        />
+
+                    </Box>
+
+                </Box>
 
             </Paper>
+
         </Box>
     );
 }

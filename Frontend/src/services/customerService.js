@@ -11,7 +11,14 @@ const register = async (formData) => {
         return response.data;
 };
 
+const getCustomerById = async (id) => {
+
+        const response = await instance.get(`/customer/${id}`);  
+        return response.data;
+};
+
 export default {
     login,
-    register
+    register,
+    getCustomerById
 };
