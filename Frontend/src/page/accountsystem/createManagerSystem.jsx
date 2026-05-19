@@ -16,7 +16,7 @@ import {
     AdminPanelSettings
 } from "@mui/icons-material";
 
-import accountSystemService from "../../services/accountsystem.js";
+import accountSystemService from "../../services/accountSystemService.js";
 
 export default function AdminRegister() {
 

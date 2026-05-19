@@ -3,7 +3,7 @@ import { useAuth } from '../AuthContext';
 
 export const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
-
+  
   if (loading) {
     return <div>Loading...</div>;
   }

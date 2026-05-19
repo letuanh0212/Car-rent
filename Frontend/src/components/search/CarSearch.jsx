@@ -33,7 +33,7 @@ import {
     Clear as ClearIcon,
     Star as StarIcon
 } from "@mui/icons-material";
-import carService from "../../services/car";
+import carService from "../../services/carService";
 
 export default function CarSearch() {
     const [searchParams, setSearchParams] = useSearchParams();

@@ -15,12 +15,16 @@ import CarList from "./page/car_articles/carlist.jsx";
 import CreatedCar from "./components/board/createdCar.jsx";
 import CarDetail from "./page/car_articles/cardetail.jsx";
 import CarSearch from "./components/search/CarSearch.jsx";
+import Bookings from "./page/bookings/booking.jsx";
+import ProfilePage from "./page/customer/profile.jsx";
 
 
 import LoginSystem from "./page/accountsystem/Login.jsx";
 import RegisterSystem from "./page/accountsystem/createManagerSystem.jsx";
 import Carlist from "./page/System/fleetmanagement.jsx";
 import Dashboard from "./page/System/dashboard.jsx";
+import AddVD from "./components/board/addVD.jsx";
+import AddImages from "./components/board/addImages.jsx";
 
 function App() {
     return (
@@ -38,6 +42,8 @@ function App() {
                     path="/register"
                     element={<Register />}
                 />
+
+
                 {/* PRIVATE using with customer */}
                 <Route
                     path="/loginsystem"
@@ -67,6 +73,28 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+                {/* ADD VD */}
+                <Route
+                    path="/add-vd"
+                    element={
+                        <ProtectedRoute>
+                            <AdminLayout>
+                                <AddVD />
+                            </AdminLayout>
+                        </ProtectedRoute>
+                    }
+                />
+                {/* ADD IMAGES */}
+                <Route
+                    path="/add-images"
+                    element={
+                        <ProtectedRoute>
+                            <AdminLayout>
+                                <AddImages />
+                            </AdminLayout>
+                        </ProtectedRoute>
+                    }
+                />
                 {/* HOME */}
 
                 <Route
@@ -77,7 +105,17 @@ function App() {
                         </MainLayout>
                     }
                 />
-
+                {/* PROFILE */}
+                <Route
+                    path="/profile"
+                    element={
+                        <ProtectedRoute>
+                            <MainLayout>
+                                <ProfilePage />
+                            </MainLayout>
+                        </ProtectedRoute>
+                    }
+                />
                 {/* CREATE CAR */}
 
                 <Route
@@ -112,6 +150,17 @@ function App() {
                         </MainLayout>
                     }
                 />
+                <Route
+                    path="/booking/:id"
+                    element={
+              
+                            <MainLayout>
+                                <Bookings />
+                            </MainLayout>
+              
+                    }
+                />
+
 
             </Routes>
         </AuthProvider>

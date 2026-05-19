@@ -1,7 +1,7 @@
 import UserRepository from "../models/account.js";
 import bcrypt from "bcrypt";
-
-const UserService = {
+import  {generateTokenAccount}  from "../utils/generateToken.js";
+const accountSystemService = {
     async registerService({ email, password, role }) {
         if (!email || !password) {
         throw new Error('MISSING_REQUIRED_FIELDS');
@@ -48,12 +48,13 @@ const UserService = {
             throw new Error('INVALID_CREDENTIALS');
         }
 
+        const accessTokenaccount = generateTokenAccount(user);
+
         return {
 
-            email: user.email,
-          
+            accessTokenaccount
         };
     }
 
 };
-export default UserService;
+export default accountSystemService;

@@ -18,6 +18,11 @@ import AddIcon from "@mui/icons-material/Add";
 import LoginIcon from "@mui/icons-material/Login";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
+
 function HideOnScroll(props) {
     const { children } = props;
     const trigger = useScrollTrigger();
@@ -33,6 +38,15 @@ export default function Navbar() {
     const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
 
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
     const handleSearch = (e) => {
         e.preventDefault();
         if (searchQuery.trim()) {
@@ -154,6 +168,24 @@ export default function Navbar() {
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             onKeyPress={handleKeyPress}
+                            sx={{
+                                backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                                borderRadius: 25,
+                                color: 'white',
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: 'rgba(255, 255, 255, 0.3)',
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: 'rgba(255, 255, 255, 0.5)',
+                                },
+                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: 'white',
+                                },
+                                '& .MuiInputBase-input::placeholder': {
+                                    color: 'rgba(255, 255, 255, 0.7)',
+                                    opacity: 1,
+                                },
+                            }}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -171,60 +203,84 @@ export default function Navbar() {
                                         </IconButton>
                                     </InputAdornment>
                                 ),
-                                sx: {
-                                    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                                    borderRadius: 25,
-                                    color: 'white',
-                                    '& .MuiOutlinedInput-notchedOutline': {
-                                        borderColor: 'rgba(255, 255, 255, 0.3)',
-                                    },
-                                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                                        borderColor: 'rgba(255, 255, 255, 0.5)',
-                                    },
-                                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                        borderColor: 'white',
-                                    },
-                                    '& .MuiInputBase-input::placeholder': {
-                                        color: 'rgba(255, 255, 255, 0.7)',
-                                        opacity: 1,
-                                    },
-                                }
                             }}
                         />
                     </Box>
 
-                    {/* User Actions */}
+               
                    {/* User Actions */}
 
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
 
                         {
                             localStorage.getItem("accessToken") ? (
+                                <>
+                                    {/* PROFILE BUTTON */}
+                                    <Button
+                                        onClick={handleMenuOpen}
+                                        sx={{
+                                            color: "white",
+                                            textTransform: "none",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 1
+                                        }}
+                                    >
+                                        <Avatar
+                                            sx={{
+                                                width: 32,
+                                                height: 32,
+                                                bgcolor: "white",
+                                                color: "#764ba2",
+                                                fontWeight: "bold"
+                                            }}
+                                        >
+                                            U
+                                        </Avatar>
 
-                                <Button
-                                    variant="contained"
-                                    onClick={() => {
+                                        Profile
+                                    </Button>
 
-                                        localStorage.removeItem("accessToken");
-                                        localStorage.removeItem("refreshToken");
+                                    {/* DROPDOWN MENU */}
+                                    <Menu
+                                        anchorEl={anchorEl}
+                                        open={open}
+                                        onClose={handleMenuClose}
+                                        PaperProps={{
+                                            sx: {
+                                                mt: 1,
+                                                minWidth: 180,
+                                                borderRadius: 2
+                                            }
+                                        }}
+                                    >
+                                        <MenuItem onClick={() => {
+                                            handleMenuClose();
+                                            navigate("/profile");
+                                        }}>
+                                            👤 My Profile
+                                        </MenuItem>
 
-                                        navigate("/login");
-                                    }}
-                                    sx={{
-                                        backgroundColor: "#ef4444",
-                                        borderRadius: 20,
-                                        px: 3,
+                                        <MenuItem onClick={() => {
+                                            handleMenuClose();
+                                            navigate("/my-bookings");
+                                        }}>
+                                            🚗 My Bookings
+                                        </MenuItem>
 
-                                        '&:hover': {
-                                            backgroundColor: "#dc2626",
-                                        }
-                                    }}
-                                >
-                                    Logout
-                                </Button>
+                                        <Divider />
 
+                                        <MenuItem onClick={() => {
+                                            localStorage.removeItem("accessToken");
+                                            localStorage.removeItem("refreshToken");
+                                            handleMenuClose();
+                                            navigate("/login");
+                                        }}>
+                                            🔓 Logout
+                                        </MenuItem>
+                                    </Menu>
+                                </>
                             ) : (
-
                                 <>
                                     <Button
                                         component={Link}
@@ -235,7 +291,6 @@ export default function Navbar() {
                                             color: 'white',
                                             borderRadius: 20,
                                             px: 2,
-
                                             '&:hover': {
                                                 backgroundColor: 'rgba(255,255,255,0.1)',
                                             }
@@ -254,7 +309,6 @@ export default function Navbar() {
                                             border: '1px solid rgba(255,255,255,0.3)',
                                             borderRadius: 20,
                                             px: 3,
-
                                             '&:hover': {
                                                 backgroundColor: 'rgba(255,255,255,0.3)',
                                                 borderColor: 'rgba(255,255,255,0.5)',
@@ -264,7 +318,6 @@ export default function Navbar() {
                                         Đăng ký
                                     </Button>
                                 </>
-
                             )
                         }
 

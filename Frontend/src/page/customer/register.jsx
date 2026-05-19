@@ -15,7 +15,7 @@ import {
     VisibilityOff
 } from "@mui/icons-material";
 
-import customerService from "../../services/customer.js";
+import customerService from "../../services/customerService.js";
 
 export default function Register() {
 

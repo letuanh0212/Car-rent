@@ -1,4 +1,4 @@
-import UserService from "../services/userService.js";
+import UserService from "../services/accountSystemService.js";
 import bycrypt from "bcrypt";
 const userController = {
     async registerController (req, res) {

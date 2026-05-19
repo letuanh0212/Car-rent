@@ -14,8 +14,8 @@ import {
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-import cars from "../../services/car";
-import carTypeService from "../../services/car_type";
+import cars from "../../services/carService";
+import carTypeService from "../../services/car_typeService";
 
 export default function CreatedCar({ onSuccess }) {
     const [carTypes, setCarTypes] = useState([]);
@@ -262,7 +262,9 @@ export default function CreatedCar({ onSuccess }) {
                             className="bg-white"
                         />
                     </div>
-
+                    <div className="md:col-span-2">
+                            
+                    </div>
                     <div className="md:col-span-2 mt-5">
                         <Button type="submit" variant="contained" size="large" disabled={loading} fullWidth>
                             {loading ? "Creating..." : "Create Car"}

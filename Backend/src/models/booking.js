@@ -1,7 +1,6 @@
 import db from "../config/db.js";
 
 const bookingRepository = {
-
     async create(data) {
 
         const {

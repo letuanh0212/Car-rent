@@ -1,6 +1,6 @@
 import DB from '../config/db.js'
 
-const UserRepository = {
+const accountsystemRepository = {
     async create(user) {
         const { email, password} = user;
         const query = 'INSERT INTO accountsystem (email, password) VALUES ($1, $2) RETURNING *';
@@ -23,4 +23,4 @@ const UserRepository = {
     }
 };
 
-export default UserRepository;
+export default accountsystemRepository;

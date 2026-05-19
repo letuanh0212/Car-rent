@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import carService from "../../services/car.js";
+import carService from "../../services/carService.js";
 import CarCard from "../../components/board/cardCarList.jsx";
 
 export default function CarList() {

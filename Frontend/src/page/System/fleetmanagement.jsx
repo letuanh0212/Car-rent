@@ -23,12 +23,16 @@ import {
     Grid,
     Card,
     CardContent,
-    CircularProgress
+    CircularProgress,
+    IconButton
 } from "@mui/material";
 
-import carService from "../../services/car.js";
-import carTypeService from "../../services/car_type.js";
-import carImagesService from "../../services/car_images.js";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
+
+import carService from "../../services/carService.js";
+import carTypeService from "../../services/car_typeService.js";
+import carImagesService from "../../services/car_imagesService.js";
 
 import CreatedCar from "../../components/board/createdCar.jsx";
 
@@ -48,24 +52,6 @@ const SERVICE_OPTIONS = [
 const placeholderImage =
     "https://via.placeholder.com/120x80.png?text=No+Image";
 
-function normalizeStatus(car) {
-
-    if (!car?.id) return "available";
-
-    const index = Number(car.id) % 3;
-
-    return ["available", "rented", "maintenance"][index];
-}
-
-function normalizeService(car) {
-
-    if (!car?.id) return "upcoming";
-
-    return Number(car.id) % 5 === 0
-        ? "overdue"
-        : "upcoming";
-}
-
 export default function FleetManagement() {
 
     const [cars, setCars] = useState([]);
@@ -79,6 +65,16 @@ export default function FleetManagement() {
     const [error, setError] = useState("");
 
     const [showModal, setShowModal] = useState(false);
+
+    const [imageModal, setImageModal] = useState(false);
+
+    const [videoModal, setVideoModal] = useState(false);
+
+    const [selectedCar, setSelectedCar] = useState(null);
+
+    const [selectedImages, setSelectedImages] = useState([]);
+
+    const [selectedVideo, setSelectedVideo] = useState(null);
 
     const [filters, setFilters] = useState({
         status: "all",
@@ -160,21 +156,92 @@ export default function FleetManagement() {
 
     }, [loadDashboardData]);
 
+    const handleUploadImages = async () => {
+
+        if (!selectedCar || !selectedImages.length)
+            return;
+
+        try {
+
+            const formData = new FormData();
+
+            selectedImages.forEach((file) => {
+
+                formData.append("images", file);
+            });
+
+            formData.append(
+                "listing_id",
+                selectedCar.id
+            );
+
+            await carImagesService.uploadImages(
+                formData
+            );
+
+            setImageModal(false);
+
+            setSelectedImages([]);
+
+            loadDashboardData();
+
+        } catch (error) {
+
+            console.error(error);
+        }
+    };
+
+    const handleUploadVideo = async () => {
+
+        if (!selectedCar || !selectedVideo)
+            return;
+
+        try {
+
+            const formData = new FormData();
+
+            formData.append(
+                "video",
+                selectedVideo
+            );
+
+            formData.append(
+                "listing_id",
+                selectedCar.id
+            );
+
+            await carService.uploadVideo(
+                formData
+            );
+
+            setVideoModal(false);
+
+            setSelectedVideo(null);
+
+        } catch (error) {
+
+            console.error(error);
+        }
+    };
+
     const enrichedCars = useMemo(() => {
 
         return cars.map((car) => ({
 
             ...car,
 
-            status: normalizeStatus(car),
+            status:
+                car.status || "available",
 
-            serviceStatus: normalizeService(car),
+            serviceStatus:
+                Number(car.odometer) > 20000
+                    ? "overdue"
+                    : "upcoming",
 
             typeName:
                 carTypes.find(
                     (type) =>
-                        Number(type.id) ===
-                        Number(car.type_id)
+                        type.id === car.type_id
                 )?.name || "Unknown",
 
             imageUrl:
@@ -183,7 +250,7 @@ export default function FleetManagement() {
 
             title:
                 car.title ||
-                `${car.brand ?? ""} ${car.model ?? ""}`
+                `${car.brand} ${car.model}`
         }));
 
     }, [cars, carTypes, imagesByListing]);
@@ -313,6 +380,24 @@ export default function FleetManagement() {
 
             </Box>
 
+            {/* ERROR */}
+
+            {
+                error && (
+                    <Paper
+                        sx={{
+                            p: 2,
+                            mb: 3,
+                            backgroundColor: "#fee2e2"
+                        }}
+                    >
+                        <Typography color="error">
+                            {error}
+                        </Typography>
+                    </Paper>
+                )
+            }
+
             {/* STATS */}
 
             <Grid
@@ -321,120 +406,67 @@ export default function FleetManagement() {
                 mb={4}
             >
 
-                <Grid item xs={12} md={3}>
+                {
+                    [
+                        {
+                            title: "Total Vehicles",
+                            value: counts.total,
+                            color: "#111827"
+                        },
+                        {
+                            title: "Available",
+                            value: counts.available,
+                            color: "#16a34a"
+                        },
+                        {
+                            title: "Rented",
+                            value: counts.rented,
+                            color: "#2563eb"
+                        },
+                        {
+                            title: "Maintenance",
+                            value: counts.maintenance,
+                            color: "#ea580c"
+                        }
+                    ].map((item) => (
 
-                    <Card
-                        sx={{
-                            borderRadius: "24px"
-                        }}
-                    >
+                        <Grid
+                            item
+                            xs={12}
+                            md={3}
+                            key={item.title}
+                        >
 
-                        <CardContent>
-
-                            <Typography color="text.secondary">
-                                Total Vehicles
-                            </Typography>
-
-                            <Typography
-                                variant="h3"
-                                fontWeight={800}
-                                mt={2}
+                            <Card
+                                sx={{
+                                    borderRadius: "24px"
+                                }}
                             >
-                                {counts.total}
-                            </Typography>
 
-                        </CardContent>
+                                <CardContent>
 
-                    </Card>
+                                    <Typography color="text.secondary">
+                                        {item.title}
+                                    </Typography>
 
-                </Grid>
+                                    <Typography
+                                        variant="h3"
+                                        fontWeight={800}
+                                        mt={2}
+                                        sx={{
+                                            color: item.color
+                                        }}
+                                    >
+                                        {item.value}
+                                    </Typography>
 
-                <Grid item xs={12} md={3}>
+                                </CardContent>
 
-                    <Card
-                        sx={{
-                            borderRadius: "24px"
-                        }}
-                    >
+                            </Card>
 
-                        <CardContent>
-
-                            <Typography color="text.secondary">
-                                Available
-                            </Typography>
-
-                            <Typography
-                                variant="h3"
-                                fontWeight={800}
-                                mt={2}
-                                color="success.main"
-                            >
-                                {counts.available}
-                            </Typography>
-
-                        </CardContent>
-
-                    </Card>
-
-                </Grid>
-
-                <Grid item xs={12} md={3}>
-
-                    <Card
-                        sx={{
-                            borderRadius: "24px"
-                        }}
-                    >
-
-                        <CardContent>
-
-                            <Typography color="text.secondary">
-                                Rented
-                            </Typography>
-
-                            <Typography
-                                variant="h3"
-                                fontWeight={800}
-                                mt={2}
-                                color="info.main"
-                            >
-                                {counts.rented}
-                            </Typography>
-
-                        </CardContent>
-
-                    </Card>
-
-                </Grid>
-
-                <Grid item xs={12} md={3}>
-
-                    <Card
-                        sx={{
-                            borderRadius: "24px"
-                        }}
-                    >
-
-                        <CardContent>
-
-                            <Typography color="text.secondary">
-                                Maintenance
-                            </Typography>
-
-                            <Typography
-                                variant="h3"
-                                fontWeight={800}
-                                mt={2}
-                                color="warning.main"
-                            >
-                                {counts.maintenance}
-                            </Typography>
-
-                        </CardContent>
-
-                    </Card>
-
-                </Grid>
+                        </Grid>
+                    ))
+                }
 
             </Grid>
 
@@ -607,7 +639,11 @@ export default function FleetManagement() {
 
                         <TableHead>
 
-                            <TableRow>
+                            <TableRow
+                                sx={{
+                                    backgroundColor: "#f9fafb"
+                                }}
+                            >
 
                                 <TableCell>
                                     Vehicle
@@ -651,9 +687,29 @@ export default function FleetManagement() {
 
                                     </TableRow>
 
+                                ) : filteredCars.length === 0 ? (
+
+                                    <TableRow>
+
+                                        <TableCell
+                                            colSpan={5}
+                                            align="center"
+                                        >
+
+                                            <Typography py={4}>
+                                                No vehicles found
+                                            </Typography>
+
+                                        </TableCell>
+
+                                    </TableRow>
+
                                 ) : filteredCars.map((car) => (
 
-                                    <TableRow key={car.id}>
+                                    <TableRow
+                                        key={car.id}
+                                        hover
+                                    >
 
                                         <TableCell>
 
@@ -705,13 +761,22 @@ export default function FleetManagement() {
 
                                             <Chip
                                                 label={car.status}
-                                                color={
-                                                    car.status === "available"
-                                                        ? "success"
-                                                        : car.status === "rented"
-                                                            ? "info"
-                                                            : "warning"
-                                                }
+                                                sx={{
+                                                    borderRadius: "10px",
+                                                    fontWeight: 700,
+                                                    backgroundColor:
+                                                        car.status === "available"
+                                                            ? "#dcfce7"
+                                                            : car.status === "rented"
+                                                                ? "#dbeafe"
+                                                                : "#fed7aa",
+                                                    color:
+                                                        car.status === "available"
+                                                            ? "#166534"
+                                                            : car.status === "rented"
+                                                                ? "#1d4ed8"
+                                                                : "#c2410c"
+                                                }}
                                             />
 
                                         </TableCell>
@@ -734,13 +799,42 @@ export default function FleetManagement() {
                                             <Stack
                                                 direction="row"
                                                 spacing={1}
+                                                flexWrap="wrap"
                                             >
 
                                                 <Button
                                                     variant="outlined"
+                                                    sx={{
+                                                        borderRadius: "10px",
+                                                        textTransform: "none"
+                                                    }}
                                                 >
                                                     View
                                                 </Button>
+
+                                                <IconButton
+                                                    color="primary"
+                                                    onClick={() => {
+
+                                                        setSelectedCar(car);
+
+                                                        setImageModal(true);
+                                                    }}
+                                                >
+                                                    <AddPhotoAlternateIcon />
+                                                </IconButton>
+
+                                                <IconButton
+                                                    color="secondary"
+                                                    onClick={() => {
+
+                                                        setSelectedCar(car);
+
+                                                        setVideoModal(true);
+                                                    }}
+                                                >
+                                                    <VideoLibraryIcon />
+                                                </IconButton>
 
                                                 <Button
                                                     variant="contained"
@@ -748,6 +842,10 @@ export default function FleetManagement() {
                                                     onClick={() =>
                                                         handleDelete(car.id)
                                                     }
+                                                    sx={{
+                                                        borderRadius: "10px",
+                                                        textTransform: "none"
+                                                    }}
                                                 >
                                                     Delete
                                                 </Button>
@@ -769,7 +867,7 @@ export default function FleetManagement() {
 
             </Paper>
 
-            {/* MODAL */}
+            {/* CREATE MODAL */}
 
             <Dialog
                 open={showModal}
@@ -792,6 +890,125 @@ export default function FleetManagement() {
                             loadDashboardData();
                         }}
                     />
+
+                </DialogContent>
+
+            </Dialog>
+
+            {/* IMAGE MODAL */}
+
+            <Dialog
+                open={imageModal}
+                onClose={() => setImageModal(false)}
+                maxWidth="sm"
+                fullWidth
+            >
+
+                <DialogContent sx={{ p: 4 }}>
+
+                    <Typography
+                        variant="h6"
+                        fontWeight={700}
+                        mb={3}
+                    >
+                        Upload Images
+                    </Typography>
+
+                    <TextField
+                        type="file"
+                        fullWidth
+                        inputProps={{
+                            multiple: true,
+                            accept: "image/*"
+                        }}
+                        onChange={(e) =>
+                            setSelectedImages(
+                                Array.from(e.target.files)
+                            )
+                        }
+                    />
+
+                    <Stack
+                        direction="row"
+                        spacing={2}
+                        mt={3}
+                    >
+
+                        <Button
+                            variant="contained"
+                            onClick={handleUploadImages}
+                        >
+                            Upload
+                        </Button>
+
+                        <Button
+                            onClick={() =>
+                                setImageModal(false)
+                            }
+                        >
+                            Cancel
+                        </Button>
+
+                    </Stack>
+
+                </DialogContent>
+
+            </Dialog>
+
+            {/* VIDEO MODAL */}
+
+            <Dialog
+                open={videoModal}
+                onClose={() => setVideoModal(false)}
+                maxWidth="sm"
+                fullWidth
+            >
+
+                <DialogContent sx={{ p: 4 }}>
+
+                    <Typography
+                        variant="h6"
+                        fontWeight={700}
+                        mb={3}
+                    >
+                        Upload Video
+                    </Typography>
+
+                    <TextField
+                        type="file"
+                        fullWidth
+                        inputProps={{
+                            accept: "video/*"
+                        }}
+                        onChange={(e) =>
+                            setSelectedVideo(
+                                e.target.files[0]
+                            )
+                        }
+                    />
+
+                    <Stack
+                        direction="row"
+                        spacing={2}
+                        mt={3}
+                    >
+
+                        <Button
+                            variant="contained"
+                            onClick={handleUploadVideo}
+                        >
+                            Upload
+                        </Button>
+
+                        <Button
+                            onClick={() =>
+                                setVideoModal(false)
+                            }
+                        >
+                            Cancel
+                        </Button>
+
+                    </Stack>
 
                 </DialogContent>
 

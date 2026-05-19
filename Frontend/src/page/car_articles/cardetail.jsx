@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import carService from "../../services/car.js";
-
+import carService from "../../services/carService.js";
+import { useNavigate } from "react-router-dom";
 export default function CarDetail() {
+    const navigate = useNavigate();
     const { id } = useParams();
     const [car, setCar] = useState(null);
     const [mainImage, setMainImage] = useState("");
@@ -93,8 +94,8 @@ export default function CarDetail() {
                         border: "none",
                         borderRadius: "8px",
                         marginTop: "10px"
-                    }}>
-                        🚗 Đặt xe ngay
+                    }} onClick={() => navigate(`/booking/${car.id}`)}>
+                        Thuê xe ngay
                     </button>
 
                     <button style={{
@@ -105,7 +106,7 @@ export default function CarDetail() {
                         border: "none",
                         borderRadius: "8px",
                         marginTop: "10px"
-                    }}>
+                    }} onClick={() => navigate(`/favorite/${car.id}`)}>
                         ❤️ Yêu thích
                     </button>
 

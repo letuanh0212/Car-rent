@@ -13,10 +13,12 @@ import {
     AdminPanelSettings
 } from "@mui/icons-material";
 
-import accountSystemService from "../../services/accountsystem.js";
+import accountSystemService from "../../services/accountSystemService.js";
+import { useAuth } from "../../AuthContext";
 
 export default function AdminLogin() {
     const navigate = useNavigate();
+    const { setIsAuthenticated } = useAuth();
     const [formData, setFormData] = useState({
         email: "",
         password: ""
@@ -43,20 +45,17 @@ export default function AdminLogin() {
             setLoading(true);
 
             const response =
-                await accountSystemService.login(
+                await accountSystemService.loginAccountSystem(
                     formData
                 );
 
             console.log(response);
 
-            // localStorage.setItem(
-            //     "adminAccessToken",
-            //     response.accessToken
-            // );
+            // Persist admin login state for protected routes
+            localStorage.setItem("adminAccessToken", "true");
+            setIsAuthenticated(true);
 
-            navigate(
-                "/dashboard"
-            );
+            navigate("/dashboard");
 
         } catch (error) {
 

@@ -15,7 +15,7 @@ import {
     LogOut
 } from "lucide-react";
 
-import accountSystemService from "../../services/accountSystem.js";
+import accountSystemService from "../../services/accountSystemService.js";
 
 export default function AdminSidebar() {
 
@@ -27,13 +27,10 @@ export default function AdminSidebar() {
 
         try {
 
-            localStorage.removeItem(
-                "adminAccessToken"
-            );
-
-            localStorage.removeItem(
-                "adminUser"
-            );
+            localStorage.removeItem("adminAccessToken");
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("adminUser");
 
             if (
                 accountSystemService.logout

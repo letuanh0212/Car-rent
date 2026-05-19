@@ -1,6 +1,6 @@
 import api  from "../api/api.js";
 
-const login = async (formData) => {
+const loginAccountSystem = async (formData) => {
     try {
         const response = await api.post("/accounts/login", formData);
         return response.data;
@@ -11,6 +11,7 @@ const login = async (formData) => {
 const logout = () => {
     localStorage.removeItem("adminAccessToken");
 };
+
 const register = async (formData) => {
     try {
         const response = await api.post("/accounts/register", formData);
@@ -21,7 +22,7 @@ const register = async (formData) => {
 };
 
 export default {
-    login,
+    loginAccountSystem,
     logout,
     register
 };
