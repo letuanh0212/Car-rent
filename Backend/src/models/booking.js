@@ -19,10 +19,10 @@ const bookingRepository = {
             SELECT *
             FROM bookings
             WHERE listing_id = $1
-            AND status IN ('pending', 'confirmed')
+            AND (status IN ('pending', 'confirmed') OR status IS NULL)
             AND (
-                start_date::timestamp < $3::timestamp
-                AND end_date::timestamp > $2::timestamp
+                $2::timestamp < (end_date::timestamp + INTERVAL '2 days')
+                AND $3::timestamp > start_date::timestamp
             )
         `;
 
@@ -72,7 +72,7 @@ const bookingRepository = {
             pickup_location,
             return_location,
             total_price,
-            status
+            status || "pending"
         ];
 
         try {
@@ -117,7 +117,7 @@ const bookingRepository = {
             SELECT *
             FROM bookings
             WHERE listing_id = $1
-            AND status IN ('pending', 'confirmed')
+            AND (status IN ('pending', 'confirmed') OR status IS NULL)
             ORDER BY start_date ASC
         `;
 
@@ -230,7 +230,10 @@ const bookingRepository = {
             FROM bookings
             WHERE listing_id = $1
             AND (status IN ('pending', 'confirmed') OR status IS NULL)
-            AND ($2::timestamp < end_date::timestamp AND $3::timestamp > start_date::timestamp)
+            AND (
+                $2::timestamp < (end_date::timestamp + INTERVAL '2 days')
+                AND $3::timestamp > start_date::timestamp
+            )
             LIMIT 1
             `,
             [car_id, start_date, end_date]
