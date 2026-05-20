@@ -177,11 +177,11 @@ function App() {
                 <Route
                     path="/booking/:id"
                     element={
-              
+                        <ProtectedRoute>
                             <MainLayout>
                                 <Bookings />
                             </MainLayout>
-              
+                        </ProtectedRoute>
                     }
                 />
 
