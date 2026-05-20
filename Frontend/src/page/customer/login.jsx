@@ -15,19 +15,25 @@ import {
     VisibilityOff
 } from "@mui/icons-material";
 
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
 
 export default function Login() {
 
     const navigate = useNavigate();
+    const location = useLocation();
     const { loginCustomer, isAuthenticated } = useAuth();
+    const from = location.state?.from || "/";
+    const bookingDraft = location.state?.bookingDraft;
 
     useEffect(() => {
         if (isAuthenticated) {
-            navigate("/");
+            navigate(from, {
+                replace: true,
+                state: bookingDraft ? { bookingDraft } : undefined
+            });
         }
-    }, [isAuthenticated, navigate]);
+    }, [bookingDraft, from, isAuthenticated, navigate]);
 
     const [formData, setFormData] = useState({
         email: "",
@@ -56,10 +62,11 @@ export default function Login() {
             setLoading(true);
 
             await loginCustomer(formData.email, formData.password);
-
-            alert("Login success");
-
-            navigate("/");
+            
+            navigate(from, {
+                replace: true,
+                state: bookingDraft ? { bookingDraft } : undefined
+            });
 
         } catch (error) {
 
@@ -278,7 +285,9 @@ export default function Login() {
                             fullWidth
                             variant="outlined"
                             onClick={() =>
-                                navigate("/register")
+                                navigate("/register", {
+                                    state: location.state
+                                })
                             }
                             sx={{
                                 py: 1.3,

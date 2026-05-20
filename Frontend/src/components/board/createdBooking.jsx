@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import bookingService from "../../services/bookingsService.js";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -11,7 +11,8 @@ import { useAuth } from "../../AuthContext.jsx";
 
 export default function CreatedBooking({ car }) {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const location = useLocation();
+    const { user, isAuthenticated } = useAuth();
 
     const [booking, setBooking] = useState({
 
@@ -30,6 +31,22 @@ export default function CreatedBooking({ car }) {
     const [bookedSlots, setBookedSlots] = useState([]);
     const [isAvailable, setIsAvailable] = useState(null);
     const [availabilityMessage, setAvailabilityMessage] = useState("");
+
+    useEffect(() => {
+        const draft = location.state?.bookingDraft;
+
+        if (!draft) {
+            return;
+        }
+
+        setBooking((prev) => ({
+            ...prev,
+            ...draft,
+            pickup_location: draft.pickup_location || prev.pickup_location
+        }));
+        setStartValue(draft.start_date ? dayjs(draft.start_date) : null);
+        setEndValue(draft.end_date ? dayjs(draft.end_date) : null);
+    }, [location.state?.bookingDraft]);
 
     useEffect(() => {
         if (car?.location) {
@@ -158,6 +175,16 @@ export default function CreatedBooking({ car }) {
 
         if (new Date(booking.start_date) >= new Date(booking.end_date)) {
             alert("Ngày trả phải sau ngày nhận.");
+            return;
+        }
+
+        if (!isAuthenticated) {
+            navigate("/login", {
+                state: {
+                    from: `/booking/${car.id}`,
+                    bookingDraft: booking
+                }
+            });
             return;
         }
 

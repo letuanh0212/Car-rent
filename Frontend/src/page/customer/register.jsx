@@ -15,9 +15,13 @@ import {
     VisibilityOff
 } from "@mui/icons-material";
 
+import { useLocation, useNavigate } from "react-router-dom";
+
 import customerService from "../../services/customerService.js";
 
 export default function Register() {
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const [formData, setFormData] = useState({
         full_name: "",
@@ -60,7 +64,10 @@ export default function Register() {
             await customerService.register(payload);
 
             alert("Register success");
-            window.location.href = "/login";
+            navigate("/login", {
+                replace: true,
+                state: location.state
+            });
 
         } catch (error) {
             alert(error.response?.data?.message || "Register failed");
@@ -230,7 +237,9 @@ export default function Register() {
 
                         <Button
                             type="button"
-                            onClick={() => window.location.href = "/login"}
+                            onClick={() => navigate("/login", {
+                                state: location.state
+                            })}
                             variant="outlined"
                             sx={{
                                 py: 1.3,
