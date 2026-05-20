@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useCallback, useEffect } from 'react';
-import instance from "./api/api.js";
+import instance from "../api/api.js";
 import accountSystemService from './services/accountSystemService.js';
 import customerService from './services/customerService.js';
 
