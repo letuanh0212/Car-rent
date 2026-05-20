@@ -611,7 +611,7 @@ export default function CustomerBooking() {
                                                     }}
                                                     onClick={() =>
                                                         navigate(
-                                                            `/booking/${booking.bk_id}`
+                                                            `/my-bookings/${booking.bk_id}`
                                                         )
                                                     }
                                                 >

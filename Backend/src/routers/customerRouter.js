@@ -5,6 +5,8 @@ import authMiddleware from "../middleware/customerMiddleware.js";
 
 router.post('/register', customerController.registerCustomerController);
 router.post('/login', customerController.loginCustomerController);
+router.post('/refresh-token', customerController.refreshTokenController);
+router.post('/refresh', customerController.refreshTokenController);
 
 router.get('/', authMiddleware, customerController.getAllCustomersController);
 router.get('/:id',authMiddleware, customerController.getCustomerByIdController);

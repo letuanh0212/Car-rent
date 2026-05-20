@@ -49,9 +49,19 @@ instance.interceptors.response.use(
                     response.data.data.accessToken;
 
                 localStorage.setItem(
-                    "accessToken",
+                    "customerAccessToken",
                     newAccessToken
                 );
+
+                const newRefreshToken =
+                    response.data.data.refreshToken;
+
+                if (newRefreshToken) {
+                    localStorage.setItem(
+                        "customerRefreshToken",
+                        newRefreshToken
+                    );
+                }
 
                 originalRequest.headers.Authorization =
                     `Bearer ${newAccessToken}`;
@@ -60,8 +70,8 @@ instance.interceptors.response.use(
 
             } catch (err) {
               
-                localStorage.removeItem("accessToken");
-                localStorage.removeItem("refreshToken");
+                localStorage.removeItem("customerAccessToken");
+                localStorage.removeItem("customerRefreshToken");
 
                 window.location.href = "/login";
             }

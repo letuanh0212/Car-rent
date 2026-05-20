@@ -20,6 +20,15 @@ const customerController = {
             res.status(400).json({ success: false, message: err.message });
         }
     },
+    async refreshTokenController(req, res) {
+        try {
+            const { refreshToken } = req.body;
+            const tokenData = await CustomerService.refreshAccessTokenService(refreshToken);
+            res.status(200).json({ success: true, data: tokenData });
+        } catch (err) {
+            res.status(401).json({ success: false, message: err.message });
+        }
+    },
     async getAllCustomersController(req, res) {
         try {
             const customers = await CustomerService.getAllCustomersService();

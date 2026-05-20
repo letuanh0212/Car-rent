@@ -1,6 +1,7 @@
 import CustomerRepository from "../models/customers.js";
 import bcrypt from "bcrypt";
 import dotenv from 'dotenv';
+import jwt from "jsonwebtoken";
 import { generateAccessToken, generateRefreshToken } from "../utils/generateToken.js";
 dotenv.config();
 const CustomerService = {
@@ -45,6 +46,24 @@ const CustomerService = {
         return {
             accessToken,
             refreshToken
+        };
+    },
+    async refreshAccessTokenService(refreshToken) {
+        if (!refreshToken) {
+            throw new Error('NO_REFRESH_TOKEN');
+        }
+
+        const decoded = jwt.verify(
+            refreshToken,
+            process.env.JWT_REFRESH_SECRET
+        );
+
+        const accessToken = generateAccessToken(decoded);
+        const newRefreshToken = generateRefreshToken(decoded);
+
+        return {
+            accessToken,
+            refreshToken: newRefreshToken
         };
     },
     async getAllCustomersService() {

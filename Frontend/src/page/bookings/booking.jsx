@@ -10,21 +10,30 @@ export default function BookingPage() {
     const { id } = useParams();
 
     const [car, setCar] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
     useEffect(() => {
 
         const fetchCar = async () => {
 
             try {
+                setLoading(true);
+                setError("");
 
                 const response = await carService.getCarById(id);
 
-                setCar(response.data);
+                const carData = response.data || response;
+
+                setCar(carData);
 
             } catch (error) {
 
                 console.log(error);
+                setError("Không tìm thấy xe hoặc đường dẫn không đúng.");
 
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -32,11 +41,20 @@ export default function BookingPage() {
 
     }, [id]);
 
-    if (!car) {
+    if (loading) {
 
         return (
             <div className="p-10">
                 Loading...
+            </div>
+        );
+    }
+
+    if (error || !car) {
+
+        return (
+            <div className="p-10">
+                {error || "Không tìm thấy xe."}
             </div>
         );
     }
