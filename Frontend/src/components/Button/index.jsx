@@ -9,7 +9,7 @@ export default function Button({
     primary: "bg-black text-white hover:opacity-90",
     secondary: "bg-[#0058be] text-white hover:bg-[#2170e4]",
     ghost: "bg-transparent text-[#45464d] hover:text-[#0058be]",
-    outline: "border border-white/30 text-white hover:bg-white/10",
+    outline: "border border-black text-black hover:bg-black hover:text-white",
   };
 
   return (
