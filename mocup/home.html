@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LuxeDrive | Premium Mobility Solutions</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#271901",
+                        "on-tertiary-fixed-variant": "#574425",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-background": "#191c1e",
+                        "on-primary-fixed": "#131b2e",
+                        "primary-fixed": "#dae2fd",
+                        "primary": "#000000",
+                        "tertiary": "#000000",
+                        "surface-dim": "#d8dadc",
+                        "inverse-on-surface": "#eff1f3",
+                        "tertiary-container": "#271901",
+                        "tertiary-fixed": "#fcdeb5",
+                        "secondary-container": "#2170e4",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-surface": "#191c1e",
+                        "on-primary-container": "#7c839b",
+                        "surface-tint": "#565e74",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#eceef0",
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#131b2e",
+                        "secondary": "#0058be",
+                        "on-secondary-container": "#fefcff",
+                        "tertiary-fixed-dim": "#dec29a",
+                        "surface-bright": "#f7f9fb",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#98805d",
+                        "outline-variant": "#c6c6cd",
+                        "on-secondary-fixed-variant": "#004395",
+                        "surface-container-low": "#f2f4f6",
+                        "on-surface-variant": "#45464d",
+                        "inverse-primary": "#bec6e0",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#001a42",
+                        "inverse-surface": "#2d3133",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "background": "#f7f9fb",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#bec6e0",
+                        "secondary-fixed": "#d8e2ff",
+                        "surface": "#f7f9fb",
+                        "outline": "#76777d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "margin-desktop": "32px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-interaction:active { transform: scale(0.95); transition: transform 0.1s; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="fixed top-0 z-50 w-full bg-surface-container-lowest shadow-sm h-16 flex items-center">
+<div class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-headline-md font-headline-md font-bold text-primary">LuxeDrive</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-secondary border-b-2 border-secondary font-bold font-label-sm text-label-sm py-1" href="#">Browse Cars</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-200 font-label-sm text-label-sm py-1" href="#">Deals</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-200 font-label-sm text-label-sm py-1" href="#">About</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden md:block text-on-surface-variant font-label-sm text-label-sm hover:text-secondary transition-colors duration-200">Login</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-label-sm text-label-sm active-interaction">Register</button>
+</div>
+</div>
+</header>
+<main class="pt-16">
+<!-- Hero Section -->
+<section class="relative h-[870px] flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover brightness-[0.7]" data-alt="A side view of a sleek, dark metallic grey luxury sports car parked in a minimalist, modern concrete architectural setting during the golden hour. The lighting is soft and directional, highlighting the car's aerodynamic curves and polished surfaces. The atmosphere is quiet, elite, and exudes a sense of high-end mobility and precision engineering." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDY0WKqJ4GbXA4VjkmlveZwYPdNeFWqZuUX2RZihKGaDsrVfnE2IIiV_UzhZXvGUKrODaAxWMR0TfAJYgI2XaGL0S01HvUMRIMGyWV675OAkGnn4nsd8FTuuav9qmLEbqIQYE1uj3HryD_E42dhvZ09RA3Ci1_l4AxQk0NioB7bjR-s-CFUhFBPmhs4UO_UCqHTfk3Q7QFbzUCCbKrw4qGrAn7XHM4_5U5yK4ym4v9A-TCczS8DGizgK_TWYL7tuep7uVIqpjolCC8"/>
+</div>
+<div class="relative z-10 w-full max-w-container-max px-margin-desktop text-center md:text-left flex flex-col items-center">
+<div class="max-w-2xl text-center">
+<h1 class="font-headline-xl text-headline-xl text-white mb-6 leading-tight">Elite Travel, <br/>Tailored for You.</h1>
+<p class="text-body-lg font-body-lg text-white/90 mb-10 max-w-lg">Experience the pinnacle of automotive excellence with LuxeDrive's curated collection of premium vehicles.</p>
+</div>
+<!-- Search Bar Glass Box -->
+</div>
+</section><section class="bg-surface-container-low py-12 -mt-20 relative z-20">
+<div class="px-margin-desktop max-w-container-max mx-auto">
+<div class="glass-card p-6 md:p-8 rounded-xl shadow-2xl w-full">
+<form class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2"><span class="material-symbols-outlined text-base">search</span> FIND YOUR CAR</label>
+<input class="w-full bg-surface-container-low border-outline-variant rounded-lg p-3 text-body-md focus:ring-2 focus:ring-secondary focus:border-transparent outline-none" placeholder="Enter brand or model (e.g. Tesla, BMW)" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-base">calendar_today</span> START DATE
+                    </label>
+<input class="w-full bg-surface-container-low border-outline-variant rounded-lg p-3 text-body-md focus:ring-2 focus:ring-secondary focus:border-transparent outline-none" type="date"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-base">calendar_month</span> END DATE
+                    </label>
+<input class="w-full bg-surface-container-low border-outline-variant rounded-lg p-3 text-body-md focus:ring-2 focus:ring-secondary focus:border-transparent outline-none" type="date"/>
+</div>
+<button class="bg-secondary text-on-secondary h-[52px] rounded-lg font-label-sm text-label-sm uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-secondary/90 transition-all active-interaction">
+                    Search Fleet
+                </button>
+</form>
+</div>
+</div>
+</section>
+<!-- Why Choose Us - Bento Layout -->
+<!-- Featured Cars Grid -->
+<section class="bg-surface-container-lowest py-24">
+<div class="px-margin-desktop max-w-container-max mx-auto">
+<div class="flex justify-between items-end mb-12">
+<div>
+<h2 class="font-headline-lg text-headline-lg mb-2">Featured Selection</h2>
+<p class="text-on-surface-variant">Our most requested vehicles of the season.</p>
+</div>
+<a class="text-secondary font-label-sm text-label-sm flex items-center gap-1 hover:underline" href="#">
+                        View Full Fleet <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Car Card 1 -->
+<div class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 translate-y-0 hover:-translate-y-2">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A clean, studio shot of a white Mercedes-Benz S-Class with black leather interior visible through the glass. The car is lit from above with professional studio lighting that emphasizes its long, elegant body and chrome details. The background is a soft, neutral grey, maintaining a high-end corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDP83FRJpzCq3URZO6t2FnRedguNRVPy8QZu1URgBC0rRRPUDrOcYuRbwv-l2RiagwoJgPHk575kZ2qOkuSscHaZvkzL6toru7hLzqAzyI2XX44gBdFR6P1UnRTrvN0aI7b-ybqgRvjKOeW_GWpnFBiw1SJ3ZQ17vR4m59hXEt6f0A6d06ZJDkVvifhm9ZeHWTgLAS96pHNkpemloHg3P44R9F4EwDS2XKHTHnBY8X1RdoUBp5HJb7tIztWIDZ1ITzy49Opoc_DEjI"/>
+<span class="absolute top-4 left-4 bg-emerald-500/10 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold backdrop-blur-md">AVAILABLE</span>
+</div>
+<div class="p-6">
+<h3 class="font-headline-md text-headline-md mb-2">Mercedes-Benz S-Class</h3>
+<div class="flex gap-4 mb-6 text-on-surface-variant text-sm">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-lg">settings</span> Auto</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-lg">person</span> 5 Seats</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-lg">local_gas_station</span> Hybrid</span>
+</div>
+<div class="flex justify-between items-center border-t border-outline-variant pt-4">
+<div class="text-secondary font-bold text-lg">$249<span class="text-on-surface-variant font-normal text-sm">/day</span></div>
+<button class="bg-primary text-on-primary px-5 py-2 rounded-lg font-label-sm text-label-sm active-interaction">Book Now</button>
+</div>
+</div>
+</div>
+<!-- Car Card 2 -->
+<div class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 translate-y-0 hover:-translate-y-2">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A polished black BMW 5 Series driving through a modern urban business district at twilight. The city lights create beautiful reflections on the car's glossy dark surface. The image captures motion with a slight blur in the background, conveying speed, luxury, and the lifestyle of a modern executive." src="https://lh3.googleusercontent.com/aida-public/AB6AXuARPQ_voHbsosvr4-i9MU0NAXAWZY7F7Yp9gQY60obBvyKvvPB_leGeOG3L3yYGzoUkcdLTi-oh5RjrHjPqXSnjWBx5QfKE2166Tr4xKmttyzHygI-1uXKGCsLUc0_HrFzFtD7-FtbvSKNQbYZTYrOiF2gMgpH7_kg4rdTfkZT_ID_ELHT7USwdCfiRyKvqVr2ova_tRI_DyMvDUIBVkYc_L0OBthUx5YaobEucRREUOMkhuGKp_7oglB6atCSt-Bj3oMjZm15DKQ8"/>
+</div>
+<div class="p-6">
+<h3 class="font-headline-md text-headline-md mb-2">BMW 5 Series</h3>
+<div class="flex gap-4 mb-6 text-on-surface-variant text-sm">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-lg">settings</span> Auto</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-lg">person</span> 5 Seats</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-lg">local_gas_station</span> Diesel</span>
+</div>
+<div class="flex justify-between items-center border-t border-outline-variant pt-4">
+<div class="text-secondary font-bold text-lg">$189<span class="text-on-surface-variant font-normal text-sm">/day</span></div>
+<button class="bg-primary text-on-primary px-5 py-2 rounded-lg font-label-sm text-label-sm active-interaction">Book Now</button>
+</div>
+</div>
+</div>
+<!-- Car Card 3 -->
+<div class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 translate-y-0 hover:-translate-y-2">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A vivid red Tesla Model S charging at a modern, clean supercharger station. The scene is bright and airy with high-key lighting, emphasizing the car's futuristic design and sustainable energy theme. The aesthetic is clean, minimalist, and technologically forward-thinking." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2fDN1Wpx7ASa1qqWSfhdC2qp5qrTu1hysrxKho90LT0KX8Afq28v-G54ekUEwSF5qhwHMnCCjtIm_Huh9UIKmWHqxS7umND4u3xqP1Vj3MB54WgGEuFk5PCkeiMIEJP3urr1S4Btj1fwMJ_tqC0VGCZ0QlTOOt7HwWKrzx6btYqbkFE7Ie6BYHlIZU0T_B-aapZu6HSHDe3Lx1B52Cp6xdn9Uc7mP2gyNNRmxV2YzyS5C-EtbOdwd8QAr8C5QS8amXJOPB9JcNcw"/>
+</div>
+<div class="p-6">
+<h3 class="font-headline-md text-headline-md mb-2">Tesla Model S</h3>
+<div class="flex gap-4 mb-6 text-on-surface-variant text-sm">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-lg">settings</span> Auto</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-lg">person</span> 5 Seats</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-lg">bolt</span> Electric</span>
+</div>
+<div class="flex justify-between items-center border-t border-outline-variant pt-4">
+<div class="text-secondary font-bold text-lg">$219<span class="text-on-surface-variant font-normal text-sm">/day</span></div>
+<button class="bg-primary text-on-primary px-5 py-2 rounded-lg font-label-sm text-label-sm active-interaction">Book Now</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Registration -->
+<section class="relative py-24 overflow-hidden">
+<div class="absolute inset-0 z-0">
+<div class="w-full h-full bg-primary"></div>
+<div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 2px 2px, #ffffff 1px, transparent 0); background-size: 40px 40px;"></div>
+</div>
+<div class="relative z-10 px-margin-desktop max-w-container-max mx-auto text-center">
+<h2 class="font-headline-xl text-headline-xl text-white mb-6">Ready to Drive Excellence?</h2>
+<p class="text-body-lg font-body-lg text-white/80 mb-10 max-w-2xl mx-auto">Join the LuxeDrive circle today and unlock exclusive benefits, early access to new fleet additions, and personalized concierge services.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<button class="bg-secondary text-on-secondary px-10 py-4 rounded-lg font-label-sm text-label-sm uppercase tracking-widest active-interaction shadow-lg">Register Now</button>
+<button class="border border-white/30 text-white px-10 py-4 rounded-lg font-label-sm text-label-sm uppercase tracking-widest hover:bg-white/10 transition-colors active-interaction">Contact Sales</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-dim border-t border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop py-12 max-w-container-max mx-auto">
+<div class="flex flex-col gap-4">
+<span class="font-headline-md text-headline-md font-bold text-primary">LuxeDrive</span>
+<p class="text-on-surface-variant font-body-md text-body-md">Premium mobility reimagined for the modern world. Precision, power, and prestige in every mile.</p>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-on-surface">Experience</h4>
+<ul class="flex flex-col gap-3">
+<li class=""><a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Browse Cars</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Fleet Locations</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Corporate Sales</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-on-surface">Support</h4>
+<ul class="flex flex-col gap-3">
+<li class=""><a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Contact Us</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Help Center</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Privacy Policy</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-on-surface">Newsletter</h4>
+<p class="text-on-surface-variant text-label-sm mb-4">Subscribe for exclusive offers.</p>
+<div class="flex gap-2">
+<input class="bg-surface-container-low border-outline-variant rounded p-2 text-sm w-full outline-none" placeholder="Email Address" type="email"/>
+<button class="bg-primary text-on-primary p-2 rounded material-symbols-outlined">send</button>
+</div>
+</div>
+</div>
+<div class="border-t border-outline-variant/30 py-6 text-center text-on-surface-variant font-label-sm text-label-sm">
+            © 2024 LuxeDrive Premium Mobility. All rights reserved.
+        </div>
+</footer>
+<script>
+        // Simple micro-interaction for navbar transparency shift
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('shadow-md');
+                header.classList.remove('shadow-sm');
+            } else {
+                header.classList.remove('shadow-md');
+                header.classList.add('shadow-sm');
+            }
+        });
+
+        // Initialize Material Symbols animations if needed
+        document.querySelectorAll('.active-interaction').forEach(el => {
+            el.addEventListener('mousedown', () => el.style.transform = 'scale(0.97)');
+            el.addEventListener('mouseup', () => el.style.transform = 'scale(1)');
+            el.addEventListener('mouseleave', () => el.style.transform = 'scale(1)');
+        });
+    </script>
+</body></html>

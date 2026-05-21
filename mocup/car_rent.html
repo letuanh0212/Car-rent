@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#271901",
+                        "on-tertiary-fixed-variant": "#574425",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-background": "#191c1e",
+                        "on-primary-fixed": "#131b2e",
+                        "primary-fixed": "#dae2fd",
+                        "primary": "#000000",
+                        "tertiary": "#000000",
+                        "surface-dim": "#d8dadc",
+                        "inverse-on-surface": "#eff1f3",
+                        "tertiary-container": "#271901",
+                        "tertiary-fixed": "#fcdeb5",
+                        "secondary-container": "#2170e4",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-surface": "#191c1e",
+                        "on-primary-container": "#7c839b",
+                        "surface-tint": "#565e74",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#eceef0",
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#131b2e",
+                        "secondary": "#0058be",
+                        "on-secondary-container": "#fefcff",
+                        "tertiary-fixed-dim": "#dec29a",
+                        "surface-bright": "#f7f9fb",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#98805d",
+                        "outline-variant": "#c6c6cd",
+                        "on-secondary-fixed-variant": "#004395",
+                        "surface-container-low": "#f2f4f6",
+                        "on-surface-variant": "#45464d",
+                        "inverse-primary": "#bec6e0",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#001a42",
+                        "inverse-surface": "#2d3133",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "background": "#f7f9fb",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#bec6e0",
+                        "secondary-fixed": "#d8e2ff",
+                        "surface": "#f7f9fb",
+                        "outline": "#76777d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "margin-desktop": "32px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- TopNavBar -->
+<nav class="bg-surface-container-lowest dark:bg-inverse-surface shadow-sm dark:shadow-none sticky top-0 z-50 transition-all duration-300">
+<div class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-16">
+<div class="text-headline-md font-headline-md font-bold text-primary dark:text-primary-fixed">LuxeDrive</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Browse Cars</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Deals</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">About</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden sm:block text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors">Login</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-label-sm text-label-sm hover:scale-105 active:scale-95 transition-all">Register</button>
+<button class="md:hidden flex items-center">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8 md:py-16">
+<!-- Breadcrumbs -->
+<nav class="mb-8 flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<a class="hover:text-primary transition-colors" href="#">Fleet</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Electric</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-primary font-bold">Tesla Model S Plaid</span>
+</nav>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<!-- Left Side: Gallery & Info -->
+<div class="lg:col-span-8 space-y-12">
+<!-- Gallery Section -->
+<section class="space-y-4">
+<div class="relative aspect-[16/9] w-full overflow-hidden rounded-xl shadow-lg group">
+<img alt="Tesla Model S Plaid" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A professional studio photograph of a Tesla Model S Plaid in deep crimson red. The car is positioned at a three-quarter angle on a polished black surface with soft, diffused top-down lighting creating elegant highlights on the sleek aerodynamic body. The atmosphere is luxurious and high-tech, emphasizing the car's premium status and clean lines against a dark, minimalist background." id="main-gallery-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIucoGcISQc5GSCGFWOSCFlPicwyD5ytNtQxNoh2DVu11vc2hKnp-PHwLRgibCyWGF3VPx3Qau6XUoF87t90IjE0hRrLtdHki0X2Ky7Q5DFDa2ki6OJdim3ysQWBbg7k4xyZ0ySt-TEk4B3cX6F9sXf0afHUAH091jGxDQWukBXkQDuN_GvIqf25fWD-nidxRsVotH7DoAMjr6a_zqHFJMSiWVm_JaiSFFxGFMqWhGuHXL4Lhy2x1j3xgOnUgkfo_e_C_xvURwfd8"/>
+<div class="absolute top-4 left-4">
+<span class="bg-emerald-500/90 text-white px-4 py-1 rounded-full text-label-sm font-label-sm backdrop-blur-md">Available</span>
+</div>
+</div>
+<div class="flex gap-4 overflow-x-auto hide-scrollbar py-2">
+<button class="relative min-w-[120px] aspect-video rounded-lg overflow-hidden border-2 border-primary ring-2 ring-primary ring-offset-2 transition-all" onclick="updateGallery(this.children[0].src)">
+<img class="w-full h-full object-cover" data-alt="Close up detail of the Tesla Model S Plaid front headlight and sleek aerodynamic hood. The lighting is moody and dramatic, focusing on the precision of the manufacturing and the deep metallic paint texture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWp6Yd21B5T0tzBBoqwY-GQ6VOpZJwuvbHmhduFbRp8gLTqXSOMkmqC7o7CdwDtryFsntr9_XXCSoDDgEuzZvUH5X8ebXoRdujX1h2RPHnaVC2iiPdCofTuxiAvM6VM-k30A59rLrCkqwgGQnCOwBb5v_r4lXTCujOW8VSBctcUvG_nPHBESuWGCy_DTjpm8bxzMF_yQM0vG98w_q5p-QmmbCZn3Dmt0lleqPi0QY5BFf8IrJ-CMlhCgzT9v-PRbtneZ4F389_clU"/>
+</button>
+<button class="relative min-w-[120px] aspect-video rounded-lg overflow-hidden border-2 border-transparent hover:border-outline-variant transition-all" onclick="updateGallery(this.children[0].src)">
+<img class="w-full h-full object-cover" data-alt="Interior view of the Tesla Model S featuring the futuristic yoke steering wheel and the massive central infotainment screen. The cabin is minimalist with white leather seating and carbon fiber accents, bathed in bright, natural daylight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAM1sz2RcTw-gfH_trZQdynN_ibKetOiUlfx0fkjT9GjvYbRsDx8XsuErAU6fT8sF4qMLcsv7frka7RdYec9M69s6cu9FofxzQOfHw2v6UvzJ0ZAS2KF394WO1YH_4FFeAme3QQfn42rgUDWRr-IEJLMV-JFu3fkmUJz2Q_DBaBDMl3EP8wH6iMrN7ey51LRVTll9qyH3DFOtNacdZ7n6GEBKYGpXG2XjCDnV4iFcha5BXrh_ZEiMvAgUEN2mtfVBAMqIwuuZ_3jdw"/>
+</button>
+<button class="relative min-w-[120px] aspect-video rounded-lg overflow-hidden border-2 border-transparent hover:border-outline-variant transition-all" onclick="updateGallery(this.children[0].src)">
+<img class="w-full h-full object-cover" data-alt="The rear profile of a red Tesla Model S showcasing the integrated spoiler and signature taillight design. The shot is taken during the golden hour, with warm sunlight reflecting off the chrome accents and glass roof." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzHOYYSRYWmWqV1eS_Gc-r6mtkFfvZxyecVe1kqt6tHs7QArQOP2Wv1AW-mneFuyKPXS49izw4lwa8Emr_ZS_v8TxraDwNGtwT43Jpuy_wrAFwAMIs4ZlynnZ6feWlSNCPwbmh89ppsNfPlGATGZa8-r2wJ12kD0fL84tT2CHhU7tQADGfM7AQgbV-giruHCFcQDUC5omeXZO9Hg3nb2_xRaCYIhhvJCrUNxMhdXw-tMm70Qb9T87oNoKnzoZLX85Nm9lLeVYpkDw"/>
+</button>
+<button class="relative min-w-[120px] aspect-video rounded-lg overflow-hidden border-2 border-transparent hover:border-outline-variant transition-all" onclick="updateGallery(this.children[0].src)">
+<img class="w-full h-full object-cover" data-alt="Close up of the large multi-spoke alloy wheels on a Tesla, showing the performance brakes and the intricate design of the rims. The car is parked on a clean concrete surface in a modern architectural setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkz8JqEI-UkdzQ9LwhaEUeJozBrOhwCSufDWEXRJ77uGHbQxIusXfzG_w5RMa9Zuq__GGt9tZfswd81-8I4qoEOePqBXuy9V9cWD5t0IkhnS-meqO0H24fn11tUB-ZfEyIn_E8xnoiDIxmROJx_jk5y5xvtJ_MBsTECCY40ilUIYr9VOEFsl9zbT6-U5AWDhpixYh6RnYMgUsKnzZyhqsdn8X--No5ekemj35dunPRD480fv0LNU28PNaU89-Z-Ao0np-dPfADNjg"/>
+</button>
+</div>
+</section>
+<!-- Vehicle Info Grid -->
+<section class="space-y-6">
+<div>
+<h1 class="font-headline-xl text-headline-xl text-primary mb-2">Tesla Model S Plaid</h1>
+<p class="text-on-surface-variant font-body-lg text-body-lg">The pinnacle of electric performance and luxury.</p>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+<div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/30 flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-secondary mb-2" style="font-size: 32px;">speed</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">Engine</span>
+<span class="text-primary font-bold">Tri-Motor</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/30 flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-secondary mb-2" style="font-size: 32px;">settings_suggest</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">Transmission</span>
+<span class="text-primary font-bold">Automatic</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/30 flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-secondary mb-2" style="font-size: 32px;">event</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">Year</span>
+<span class="text-primary font-bold">2024</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/30 flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-secondary mb-2" style="font-size: 32px;">ev_station</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">Fuel Type</span>
+<span class="text-primary font-bold">Electric</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/30 flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-secondary mb-2" style="font-size: 32px;">airline_seat_recline_extra</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">Seats</span>
+<span class="text-primary font-bold">5 Adults</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/30 flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-secondary mb-2" style="font-size: 32px;">bolt</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">Horsepower</span>
+<span class="text-primary font-bold">1,020 hp</span>
+</div>
+</div>
+</section>
+<!-- Description -->
+<section class="prose prose-slate max-w-none">
+<h3 class="font-headline-md text-headline-md text-primary mb-4">The Ultimate Driving Experience</h3>
+<p class="text-on-surface-variant font-body-md text-body-md leading-relaxed">
+                        The Tesla Model S Plaid is designed for speed and endurance, featuring a tri-motor setup that delivers over 1,000 horsepower and an estimated 396 miles of range. Whether you're cruising through city streets or embarking on a cross-country adventure, the Plaid offers unparalleled performance, comfort, and safety.
+                    </p>
+<p class="text-on-surface-variant font-body-md text-body-md mt-4 leading-relaxed">
+                        Inside, you'll find a world-class cabin featuring a 17-inch cinematic display, a premium 22-speaker audio system, and enough storage space for your entire group's luggage. This isn't just a car; it's a glimpse into the future of automotive excellence.
+                    </p>
+<div class="mt-8 flex flex-wrap gap-2">
+<span class="bg-surface-container-highest text-on-surface-variant px-4 py-1 rounded-full text-label-sm font-label-sm">Autopilot</span>
+<span class="bg-surface-container-highest text-on-surface-variant px-4 py-1 rounded-full text-label-sm font-label-sm">Supercharging</span>
+<span class="bg-surface-container-highest text-on-surface-variant px-4 py-1 rounded-full text-label-sm font-label-sm">Ludicrous Mode</span>
+<span class="bg-surface-container-highest text-on-surface-variant px-4 py-1 rounded-full text-label-sm font-label-sm">Premium Sound</span>
+</div>
+</section>
+</div>
+<!-- Right Side: Booking Widget -->
+<aside class="lg:col-span-4 lg:sticky lg:top-24">
+<div class="bg-white rounded-2xl shadow-[0px_8px_32px_rgba(0,0,0,0.08)] border border-outline-variant/20 p-6 md:p-8 space-y-6">
+<div class="flex justify-between items-end">
+<div>
+<span class="text-secondary font-headline-md text-headline-md font-bold">$299</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm"> / day</span>
+</div>
+<div class="flex items-center text-emerald-600 font-bold">
+<span class="material-symbols-outlined text-sm mr-1" data-weight="fill">star</span>
+<span>4.9 (128 reviews)</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Check-in Date &amp; Time</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">calendar_today</span>
+<input class="w-full pl-10 pr-4 py-3 rounded-lg border-outline-variant focus:border-secondary focus:ring-1 focus:ring-secondary transition-all outline-none bg-surface-bright" id="checkin" type="datetime-local" value="2024-05-01T10:00"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Check-out Date &amp; Time</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">calendar_today</span>
+<input class="w-full pl-10 pr-4 py-3 rounded-lg border-outline-variant focus:border-secondary focus:ring-1 focus:ring-secondary transition-all outline-none bg-surface-bright" id="checkout" type="datetime-local" value="2024-05-04T10:00"/>
+</div>
+</div>
+</div>
+<div class="pt-6 border-t border-outline-variant/30 space-y-3" id="price-breakdown">
+<div class="flex justify-between text-on-surface-variant">
+<span class="font-body-md text-body-md">$299 x <span id="days-count">3</span> days</span>
+<span class="font-body-md text-body-md" id="subtotal">$897</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span class="font-body-md text-body-md">Insurance &amp; Fees</span>
+<span class="font-body-md text-body-md">$45</span>
+</div>
+<div class="flex justify-between text-primary font-bold pt-2">
+<span class="font-headline-md text-headline-md">Total</span>
+<span class="font-headline-md text-headline-md" id="total-price">$942</span>
+</div>
+</div>
+<button class="w-full bg-secondary hover:bg-secondary/90 text-white py-4 rounded-xl font-headline-md text-headline-md font-bold transition-all transform active:scale-[0.98] shadow-lg shadow-secondary/20">
+                        Rent This Car
+                    </button>
+<p class="text-center text-on-surface-variant text-label-sm font-label-sm">
+                        You won't be charged yet.
+                    </p>
+</div>
+<!-- Assistance Card -->
+<div class="mt-6 flex items-center gap-4 p-4 rounded-xl bg-surface-container-low border border-outline-variant/20">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-primary-fixed">
+<img class="w-full h-full object-cover" data-alt="A professional portrait of a concierge service agent in a clean business environment. The lighting is soft and professional, showing a helpful and trustworthy demeanor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJPSl01B7nXfuGMwB6C68PB9JacJRgbOzmx_OqIpbXhHDLCxLX1zfucwJHTe68G3cklcXyuqdV6nYHJDr5ZzYTwgwiMGg74CgKPzan0a2DBYUm5gna1wedOe_hZ5T-2SWqD5B58xwhQtHg2S07W1nIJnWlMQKkAji_FGDZspkk3AyGSYCYmX20GoQWmiSNvlZuB6Iz0F-t-nCGFCdNmi7AbJs3QedGqf_dTgEmn0xVGC-EjbP_pe5EoOwpW_TZRo7CGnryb-sxr4I"/>
+</div>
+<div>
+<p class="text-primary font-bold font-label-sm text-label-sm">Need Help?</p>
+<p class="text-on-surface-variant font-label-sm text-label-sm">Chat with our luxury concierge</p>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-dim dark:bg-inverse-surface border-t border-outline-variant mt-24">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop py-12 max-w-container-max mx-auto">
+<div class="space-y-4">
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">LuxeDrive</div>
+<p class="text-on-surface-variant font-body-md text-body-md">Redefining premium mobility through technology and elite service standards.</p>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="font-label-sm text-label-sm font-bold text-primary">Quick Links</h4>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors" href="#">Contact Us</a>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="font-label-sm text-label-sm font-bold text-primary">Fleet</h4>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors" href="#">Fleet Locations</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors" href="#">Corporate Sales</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors" href="#">Luxury SUVs</a>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="font-label-sm text-label-sm font-bold text-primary">Connect</h4>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer hover:scale-110 transition-transform">public</span>
+<span class="material-symbols-outlined text-primary cursor-pointer hover:scale-110 transition-transform">share</span>
+<span class="material-symbols-outlined text-primary cursor-pointer hover:scale-110 transition-transform">mail</span>
+</div>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-desktop py-6 border-t border-outline-variant/30 text-on-surface-variant font-label-sm text-label-sm">
+            © 2024 LuxeDrive Premium Mobility. All rights reserved.
+        </div>
+</footer>
+<script>
+        function updateGallery(src) {
+            const mainImg = document.getElementById('main-gallery-img');
+            mainImg.style.opacity = '0.5';
+            
+            // Highlight selected thumbnail
+            const thumbs = document.querySelectorAll('.hide-scrollbar button');
+            thumbs.forEach(btn => {
+                btn.classList.remove('border-primary', 'ring-2', 'ring-primary', 'ring-offset-2');
+                btn.classList.add('border-transparent');
+            });
+            
+            event.currentTarget.classList.remove('border-transparent');
+            event.currentTarget.classList.add('border-primary', 'ring-2', 'ring-primary', 'ring-offset-2');
+
+            setTimeout(() => {
+                mainImg.src = src;
+                mainImg.style.opacity = '1';
+            }, 150);
+        }
+
+        function calculatePrice() {
+            const checkin = new Date(document.getElementById('checkin').value);
+            const checkout = new Date(document.getElementById('checkout').value);
+            const dailyRate = 299;
+            const fees = 45;
+
+            if (checkout > checkin) {
+                const diffTime = Math.abs(checkout - checkin);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                document.getElementById('days-count').innerText = diffDays;
+                const subtotal = diffDays * dailyRate;
+                document.getElementById('subtotal').innerText = '$' + subtotal;
+                document.getElementById('total-price').innerText = '$' + (subtotal + fees);
+            }
+        }
+
+        document.getElementById('checkin').addEventListener('change', calculatePrice);
+        document.getElementById('checkout').addEventListener('change', calculatePrice);
+    </script>
+</body></html>
