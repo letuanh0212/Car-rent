@@ -3,6 +3,7 @@ import PublicLayout from './components/Layout/publicLayout';
 import Car from '~/pages/Car';
 import LoginPage from '~/pages/authCustomers/LoginPage';
 import RegisterPage from '~/pages/authCustomers/RegisterPage';
+import CarDetailPage from '~/pages/Car/_id';
 function App() {
     return (
             <Routes>
@@ -10,6 +11,7 @@ function App() {
                     <Route path="/" element={<Car />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/cars/:id" element={<CarDetailPage />} />
                 </Route>
                 
             </Routes>

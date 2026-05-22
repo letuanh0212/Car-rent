@@ -1,21 +1,35 @@
 import { useState } from "react";
-import authApi from "~/apis/authCustomer";
+
+import { useDispatch } from "react-redux";
+
+import authApi from "~/apis/customer/authCustomer";
+
+import { loginSuccess } from "~/store/slices/authSlice";
 
 export default function useCustomerLogin() {
+  const dispatch = useDispatch();
+
   const [loading, setLoading] = useState(false);
+
   const [error, setError] = useState("");
 
   const login = async (formData) => {
     try {
       setLoading(true);
+
       setError("");
 
       const response =
         await authApi.loginAccountSystem(formData);
 
-      localStorage.setItem(
-        "CustomerAccessToken",
-        response.accessToken
+      dispatch(
+        loginSuccess({
+          accessToken: response.accessToken,
+
+          refreshToken: response.refreshToken,
+
+          authType: "customer",
+        })
       );
 
       return response;

@@ -1,733 +1,1071 @@
-# Frontend Source Architecture
+# Frontend Src Architecture
 
-Dựa trên 3 mockup:
+Tài liệu này được viết lại theo trạng thái hiện tại của `Frontend/src`.
 
-- `mocup/home.html`
-- `mocup/car_rent.html`
-- `mocup/carDtail.html`
+Mục tiêu:
 
-Frontend nên đi theo hướng **Hybrid Layer-based + Component-driven React Architecture**.
+- Ghi lại architecture thực tế đang có trong source.
+- So sánh với architecture đề xuất ban đầu.
+- Chỉ ra những điểm đã khác, điểm còn thiếu, và hướng nên chỉnh tiếp.
 
-Nghĩa là:
+## 1. Tổng quan hiện tại
 
-- Chia folder theo layer trách nhiệm.
-- UI dùng component tái sử dụng.
-- Page chia theo domain nghiệp vụ.
-- Layout tách khỏi page.
-- Config, API, state, hook, utility tách riêng.
+Frontend hiện tại là React SPA dùng:
 
-## Source Structure
+- Vite
+- React
+- React Router
+- Redux Toolkit
+- React Redux
+- Axios
+- Tailwind CSS v4
+- CSS variables trong `theme.css`
+
+Entry chính:
+
+```txt
+src/main.jsx
+  -> Redux Provider
+  -> BrowserRouter
+  -> App
+```
+
+Router hiện tại nằm trực tiếp trong:
+
+```txt
+src/App.jsx
+```
+
+Store Redux hiện tại nằm trong:
+
+```txt
+src/store/
+```
+
+Layout hiện tại nằm trong:
+
+```txt
+src/components/Layout/
+```
+
+Không còn folder `contexts/` trong `src` hiện tại. Auth state đang đi theo Redux, không còn đi theo AuthContext.
+
+## 2. Cấu trúc `src` hiện tại
 
 ```txt
 src/
   apis/
+    Client/
+      axiosAccountClient.js
+      axiosCusClient.js
+    authAccountSystem.js
+    authCustomer.js
+    car.js
+
   components/
-  config/
-  contexts/
-  hooks/
-  layouts/
-  pages/
-  routes/
-  stores/
-  styles/
-  types/
-  utils/
-```
-
-## Ý Nghĩa Từng Folder
-
-### `apis/`
-
-Chứa hàm gọi backend, chia theo domain nghiệp vụ.
-
-Với dự án LuxeDrive, folder này nên chứa:
-
-```txt
-apis/
-  client.js
-  authApi.js
-  vehicleApi.js
-  bookingApi.js
-  customerApi.js
-  reviewApi.js
-  favoriteApi.js
-  notificationApi.js
-```
-
-Ý nghĩa:
-
-- `client.js`: cấu hình Axios instance, base URL, token, refresh token.
-- `authApi.js`: login, register, logout, refresh token.
-- `vehicleApi.js`: lấy danh sách xe, chi tiết xe, loại xe, ảnh xe.
-- `bookingApi.js`: tạo booking, tính giá thuê, lịch sử booking.
-- `customerApi.js`: thông tin profile khách hàng.
-- `reviewApi.js`: đánh giá xe.
-- `favoriteApi.js`: lưu xe yêu thích.
-- `notificationApi.js`: thông báo người dùng.
-
-Ví dụ domain từ mockup:
-
-- Trang `home.html` cần API lấy featured cars.
-- Trang `car_rent.html` cần API lấy danh sách xe và filter.
-- Trang `carDtail.html` cần API lấy chi tiết xe, gallery, recommendation, booking price.
-
-### `components/`
-
-Chứa component dùng lại, không gắn với một page cụ thể.
-
-Nên tổ chức theo component-driven:
-
-```txt
-components/
-  common/
-    Breadcrumbs/
     Badge/
     Button/
-    FormField/
-    IconButton/
-    PriceText/
-  layout/
-    LuxeNavbar/
-    LuxeFooter/
-  vehicle/
-    CarCard/
-    VehicleGallery/
-    VehicleSpecs/
-    BookingCard/
-    RecommendationCard/
-    FilterPanel/
-    SearchFleetForm/
-```
-
-Ý nghĩa:
-
-- `common/`: UI generic dùng ở nhiều nơi.
-- `layout/`: navbar, footer, navigation UI.
-- `vehicle/`: component dùng lại trong domain xe.
-
-Component lấy ra từ mockup:
-
-- `LuxeNavbar`: xuất hiện ở cả 3 trang.
-- `LuxeFooter`: xuất hiện ở cả 3 trang.
-- `Breadcrumbs`: xuất hiện ở trang chi tiết xe.
-- `CarCard`: xuất hiện ở home featured cars và fleet listing.
-- `SearchFleetForm`: xuất hiện ở home.
-- `FilterPanel`: phù hợp với trang `car_rent.html`.
-- `VehicleGallery`: xuất hiện ở trang chi tiết xe.
-- `VehicleSpecs`: engine, transmission, year, fuel type, seats, horsepower.
-- `BookingCard`: widget đặt xe bên phải trang detail.
-- `RecommendationCard`: phần "You might also like".
-
-Mỗi component reusable nên có dạng:
-
-```txt
-CarCard/
-  CarCard.jsx
-  index.js
-```
-
-Khi cần mở rộng production:
-
-```txt
-CarCard/
-  CarCard.jsx
-  CarCard.module.css
-  CarCard.test.jsx
-  index.js
-```
-
-### `config/`
-
-Chứa menu, access rule, constant app-level.
-
-Nên có:
-
-```txt
-config/
-  api/
-    endpoints.js
-    index.js
-  navigation.js
-  routes.js
-  vehicleFilters.js
-  luxeDriveCatalog.js
-```
-
-Ý nghĩa:
-
-- `api/endpoints.js`: base URL, endpoint path.
-- `navigation.js`: menu Browse Cars, Deals, About.
-- `routes.js`: path route dùng chung.
-- `vehicleFilters.js`: option filter như brand, type, fuel, transmission, price.
-- `luxeDriveCatalog.js`: mock data hoặc config tạm khi chưa nối backend.
-
-Từ mockup có các config rõ:
-
-- Navigation: `Browse Cars`, `Deals`, `About`.
-- Filter xe: brand/model, start date, end date, fuel type, seat count.
-- Route: `/`, `/car-rent`, `/car-detail`.
-
-### `contexts/`
-
-Chứa React Provider cấp app như theme, locale, tenant.
-
-Nên có:
-
-```txt
-contexts/
-  AuthContext.jsx
-  ThemeContext.jsx
-  LocaleContext.jsx
-```
-
-Ý nghĩa:
-
-- `AuthContext.jsx`: trạng thái đăng nhập, user hiện tại, role.
-- `ThemeContext.jsx`: light/dark theme nếu app cần đổi theme.
-- `LocaleContext.jsx`: ngôn ngữ, tiền tệ, format ngày.
-
-Với LuxeDrive, `AuthContext` phù hợp vì navbar có `Login`, `Register`, sau này cần đổi thành avatar/user menu.
-
-### `hooks/`
-
-Chứa custom hook dùng lại.
-
-Nên có:
-
-```txt
-hooks/
-  useAuth.js
-  useVehicles.js
-  useVehicleDetail.js
-  useBookingPrice.js
-  useDebounce.js
-  useScrollHeader.js
-```
-
-Ý nghĩa:
-
-- `useAuth.js`: lấy user, login state, logout.
-- `useVehicles.js`: lấy danh sách xe theo filter.
-- `useVehicleDetail.js`: lấy chi tiết xe theo id.
-- `useBookingPrice.js`: tính số ngày thuê, subtotal, fee, total.
-- `useDebounce.js`: debounce keyword search.
-- `useScrollHeader.js`: xử lý navbar đổi shadow khi scroll như trong `home.html`.
-
-Logic từ mockup nên đưa vào hook:
-
-- Tính giá thuê theo ngày trong detail page.
-- Đổi ảnh gallery active.
-- Search/filter xe.
-- Navbar shadow khi scroll.
-
-### `layouts/`
-
-Chứa shell lớn như public layout, private layout, auth layout, sidebar, topbar.
-
-Nên có:
-
-```txt
-layouts/
-  PublicLayout.jsx
-  PrivateLayout.jsx
-  AuthLayout.jsx
-  AdminLayout.jsx
-  MainLayouts.jsx
-```
-
-Ý nghĩa:
-
-- `PublicLayout.jsx`: layout cho home, fleet, car detail. Gồm navbar, outlet, footer.
-- `PrivateLayout.jsx`: layout cho user đã đăng nhập.
-- `AuthLayout.jsx`: layout cho login/register.
-- `AdminLayout.jsx`: layout dashboard admin.
-- `MainLayouts.jsx`: file alias hoặc layout tổng nếu dự án đang dùng tên này.
-
-Với 3 mockup hiện tại, layout chính là:
-
-```txt
-PublicLayout
-  LuxeNavbar
-  Outlet
-  LuxeFooter
-```
-
-Header/Footer không nên đặt trực tiếp trong `layouts/`. Chúng là reusable UI shell component, nên để trong:
-
-```txt
-components/layout/
-  LuxeNavbar/
-  LuxeFooter/
-```
-
-### `pages/`
-
-Chứa màn hình theo feature/domain.
-
-Nên có:
-
-```txt
-pages/
-  home/
-    HomePage.jsx
-    components/
-      HeroSearch.jsx
-      FeaturedCars.jsx
-      RegisterCta.jsx
-  vehicles/
-    VehicleListPage.jsx
-    VehicleDetailPage.jsx
-    components/
-      VehicleListToolbar.jsx
-      VehicleResultSummary.jsx
-  bookings/
-    BookingPage.jsx
-    BookingHistoryPage.jsx
-  auth/
-    LoginPage.jsx
-    RegisterPage.jsx
-  profile/
-    ProfilePage.jsx
-```
-
-Mapping từ mockup:
-
-- `home.html` -> `pages/home/HomePage.jsx`
-- `car_rent.html` -> `pages/vehicles/VehicleListPage.jsx`
-- `carDtail.html` -> `pages/vehicles/VehicleDetailPage.jsx`
-
-Quy tắc:
-
-- Component chỉ dùng riêng cho một page thì để trong `pages/<domain>/components/`.
-- Component dùng lại nhiều page thì đưa lên `components/`.
-
-Ví dụ:
-
-- `HeroSearch` chỉ dùng home -> `pages/home/components/HeroSearch.jsx`
-- `CarCard` dùng ở home và vehicle list -> `components/vehicle/CarCard/`
-- `BookingCard` dùng ở vehicle detail và có thể booking flow -> `components/vehicle/BookingCard/`
-
-### `routes/`
-
-Chứa router, lazy route, guard, redirect.
-
-Nên có:
-
-```txt
-routes/
-  AppRoutes.jsx
-  routePaths.js
-  guards/
-    PrivateRoute.jsx
-    AdminRoute.jsx
-```
-
-Ý nghĩa:
-
-- `AppRoutes.jsx`: khai báo toàn bộ route.
-- `routePaths.js`: constant path.
-- `PrivateRoute.jsx`: guard user đã đăng nhập.
-- `AdminRoute.jsx`: guard admin.
-
-Route nên map như sau:
-
-```txt
-/             -> HomePage
-/car-rent     -> VehicleListPage
-/car-detail   -> VehicleDetailPage
-/login        -> LoginPage
-/register     -> RegisterPage
-/profile      -> ProfilePage
-/bookings     -> BookingHistoryPage
-```
-
-Với production nên dùng dynamic route:
-
-```txt
-/vehicles
-/vehicles/:vehicleId
-```
-
-Thay cho:
-
-```txt
-/car-rent
-/car-detail
-```
-
-### `stores/`
-
-Chứa client state bằng Zustand hoặc store tương đương.
-
-Nên có:
-
-```txt
-stores/
-  authStore.js
-  vehicleFilterStore.js
-  bookingStore.js
-  favoriteStore.js
-```
-
-Ý nghĩa:
-
-- `authStore.js`: access token, user, role.
-- `vehicleFilterStore.js`: keyword, date range, fuel type, seats, price range.
-- `bookingStore.js`: booking draft, pickup/dropoff date, total price.
-- `favoriteStore.js`: danh sách xe yêu thích.
-
-Không phải state nào cũng đưa vào store.
-
-Nên để local state nếu:
-
-- Active image trong gallery.
-- Input tạm trong form.
-- Toggle nhỏ trong một component.
-
-Nên đưa vào store nếu:
-
-- Nhiều page cùng dùng.
-- Cần giữ state khi chuyển route.
-- Là trạng thái nghiệp vụ quan trọng.
-
-### `styles/`
-
-Chứa theme token, global CSS, style wrapper dùng chung.
-
-Nên có:
-
-```txt
-styles/
-  globals.css
-  theme.css
-  layout.css
-  components.css
-  DESIGN_SYSTEM.md
-```
-
-Ý nghĩa:
-
-- `globals.css`: reset, body, base class.
-- `theme.css`: CSS variables cho màu, spacing, typography.
-- `layout.css`: container, grid, shell.
-- `components.css`: class dùng chung cho button, badge, input, card.
-- `DESIGN_SYSTEM.md`: ghi lại token và rule thiết kế.
-
-Token lấy từ mockup:
-
-- Font: `Inter`.
-- Container max: `1280px`.
-- Desktop margin: `32px`.
-- Mobile margin: `16px`.
-- Gutter: `24px`.
-- Primary: black.
-- Secondary: blue `#0058be`.
-- Background: `#f7f9fb`.
-- Surface: white/light gray.
-- Border radius: `8px`, `12px`, full.
-
-Các class UI có thể chuẩn hóa:
-
-```txt
-btn
-btn-primary
-btn-secondary
-btn-outline
-badge
-input
-app-container
-headline-xl
-headline-lg
-headline-md
-body-lg
-body-md
-```
-
-### `types/`
-
-Chứa TypeScript type/interface dùng chung.
-
-Dự án hiện tại đang dùng JSX, nhưng vẫn nên có folder này để chuẩn bị migrate TypeScript.
-
-Nên có:
-
-```txt
-types/
-  auth.js
-  vehicle.js
-  booking.js
-  api.js
-```
-
-Nếu dùng TypeScript sau này:
-
-```txt
-types/
-  auth.ts
-  vehicle.ts
-  booking.ts
-  api.ts
-```
-
-Các type chính:
-
-```txt
-Vehicle
-VehicleImage
-VehicleSpec
-Booking
-Customer
-Review
-ApiResponse
-RouteConfig
-NavigationItem
-```
-
-Ví dụ `Vehicle` nên có:
-
-```txt
-id
-name
-brand
-model
-year
-category
-pricePerDay
-rating
-reviewCount
-fuelType
-transmission
-seatCount
-images
-features
-status
-```
-
-### `utils/`
-
-Chứa helper thuần logic, không phụ thuộc UI.
-
-Nên có:
-
-```txt
-utils/
-  date.js
-  currency.js
-  booking.js
-  vehicle.js
-  storage.js
-```
-
-Ý nghĩa:
-
-- `date.js`: format date, tính số ngày thuê.
-- `currency.js`: format VND/USD.
-- `booking.js`: calculate subtotal, fees, total.
-- `vehicle.js`: map status, normalize specs.
-- `storage.js`: đọc/ghi token localStorage an toàn.
-
-Logic từ mockup nên đưa vào utils:
-
-```txt
-daysBetween(startDate, endDate)
-calculateBookingTotal(pricePerDay, startDate, endDate, fees)
-formatCurrency(amount)
-getVehicleImageAlt(vehicle)
-```
-
-## Cấu Trúc Đề Xuất Cụ Thể Cho LuxeDrive
-
-```txt
-src/
-  apis/
-    client.js
-    authApi.js
-    vehicleApi.js
-    bookingApi.js
-
-  components/
-    common/
-      Breadcrumbs/
-      Badge/
-      Button/
-      FormField/
-      IconButton/
-    layout/
-      LuxeNavbar/
-      LuxeFooter/
-    vehicle/
-      CarCard/
-      FilterPanel/
-      SearchFleetForm/
-      VehicleGallery/
-      VehicleSpecs/
-      BookingCard/
-      RecommendationCard/
+    CardCar/
+    Form/
+    Inputs/
+    Layout/
 
   config/
-    api/
-      endpoints.js
-      index.js
-    navigation.js
-    routes.js
-    vehicleFilters.js
-    luxeDriveCatalog.js
-
-  contexts/
-    AuthContext.jsx
-    ThemeContext.jsx
+    carStatus.js
 
   hooks/
-    useAuth.js
-    useVehicles.js
-    useVehicleDetail.js
-    useBookingPrice.js
-    useScrollHeader.js
-
-  layouts/
-    PublicLayout.jsx
-    AuthLayout.jsx
-    PrivateLayout.jsx
-    AdminLayout.jsx
+    AuthCus/
+      useCustomerLogin.jsx
 
   pages/
-    home/
-      HomePage.jsx
-      components/
-        HeroSearch.jsx
-        FeaturedCars.jsx
-        RegisterCta.jsx
-    vehicles/
-      VehicleListPage.jsx
-      VehicleDetailPage.jsx
-      components/
-        VehicleListToolbar.jsx
-        VehicleResultSummary.jsx
-    auth/
+    authAccountSystem/
+      LoginPageSystem.jsx
+    authCustomers/
       LoginPage.jsx
       RegisterPage.jsx
-    bookings/
-      BookingHistoryPage.jsx
-    profile/
-      ProfilePage.jsx
+    Booking/
+      index.jsx
+      _id.jsx
+    Car/
+      index.jsx
+      _id.jsx
 
-  routes/
-    AppRoutes.jsx
-    routePaths.js
-    guards/
-      PrivateRoute.jsx
-      AdminRoute.jsx
-
-  stores/
-    authStore.js
-    vehicleFilterStore.js
-    bookingStore.js
-    favoriteStore.js
+  store/
+    index.js
+    slices/
+      authSlice.js
 
   styles/
     globals.css
     theme.css
-    DESIGN_SYSTEM.md
-
-  types/
-    auth.js
-    vehicle.js
-    booking.js
-    api.js
 
   utils/
-    date.js
     currency.js
-    booking.js
-    storage.js
+
+  App.jsx
+  main.jsx
 ```
 
-## Mapping Mockup Sang React
+## 3. Luồng render app
 
-### `home.html`
+### `main.jsx`
 
-Nên tách thành:
+`main.jsx` đang làm đúng vai trò entry point:
 
 ```txt
-pages/home/HomePage.jsx
-pages/home/components/HeroSearch.jsx
-pages/home/components/FeaturedCars.jsx
-pages/home/components/RegisterCta.jsx
-components/vehicle/CarCard/
-components/layout/LuxeNavbar/
-components/layout/LuxeFooter/
+createRoot
+  -> StrictMode
+  -> Provider store={store}
+  -> BrowserRouter
+  -> App
 ```
 
-### `car_rent.html`
+Điểm này đã khác với giai đoạn trước: Redux Provider hiện đã được bọc vào app.
 
-Nên tách thành:
+### `App.jsx`
+
+`App.jsx` đang khai báo route trực tiếp:
 
 ```txt
-pages/vehicles/VehicleListPage.jsx
-pages/vehicles/components/VehicleListToolbar.jsx
-pages/vehicles/components/VehicleResultSummary.jsx
-components/vehicle/SearchFleetForm/
-components/vehicle/FilterPanel/
-components/vehicle/CarCard/
-components/common/Badge/
+/
+  -> PublicLayout
+    -> /
+    -> /login
+    -> /register
 ```
 
-### `carDtail.html`
-
-Nên tách thành:
+Route hiện tại:
 
 ```txt
-pages/vehicles/VehicleDetailPage.jsx
-components/common/Breadcrumbs/
-components/vehicle/VehicleGallery/
-components/vehicle/VehicleSpecs/
-components/vehicle/BookingCard/
-components/vehicle/RecommendationCard/
-components/vehicle/CarCard/
-utils/booking.js
-utils/date.js
+/         -> pages/Car/index.jsx
+/login    -> pages/authCustomers/LoginPage.jsx
+/register -> pages/authCustomers/RegisterPage.jsx
 ```
 
-## Quy Tắc Đặt Component
+Các page `Booking`, `Car/_id`, `authAccountSystem/LoginPageSystem` đã có file nhưng chưa được nối route.
 
-Đặt trong `components/` nếu:
+## 4. Architecture theo layer hiện tại
 
-- Dùng lại ở nhiều page.
-- Không phụ thuộc route cụ thể.
-- Có props rõ ràng.
-- Có thể test độc lập.
+Hiện tại source đang đi theo kiểu:
 
-Đặt trong `pages/<domain>/components/` nếu:
+```txt
+Layer-based React Architecture
++ Component-driven UI
++ Redux auth state
+```
 
-- Chỉ phục vụ một page.
-- Gắn chặt với layout của page đó.
-- Không có nhu cầu dùng lại.
+Có thể gọi ngắn là:
 
-Ví dụ:
+```txt
+Layered React SPA with Redux Toolkit
+```
 
-- `CarCard` -> `components/vehicle/CarCard/`
-- `HeroSearch` -> `pages/home/components/HeroSearch.jsx`
-- `BookingCard` -> `components/vehicle/BookingCard/`
-- `VehicleListToolbar` -> `pages/vehicles/components/VehicleListToolbar.jsx`
+Các layer chính:
 
-## Kết Luận
+```txt
+main/App layer
+  -> khởi tạo Provider, Router, Routes
 
-Structure này phù hợp với:
+pages layer
+  -> màn hình theo domain
 
-- React SPA.
-- Booking system.
-- Car rental frontend.
-- SaaS/dashboard nhỏ và vừa.
-- Startup production frontend.
+components layer
+  -> UI tái sử dụng
 
-Tên architecture phù hợp nhất:
+hooks layer
+  -> logic UI gọi API và dispatch Redux
+
+apis layer
+  -> gọi backend qua axios instance
+
+store layer
+  -> global client state bằng Redux Toolkit
+
+config/utils/styles layer
+  -> constant, helper, theme, global style
+```
+
+## 5. Pages layer
+
+### `pages/Car/index.jsx`
+
+Đây đang là page chính cho route `/`.
+
+Vai trò:
+
+- Hiển thị danh sách xe.
+- Dùng mock data nội bộ `mockCars`.
+- Render danh sách bằng component `CardCar`.
+
+Hiện tại page này chưa gọi API thật.
+
+Luồng:
+
+```txt
+CarListPage
+  -> mockCars
+  -> CardCar
+```
+
+### `pages/Car/_id.jsx`
+
+File tồn tại nhưng đang trống.
+
+Dự kiến nên dùng cho trang chi tiết xe, ví dụ:
+
+```txt
+/cars/:id
+```
+
+### `pages/Booking/index.jsx`
+
+File tồn tại nhưng đang trống.
+
+Dự kiến nên dùng cho danh sách booking hoặc flow đặt xe.
+
+### `pages/Booking/_id.jsx`
+
+File tồn tại nhưng đang trống.
+
+Dự kiến nên dùng cho chi tiết booking.
+
+### `pages/authCustomers/LoginPage.jsx`
+
+Đây là trang login customer.
+
+Luồng hiện tại:
+
+```txt
+LoginPage
+  -> lấy email/password từ form
+  -> useCustomerLogin.login(data)
+  -> navigate("/")
+```
+
+Trang này dùng:
+
+- `InputWithIcon`
+- `InputField`
+- `Button`
+- `FormCard`
+- `FormActions`
+- `useCustomerLogin`
+- `useNavigate`
+
+### `pages/authCustomers/RegisterPage.jsx`
+
+Đây là UI register customer.
+
+Hiện tại:
+
+- Có form UI.
+- Chưa có submit handler.
+- Chưa gọi API register.
+- Chưa dispatch Redux.
+- Chưa validate confirm password.
+
+### `pages/authAccountSystem/LoginPageSystem.jsx`
+
+File tồn tại nhưng đang trống.
+
+Dự kiến dùng cho login admin/account/system.
+
+## 6. Components layer
+
+### `components/Layout`
+
+Hiện tại layout nằm trong `components/Layout`, không nằm trong folder `layouts`.
+
+```txt
+components/Layout/
+  publicLayout.jsx
+  privateLayout.jsx
+  AppBar/
+  Footer/
+```
+
+#### `publicLayout.jsx`
+
+Đang bọc:
+
+```txt
+AppBar
+Outlet
+Footer
+```
+
+Đây là public shell cho các route public.
+
+#### `privateLayout.jsx`
+
+File tồn tại nhưng đang trống.
+
+Dự kiến nên dùng cho route cần đăng nhập.
+
+#### `AppBar/index.jsx`
+
+AppBar hiện đã kết nối Redux:
+
+```txt
+useSelector(state.auth)
+useDispatch(logout)
+```
+
+Nếu chưa login:
+
+```txt
+Login
+Register
+```
+
+Nếu đã login:
+
+```txt
+avatar button
+profile menu
+my bookings
+logout
+```
+
+Logout hiện dispatch Redux action `logout()` rồi redirect về `/login`.
+
+#### `Footer/index.jsx`
+
+Footer là UI tĩnh, gồm:
+
+- Brand
+- Link groups
+- Newsletter form
+
+Một số link trong footer như `/cars`, `/locations`, `/corporate`, `/contact`, `/help`, `/privacy` hiện chưa có route.
+
+### `components/CardCar`
+
+`CardCar` là card hiển thị xe.
+
+Input:
+
+```txt
+car
+```
+
+Phụ thuộc:
+
+- `Button`
+- `Badge`
+- `carStatusLabel`
+- `carStatusVariant`
+- `formatCurrency`
+
+Hiển thị:
+
+- thumbnail
+- status
+- title
+- brand/model
+- year
+- transmission
+- seat count
+- fuel type
+- location
+- description
+- price per day
+- Book Now button
+
+Hiện tại `Book Now` chưa có handler hoặc link.
+
+### `components/Button`
+
+Button generic.
+
+Props chính:
+
+```txt
+variant
+fullWidth
+className
+children
+...props
+```
+
+Variant hiện có:
+
+```txt
+primary
+secondary
+ghost
+outline
+```
+
+### `components/Badge`
+
+Badge generic.
+
+Variant hiện có:
+
+```txt
+success
+warning
+error
+```
+
+### `components/Inputs`
+
+Hiện có:
+
+```txt
+Inputs/index.jsx
+Inputs/InputField.jsx
+Inputs/InputWithIcon.jsx
+```
+
+`Input` là input base.
+
+`InputField` bọc label và children.
+
+`InputWithIcon` bọc icon Material Symbols ở bên trái input.
+
+### `components/Form`
+
+Hiện có:
+
+```txt
+FormCard.jsx
+FormActions.jsx
+FormSection.jsx
+FormRow .jsx
+```
+
+Lưu ý: file `FormRow .jsx` có dấu cách trước `.jsx`. Nên đổi lại thành:
+
+```txt
+FormRow.jsx
+```
+
+để tránh lỗi import khó nhìn và lỗi đường dẫn trên môi trường khác.
+
+## 7. Hooks layer
+
+### `hooks/AuthCus/useCustomerLogin.jsx`
+
+Đây là hook login customer.
+
+Vai trò:
+
+- Quản lý `loading`.
+- Quản lý `error`.
+- Gọi API customer login.
+- Dispatch Redux `loginSuccess`.
+- Trả response cho page.
+
+Luồng hiện tại:
+
+```txt
+useCustomerLogin.login(formData)
+  -> authApi.loginAccountSystem(formData)
+  -> dispatch loginSuccess({
+       accessToken,
+       refreshToken,
+       authType: "customer"
+     })
+```
+
+Điểm đúng:
+
+- Hook đã dùng `useDispatch`.
+- Auth state được đưa về Redux.
+- Page không tự ghi localStorage nữa.
+
+Điểm cần sửa:
+
+- Tên API `loginAccountSystem` không đúng nghĩa customer.
+- Nên đổi thành `loginCustomer`.
+- Cần đảm bảo `response.accessToken` đúng với shape backend trả về.
+
+## 8. Store layer
+
+### `store/index.js`
+
+Store hiện tại:
+
+```txt
+auth -> authReducer
+```
+
+Đã export default store.
+
+### `store/slices/authSlice.js`
+
+Auth slice hiện tại quản lý:
+
+```txt
+token
+user
+authType
+isAuthenticated
+```
+
+Initial state đọc token từ localStorage:
+
+```txt
+customerAccessToken
+adminAccessToken
+```
+
+Action hiện có:
+
+```txt
+loginSuccess
+logout
+```
+
+`loginSuccess` nhận:
+
+```txt
+accessToken
+refreshToken
+authType
+```
+
+Nếu `authType === "customer"`:
+
+- Xóa account token.
+- Lưu customer token.
+
+Nếu `authType === "admin"`:
+
+- Xóa customer token.
+- Lưu account token.
+
+Điểm cần chú ý lớn:
+
+```txt
+initialState đọc adminAccessToken
+loginSuccess admin lại ghi accountAccessToken
+```
+
+Đây là lệch key.
+
+Bạn nên chọn một naming duy nhất:
+
+```txt
+customerAccessToken
+customerRefreshToken
+accountAccessToken
+accountRefreshToken
+```
+
+hoặc:
+
+```txt
+customerAccessToken
+customerRefreshToken
+adminAccessToken
+adminRefreshToken
+```
+
+Không nên đọc `adminAccessToken` nhưng ghi `accountAccessToken`.
+
+## 9. APIs layer
+
+### `apis/Client/axiosCusClient.js`
+
+Axios instance cho customer.
+
+Vai trò:
+
+- Base URL từ `VITE_API_BASE_URL`.
+- Gắn `Authorization: Bearer <customerAccessToken>`.
+- Khi gặp 401 thì thử refresh token qua `/customer/refresh-token`.
+- Nếu refresh fail thì xóa customer token và redirect `/login`.
+
+Response interceptor đang unwrap:
+
+```txt
+response -> response.data
+```
+
+Nghĩa là API wrapper dùng instance này không nên tiếp tục `return response.data`.
+
+### `apis/Client/axiosAccountClient.js`
+
+Axios instance cho account/admin.
+
+Vai trò:
+
+- Base URL từ `VITE_API_BASE_URL`.
+- Gắn `Authorization: Bearer <accountAccessToken>`.
+- Nếu 401 thì xóa account token và redirect `/account/login`.
+
+File này chưa có refresh token flow như customer.
+
+### `apis/authCustomer.js`
+
+Đang là API wrapper cho customer auth.
+
+Hiện tại có:
+
+```txt
+loginAccountSystem(formData)
+logout()
+register(formData)
+```
+
+Điểm cần sửa:
+
+- Đang import nhầm `axiosAccountClient`.
+- Nên import `axiosCusClient`.
+- Tên `loginAccountSystem` nên đổi thành `loginCustomer`.
+- Đang `return response.data` trong khi axios client có thể đã unwrap data.
+- `logout()` đang xóa `CustomerAccessToken`, sai key so với phần còn lại là `customerAccessToken`.
+
+### `apis/authAccountSystem.js`
+
+Đang là API wrapper cho account/admin auth.
+
+Hiện tại import:
+
+```js
+import AccountIntance from "./instance/AccountInstance";
+```
+
+Nhưng trong `src/apis` hiện tại không thấy folder:
+
+```txt
+apis/instance/
+```
+
+Trong source hiện tại chỉ có:
+
+```txt
+apis/Client/axiosAccountClient.js
+```
+
+Vậy file này có khả năng đang import sai đường dẫn. Nên dùng `axiosAccountClient`.
+
+### `apis/car.js`
+
+File hiện tại chưa hoàn thành, chỉ có:
+
+```js
+import
+```
+
+File này sẽ gây lỗi build nếu được import ở đâu đó.
+
+Hiện tại chưa thấy route/page nào import `apis/car.js`, nhưng vẫn nên hoàn thiện hoặc xóa nếu chưa dùng.
+
+## 10. Config layer
+
+### `config/carStatus.js`
+
+Đang map status xe sang label và badge variant.
+
+```txt
+available   -> Available    -> success
+rented      -> Rented       -> warning
+maintenance -> Maintenance  -> error
+```
+
+File này đang được `CardCar` dùng đúng vai trò.
+
+## 11. Utils layer
+
+### `utils/currency.js`
+
+Có helper:
+
+```txt
+formatCurrency(value)
+```
+
+Format tiền theo:
+
+```txt
+vi-VN
+VND
+maximumFractionDigits: 0
+```
+
+File này đang được `CardCar` dùng đúng vai trò.
+
+## 12. Styles layer
+
+### `styles/theme.css`
+
+Đang chứa CSS variables cho:
+
+- brand colors
+- background/surface colors
+- text colors
+- border colors
+- semantic colors
+- font
+- typography
+- layout spacing
+- radius
+- shadow
+- dark theme variables
+
+Đây là hướng tốt vì component có thể dùng token thay vì hard-code màu.
+
+### `styles/globals.css`
+
+Đang import:
+
+```css
+@import "tailwindcss";
+@import "./theme.css";
+```
+
+Và setup base:
+
+- box sizing
+- body font/background/color
+- reset link
+- form font inheritance
+- image max width
+
+Điểm cần chú ý:
+
+- Một số component vẫn đang hard-code màu như `#191c1e`, `#45464d`, `#0058be`.
+- Nếu muốn architecture style sạch hơn, nên dùng CSS variables thống nhất.
+
+## 13. So sánh với architecture ban đầu
+
+Architecture ban đầu trong doc cũ đề xuất:
 
 ```txt
 Hybrid Layer-based + Component-driven React Architecture
 ```
 
-Hoặc ngắn hơn:
+Về ý tưởng tổng thể, source hiện tại vẫn đi đúng hướng layer-based + component-driven, nhưng cấu trúc thực tế đã khác khá nhiều.
+
+### 13.1. Khác về folder
+
+Ban đầu đề xuất:
 
 ```txt
-Scalable Layered React SPA Architecture
+src/
+  apis/
+  components/
+  config/
+  contexts/
+  hooks/
+  layouts/
+  pages/
+  routes/
+  stores/
+  styles/
+  types/
+  utils/
 ```
+
+Hiện tại thực tế:
+
+```txt
+src/
+  apis/
+  components/
+  config/
+  hooks/
+  pages/
+  store/
+  styles/
+  utils/
+  App.jsx
+  main.jsx
+```
+
+Khác biệt chính:
+
+- Không có `contexts/`.
+- Không có `layouts/`; layout đang nằm trong `components/Layout`.
+- Không có `routes/`; route đang nằm trong `App.jsx`.
+- Không có `stores/`; hiện dùng `store/` số ít.
+- Không có `types/`.
+- Có `components/Form`, `components/Inputs`, `components/CardCar` thay vì chia `common/vehicle/layout`.
+
+### 13.2. Khác về state management
+
+Ban đầu doc cũ còn nghiêng về `contexts/AuthContext` hoặc `stores/authStore`.
+
+Hiện tại source đã chọn:
+
+```txt
+Redux Toolkit
+```
+
+Đây là thay đổi tốt nếu app sẽ có nhiều màn cần auth state.
+
+Nhưng cần thống nhất:
+
+- Redux là nguồn auth state chính.
+- Không thêm lại AuthContext nếu không có lý do rõ.
+- Token key phải đồng bộ giữa slice, axios và API wrapper.
+
+### 13.3. Khác về routes
+
+Ban đầu đề xuất tách route:
+
+```txt
+routes/AppRoutes.jsx
+routes/routePaths.js
+routes/guards/
+```
+
+Hiện tại:
+
+```txt
+App.jsx chứa Routes trực tiếp
+```
+
+Với app nhỏ thì chấp nhận được.
+
+Khi có thêm:
+
+- booking route
+- car detail route
+- profile route
+- account/admin route
+- private route
+
+thì nên tách `routes/`.
+
+### 13.4. Khác về page naming
+
+Ban đầu đề xuất domain lowercase:
+
+```txt
+pages/vehicles/
+pages/bookings/
+pages/auth/
+```
+
+Hiện tại:
+
+```txt
+pages/Car/
+pages/Booking/
+pages/authCustomers/
+pages/authAccountSystem/
+```
+
+Không sai, nhưng nên thống nhất style.
+
+Khuyến nghị:
+
+```txt
+pages/cars/
+pages/bookings/
+pages/authCustomers/
+pages/authAccountSystem/
+```
+
+hoặc:
+
+```txt
+pages/Car/
+pages/Booking/
+pages/AuthCustomers/
+pages/AuthAccountSystem/
+```
+
+Quan trọng là đừng trộn lowercase và PascalCase folder cho domain.
+
+### 13.5. Khác về components
+
+Ban đầu đề xuất:
+
+```txt
+components/common/
+components/layout/
+components/vehicle/
+```
+
+Hiện tại:
+
+```txt
+components/Button/
+components/Badge/
+components/CardCar/
+components/Form/
+components/Inputs/
+components/Layout/
+```
+
+Với project nhỏ, cách hiện tại dễ dùng.
+
+Khi component nhiều hơn, nên chuyển dần thành:
+
+```txt
+components/common/Button
+components/common/Badge
+components/common/Inputs
+components/common/Form
+components/layout/AppBar
+components/layout/Footer
+components/vehicle/CardCar
+```
+
+### 13.6. Khác về API layer
+
+Ban đầu đề xuất API theo domain rõ:
+
+```txt
+authApi.js
+vehicleApi.js
+bookingApi.js
+```
+
+Hiện tại:
+
+```txt
+authCustomer.js
+authAccountSystem.js
+car.js
+Client/axiosCusClient.js
+Client/axiosAccountClient.js
+```
+
+Hướng hiện tại có ưu điểm là tách customer auth và account auth.
+
+Nhưng còn lỗi naming/import:
+
+- `authCustomer` đang dùng account axios.
+- `authAccountSystem` import instance không tồn tại.
+- `car.js` chưa hoàn chỉnh.
+
+## 14. Các vấn đề architecture hiện tại cần sửa trước
+
+### Mức ưu tiên cao
+
+1. Đồng bộ token key trong `authSlice`, `axiosAccountClient`, `axiosCusClient`, `authCustomer`, `authAccountSystem`.
+2. Sửa `authCustomer.js` dùng `axiosCusClient`.
+3. Sửa `authAccountSystem.js` dùng đúng `axiosAccountClient`.
+4. Sửa `authCustomer.loginAccountSystem` thành `loginCustomer`.
+5. Sửa `return response.data` ở API wrapper nếu axios interceptor đã return `response.data`.
+6. Hoàn thiện hoặc xóa `apis/car.js` vì file đang dang dở.
+
+### Mức ưu tiên trung bình
+
+1. Tạo route cho `Booking`, `Car/_id`, `LoginPageSystem`.
+2. Tạo private route hoặc layout guard cho customer route.
+3. Hoàn thiện `privateLayout.jsx`.
+4. Hoàn thiện register customer flow.
+5. Thêm account/admin login hook riêng.
+6. Đổi `FormRow .jsx` thành `FormRow.jsx`.
+
+### Mức ưu tiên thấp
+
+1. Tách `routes/` khi số route tăng.
+2. Chuẩn hóa folder naming.
+3. Tách component theo `common/layout/vehicle` khi component nhiều.
+4. Giảm hard-code màu, dùng CSS variables nhiều hơn.
+5. Thêm selectors cho auth slice.
+
+## 15. Hướng architecture nên đi tiếp
+
+Vì source hiện tại đã dùng Redux, hướng nên giữ là:
+
+```txt
+React SPA
++ Layer-based folders
++ Redux Toolkit for global state
++ Axios clients by auth domain
++ Component-driven UI
+```
+
+Cấu trúc nên tiến hóa dần thành:
+
+```txt
+src/
+  apis/
+    Client/
+      axiosCusClient.js
+      axiosAccountClient.js
+    authCustomer.js
+    authAccountSystem.js
+    car.js
+    booking.js
+
+  components/
+    common/
+      Badge/
+      Button/
+      Form/
+      Inputs/
+    layout/
+      AppBar/
+      Footer/
+    vehicle/
+      CardCar/
+
+  config/
+    carStatus.js
+    routes.js
+
+  hooks/
+    AuthCus/
+      useCustomerLogin.jsx
+      useCustomerRegister.jsx
+    AuthAccount/
+      useAccountLogin.jsx
+
+  pages/
+    cars/
+      index.jsx
+      _id.jsx
+    bookings/
+      index.jsx
+      _id.jsx
+    authCustomers/
+      LoginPage.jsx
+      RegisterPage.jsx
+    authAccountSystem/
+      LoginPageSystem.jsx
+
+  routes/
+    AppRoutes.jsx
+    guards/
+      CustomerPrivateRoute.jsx
+      AccountPrivateRoute.jsx
+
+  store/
+    index.js
+    slices/
+      authSlice.js
+
+  styles/
+    globals.css
+    theme.css
+
+  utils/
+    currency.js
+    storage.js
+```
+
+Không cần refactor hết ngay. Nên làm theo thứ tự:
+
+```txt
+1. Sửa auth/API/token cho chạy đúng.
+2. Nối route còn thiếu.
+3. Hoàn thiện register, account login, private route.
+4. Sau đó mới dọn folder naming và tách routes.
+```
+
+## 16. Kết luận
+
+Architecture ban đầu và source hiện tại vẫn cùng hướng: layer-based và component-driven.
+
+Nhưng source hiện tại đã thay đổi ở các điểm quan trọng:
+
+- Auth chuyển sang Redux Toolkit.
+- Không còn Context.
+- Layout đặt trong `components/Layout` thay vì `layouts`.
+- Routes đặt trực tiếp trong `App.jsx` thay vì folder `routes`.
+- Store dùng `store/` số ít.
+- API tách customer/account nhưng còn sai import và sai naming.
+- Một số file page/API đã tạo nhưng chưa hoàn thiện.
+
+Vì vậy architecture hiện tại chưa sai hướng, nhưng đang ở trạng thái giữa chừng. Việc cần làm trước không phải refactor lớn, mà là đồng bộ auth flow, token key, axios client và route guard để nền app ổn định trước.

@@ -5,13 +5,15 @@ import Button from "~/components/Button";
 import FormCard from "~/components/Form/FormCard";
 import FormActions from "~/components/Form/FormActions";
 // import FormRow from "~/components/Form/FormRow";
-import UseCustomerLogin from "~/hooks/AuthCus/useAuthCus";
+import useCustomerLogin  from '~/hooks/AuthCus/useCustomerLogin';
+
 import {useNavigate} from "react-router-dom";
 
 export default function LoginPage() {
     const navigate = useNavigate();
-    const { login, loading, error } = UseCustomerLogin();
-    const handleLogin = async (e) => {
+    const { login, loading, error } = useCustomerLogin();
+    
+    const handleLogin = async (e) => { 
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = {
@@ -32,11 +34,13 @@ export default function LoginPage() {
         title="Login to Your Account"
         subtitle="Welcome back to LuxeDrive."
       >
-        <form className="flex flex-col gap-5">
+        <form className="flex flex-col gap-5"
+              onSubmit={handleLogin}>
           {/* Email */}
           <InputField label="Email">
             <InputWithIcon
               type="email"
+              name="email"
               placeholder="Enter your email"
               icon="email"
             />
@@ -46,14 +50,22 @@ export default function LoginPage() {
           <InputField label="Password">
             <InputWithIcon
               type="password"
+              name="password"
               placeholder="Enter your password"
               icon="lock"
             />
           </InputField>
-
+          {error && (
+            <p className="text-sm text-red-500">
+              {error}
+            </p>
+          )}
           {/* Forgot password */}
-          <div className="flex justify-end -mt-2" >
-            <Button variant="ghost">
+          <div className="flex justify-end -mt-2">
+            <Button
+              variant="ghost"
+              className="px-0 text-xs font-medium normal-case"
+            >
               Forgot Password?
             </Button>
           </div>
@@ -61,7 +73,7 @@ export default function LoginPage() {
           <FormActions>
             {/* Main login button */}
             <Button variant="outline" fullWidth>
-              loading ? "Logging in..." : "Login"
+                {loading ? "Logging in..." : "Login"}
             </Button>
             {/* Create account button */}
             <Button variant="outline" fullWidth onClick={() => navigate("/register")}>

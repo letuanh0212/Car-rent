@@ -12,7 +12,7 @@ export default function CardCar({ car }) {
   if (!car) return null;
 
   return (
-    <article className="overflow-hidden rounded-xl border border-black/10 bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl">
+    <article className="overflow-hidden rounded-xl border border-(--color-border) bg-(--color-surface-lowest) shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl">
       <div className="relative h-64 overflow-hidden">
         <img
           className="h-full w-full object-cover transition duration-700 hover:scale-110"
@@ -29,11 +29,11 @@ export default function CardCar({ car }) {
       </div>
 
       <div className="p-6">
-        <h3 className="mb-3 text-2xl font-semibold leading-8 text-[#191c1e]">
+        <h3 className="mb-3 text-2xl font-semibold leading-8 text-(--color-text-primary)">
           {car.title}
         </h3>
 
-        <div className="mb-6 flex flex-wrap gap-4 text-sm text-[#45464d]">
+        <div className="mb-6 flex flex-wrap gap-4 text-sm text-(--color-text-secondary)">
           <Meta icon="directions_car">
             {car.brand} {car.model}
           </Meta>
@@ -45,11 +45,11 @@ export default function CardCar({ car }) {
           </Meta>
 
           <Meta icon="airline_seat_recline_normal">
-            {car.seatCount} seats
+            {car.seat_count} seats
           </Meta>
 
           <Meta icon="local_gas_station">
-            {car.fuelType}
+            {car.fuel_type}
           </Meta>
 
           <Meta icon="location_on">
@@ -57,14 +57,14 @@ export default function CardCar({ car }) {
           </Meta>
         </div>
 
-        <p className="mb-6 text-base leading-6 text-[#45464d]">
+        <p className="mb-6 text-base leading-6 text-(--color-text-secondary)">
           {car.description}
         </p>
 
-        <div className="flex items-center justify-between gap-4 border-t border-[#c6c6cd] pt-4">
-          <p className="m-0 text-lg font-extrabold text-[#0058be]">
-            {formatCurrency(car.pricePerDay)}
-            <span className="text-sm font-normal text-[#45464d]">
+        <div className="flex items-center justify-between gap-4 border-t border-(--color-border) pt-4">
+          <p className="m-0 text-lg font-extrabold text-(--color-secondary)">
+            {formatCurrency(car.price_per_day)}
+            <span className="text-sm font-normal text-(--color-text-secondary)">
               /day
             </span>
           </p>

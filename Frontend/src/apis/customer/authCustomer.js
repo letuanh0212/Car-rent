@@ -1,4 +1,4 @@
-import customerInstance from "./Client/axiosAccountClient";
+import customerInstance from "../Client/axiosAccountClient";
 
 const authCustomer = {
 
