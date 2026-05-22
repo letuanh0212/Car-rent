@@ -2,48 +2,25 @@ import { useMemo, useState } from "react";
 
 import Button from "~/components/Button";
 import Input from "~/components/Inputs";
-
+import InputField from "~/components/Inputs/InputField";
 import { formatCurrency } from "~/utils/currency";
 
-const insuranceFee = 45000;
-
-function getDateValue(offsetDays = 0) {
-  const date = new Date();
-  date.setDate(date.getDate() + offsetDays);
-  date.setHours(10, 0, 0, 0);
-
-  return date.toISOString().slice(0, 16);
-}
-
-function calculateRentalDays(startDate, endDate) {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-
-  if (!startDate || !endDate || end <= start) {
-    return 1;
-  }
-
-  const diff = end.getTime() - start.getTime();
-
-  return Math.max(
-    1,
-    Math.ceil(diff / (1000 * 60 * 60 * 24))
-  );
-}
-
-export default function BookingWidget({
-  car,
-  onSubmit,
-}) {
+import {
+  getDateValue,
+  calculateRentalDays,
+  formatBookingDate,
+} from "~/utils/date";
+export default function BookingWidget({ car, onSubmit }) {
   const [checkIn, setCheckIn] = useState(getDateValue());
   const [checkOut, setCheckOut] = useState(getDateValue(1));
+  const [returnLocation, setReturnLocation] = useState("");
 
   const pricePerDay = Number(car?.price_per_day || 0);
 
   const priceSummary = useMemo(() => {
     const days = calculateRentalDays(checkIn, checkOut);
     const subtotal = days * pricePerDay;
-    const total = subtotal + insuranceFee;
+    const total = subtotal ;
 
     return {
       days,
@@ -58,13 +35,12 @@ export default function BookingWidget({
     event.preventDefault();
 
     onSubmit?.({
-      carId: car.id,
-      checkIn,
-      checkOut,
-      days: priceSummary.days,
-      subtotal: priceSummary.subtotal,
-      insuranceFee,
-      total: priceSummary.total,
+      listing_id: car.id,
+      start_date: formatBookingDate(checkIn),
+      end_date: formatBookingDate(checkOut),
+      pickup_location: car.location,
+      return_location: returnLocation,
+      total_price: priceSummary.total,
     });
   };
 
@@ -101,6 +77,32 @@ export default function BookingWidget({
             value={checkOut}
             onChange={setCheckOut}
           />
+
+          <InputField label="Pickup Location">
+            <Input
+              type="text"
+              value={car.location || ""}
+              disabled
+              className="bg-(--color-surface-lowest) text-(--color-text-secondary)"
+            />
+          </InputField>
+
+          <InputField label="Return Location">
+            <div className="relative">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-(--color-text-muted)">
+                location_on
+              </span>
+
+              <Input
+                type="text"
+                value={returnLocation}
+                onChange={(event) => setReturnLocation(event.target.value)}
+                placeholder="Enter return location"
+                className="pl-11"
+                required
+              />
+            </div>
+          </InputField>
         </div>
 
         <div className="space-y-3 border-t border-(--color-border) pt-6">
@@ -108,12 +110,6 @@ export default function BookingWidget({
             label={`${formatCurrency(pricePerDay)} x ${priceSummary.days} day`}
             value={formatCurrency(priceSummary.subtotal)}
           />
-
-          <PriceRow
-            label="Insurance & Fees"
-            value={formatCurrency(insuranceFee)}
-          />
-
           <div className="flex items-center justify-between pt-2 text-(--color-text-primary)">
             <span className="text-2xl font-bold">Total</span>
             <span className="text-2xl font-bold">
@@ -130,7 +126,6 @@ export default function BookingWidget({
         >
           Rent This Car
         </Button>
-
         <p className="text-center text-sm font-semibold text-(--color-text-secondary)">
           You will not be charged yet.
         </p>
@@ -139,11 +134,7 @@ export default function BookingWidget({
   );
 }
 
-function DateField({
-  label,
-  value,
-  onChange,
-}) {
+function DateField({ label, value, onChange }) {
   return (
     <label className="block space-y-2">
       <span className="text-sm font-semibold text-(--color-text-secondary)">
