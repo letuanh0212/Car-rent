@@ -4,12 +4,14 @@ import Button from "~/components/Button";
 import Input from "~/components/Inputs";
 import InputField from "~/components/Inputs/InputField";
 import { formatCurrency } from "~/utils/currency";
-
+import DateTimeField from "~/components/Inputs/DateTimeField";
 import {
   getDateValue,
-  calculateRentalDays,
   formatBookingDate,
 } from "~/utils/date";
+  
+import { calculateBookingPrice } from "~/utils/price";
+
 export default function BookingWidget({ car, onSubmit }) {
   const [checkIn, setCheckIn] = useState(getDateValue());
   const [checkOut, setCheckOut] = useState(getDateValue(1));
@@ -18,15 +20,11 @@ export default function BookingWidget({ car, onSubmit }) {
   const pricePerDay = Number(car?.price_per_day || 0);
 
   const priceSummary = useMemo(() => {
-    const days = calculateRentalDays(checkIn, checkOut);
-    const subtotal = days * pricePerDay;
-    const total = subtotal ;
-
-    return {
-      days,
-      subtotal,
-      total,
-    };
+    return calculateBookingPrice({
+      checkIn,
+      checkOut,
+      pricePerDay,
+    });
   }, [checkIn, checkOut, pricePerDay]);
 
   if (!car) return null;
@@ -66,16 +64,18 @@ export default function BookingWidget({ car, onSubmit }) {
         </div>
 
         <div className="space-y-4">
-          <DateField
+          <DateTimeField
             label="Check-in Date & Time"
             value={checkIn}
             onChange={setCheckIn}
+            min={getDateValue()}
           />
 
-          <DateField
+          <DateTimeField
             label="Check-out Date & Time"
             value={checkOut}
             onChange={setCheckOut}
+            min={checkIn}
           />
 
           <InputField label="Pickup Location">
@@ -131,29 +131,6 @@ export default function BookingWidget({ car, onSubmit }) {
         </p>
       </form>
     </aside>
-  );
-}
-
-function DateField({ label, value, onChange }) {
-  return (
-    <label className="block space-y-2">
-      <span className="text-sm font-semibold text-(--color-text-secondary)">
-        {label}
-      </span>
-
-      <div className="relative">
-        <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-(--color-text-muted)">
-          calendar_today
-        </span>
-
-        <Input
-          type="datetime-local"
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          className="pl-11"
-        />
-      </div>
-    </label>
   );
 }
 
