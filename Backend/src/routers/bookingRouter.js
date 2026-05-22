@@ -11,7 +11,8 @@ router.get("/:id", authMiddleware, bookingController.getBookingById);
 router.put("/:id", authMiddleware, bookingController.updateBooking);
 router.delete("/:id", authMiddleware, bookingController.deleteBooking);
 router.get("/", authMiddleware, bookingController.getAllBookings);
-router.post("/check-availability", authMiddleware, bookingController.checkCarAvailability);
+
+router.post("/check-availability",  bookingController.checkCarAvailability);
 
 
 export default router;

@@ -14,7 +14,7 @@ const customerToken = localStorage.getItem(
 );
 
 const adminToken = localStorage.getItem(
-  "adminAccessToken"
+  "accountAccessToken"
 );
 
 const token = customerToken || adminToken;

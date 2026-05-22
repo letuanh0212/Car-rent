@@ -42,7 +42,7 @@ const specs = [
     getValue: (car) => car.location,
   },
 ];
-
+import InfoBox from "../InfoBox";
 export default function DetailInfo({ car }) {
   if (!car) return null;
 
@@ -59,6 +59,24 @@ export default function DetailInfo({ car }) {
           </p>
         )}
       </section>
+
+        <div className="grid grid-cols-1 gap-4">
+            <InfoBox
+              title="Owner Information"
+              icon="person"
+              className="col-span-1"
+            >
+              <div className="flex items-center gap-3 text-gray-700">
+                <span className="material-symbols-outlined">badge</span>
+                <span className="font-medium">{car.owner_name || "N/A"}</span>
+              </div>
+
+              <div className="flex items-center gap-3 text-gray-700">
+                <span className="material-symbols-outlined">call</span>
+                <span className="font-medium">{car.owner_phone || "N/A"}</span>
+              </div>
+            </InfoBox>
+        </div>
 
       <section className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
         {specs.map((spec) => {

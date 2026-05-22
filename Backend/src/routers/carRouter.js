@@ -4,6 +4,8 @@ import CarController from "../controllers/carController.js";
 import CarImagesController from "../controllers/car_imagesController.js";
 import car_embeddingController from '../controllers/car_embedding_vdController.js';
 import authMiddleware from "../middleware/customerMiddleware.js";
+
+
 router.get('/',  CarController.getAllCarsController);
 router.get('/search', CarController.searchCarsController);
 

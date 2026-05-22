@@ -5,32 +5,46 @@ import Input from "~/components/Inputs";
 import InputField from "~/components/Inputs/InputField";
 import { formatCurrency } from "~/utils/currency";
 import DateTimeField from "~/components/Inputs/DateTimeField";
-import {
-  getDateValue,
-  formatBookingDate,
-} from "~/utils/date";
-  
+import {getDateValue,formatBookingDate} from "~/utils/date";
+import useCarAvailability from "~/store/slices/useCarAvailability";
 import { calculateBookingPrice } from "~/utils/price";
+import InfoBox from "../InfoBox";
+import { useSelector } from "react-redux";
 
 export default function BookingWidget({ car, onSubmit }) {
   const [checkIn, setCheckIn] = useState(getDateValue());
   const [checkOut, setCheckOut] = useState(getDateValue(1));
   const [returnLocation, setReturnLocation] = useState("");
 
-  const pricePerDay = Number(car?.price_per_day || 0);
+  const { user} = useSelector(
+    (state) => state.auth
+  );
 
-  const priceSummary = useMemo(() => {
-    return calculateBookingPrice({
+  const pricePerDay = Number(car?.price_per_day);
+  const {
+    isAvailable,
+      message: availabilityMessage,
+    } = useCarAvailability({
+      carId: car?.id,
       checkIn,
       checkOut,
-      pricePerDay,
     });
-  }, [checkIn, checkOut, pricePerDay]);
+    const priceSummary = useMemo(() => {
+      return calculateBookingPrice({
+        checkIn,
+        checkOut,
+        pricePerDay,
+      });
+    }, [checkIn, checkOut, pricePerDay]);
 
   if (!car) return null;
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (isAvailable === false) {
+      alert(availabilityMessage);
+      return;
+    }
 
     onSubmit?.({
       listing_id: car.id,
@@ -103,8 +117,24 @@ export default function BookingWidget({ car, onSubmit }) {
               />
             </div>
           </InputField>
-        </div>
+          <div className="grid grid-cols-1 gap-4">
+            <InfoBox
+              title="Information"
+              icon="person"
+              className="col-span-1"
+            >
+              <div className="flex items-center gap-3 text-gray-700">
+                <span className="material-symbols-outlined">badge</span>
+                <span className="font-medium">{user?.full_name || "N/A"}</span>
+              </div>
 
+              <div className="flex items-center gap-3 text-gray-700">
+                <span className="material-symbols-outlined">call</span>
+                <span className="font-medium">{user?.phone || "N/A"}</span>
+              </div>
+            </InfoBox>
+        </div>
+        </div>
         <div className="space-y-3 border-t border-(--color-border) pt-6">
           <PriceRow
             label={`${formatCurrency(pricePerDay)} x ${priceSummary.days} day`}
@@ -117,7 +147,12 @@ export default function BookingWidget({ car, onSubmit }) {
             </span>
           </div>
         </div>
-
+        { availabilityMessage && (
+          <p className="text-sm font-semibold text-red-600">
+            {availabilityMessage}
+          </p>
+        )
+        }
         <Button
           type="submit"
           variant="secondary"
