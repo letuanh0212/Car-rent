@@ -12,7 +12,7 @@ export default function CardCar({ car }) {
   if (!car) return null;
 
   return (
-    <article className="overflow-hidden rounded-xl border border-(--color-border) bg-(--color-surface-lowest) shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl">
+    <article className="flex h-full flex-col overflow-hidden rounded-xl border border-(--color-border) bg-(--color-surface-lowest) shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl">
       <div className="relative h-64 overflow-hidden">
         <img
           className="h-full w-full object-cover transition duration-700 hover:scale-110"
@@ -28,7 +28,7 @@ export default function CardCar({ car }) {
         </Badge>
       </div>
 
-      <div className="p-6">
+      <div className="flex flex-1 flex-col p-6">
         <h3 className="mb-3 text-2xl font-semibold leading-8 text-(--color-text-primary)">
           {car.title}
         </h3>

@@ -1,53 +1,38 @@
-import bookRepository from "../repositories/bookRepository.js";
+import bookRepository from "../models/booking.js";
+
 const BookService = {
     async createBook(data) {
-        try {
-            const newBook = await bookRepository.create(data);
-            return newBook;
-        } catch (err) {
-            throw err;
-        }
+        return await bookRepository.create(data);
     },
+
     async getAllBooks() {
-        try {
-            const books = await bookRepository.getAllBooks();
-            return books;
-        } catch (err) {
-            throw err;
-        }
+        return await bookRepository.getAllBookings();
     },
 
     async updateBook(id, data) {
-        try {
-            const updatedBook = await bookRepository.update(id, data);
-            return updatedBook;
-        } catch (err) {
-            throw err;
-        }
+        return await bookRepository.update(id, data);
     },
+
     async deleteBook(id) {
-        try {
-            await bookRepository.delete(id);
-            return;
-        } catch (err) {
-            throw err;
-        }
+        await bookRepository.delete(id);
+        return;
     },
+
     async getBookingsByUserId(user_id) {
-        try {
-            const bookings = await bookingRepository.getBookingsByUserId(user_id);
-            return bookings;
-        } catch (err) {
-            throw err;
-        }
+        return await bookRepository.getBookingsByUserId(user_id);
     },
+
     async checkAvailability(car_id, start_date, end_date) {
-        try{    
-            const isAvailable = await bookingRepository.checkCarAvailability(car_id, start_date, end_date);
-            return isAvailable;
-        } catch (err) {
-            throw err;
-        }
+        return await bookRepository.checkCarAvailability(
+            car_id,
+            start_date,
+            end_date
+        );
+    },
+
+    async getTopBookedCars(limit) {
+        return await bookRepository.getTopBooked(limit);
     },
 };
+
 export default BookService;
