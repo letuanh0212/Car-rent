@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import carApi from "~/apis/customer/carCustomer";
@@ -18,7 +18,7 @@ export default function useCars() {
     error,
   } = useSelector((state) => state.cars);
 
-  const fetchCars = async () => {
+  const fetchCars = useCallback(async () => {
     try {
       dispatch(setCarLoading(true));
 
@@ -36,11 +36,11 @@ export default function useCars() {
     } finally {
       dispatch(setCarLoading(false));
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     fetchCars();
-  }, []);
+  }, [fetchCars]);
 
   return {
     cars,

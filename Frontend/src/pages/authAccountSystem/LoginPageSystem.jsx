@@ -73,7 +73,7 @@ export default function LoginSystem() {
             </InputField>
 
             {error && (
-              <p className="text-sm text-red-500">
+              <p className="text-sm text-(--color-error)">
                 {error}
               </p>
             )}

@@ -8,7 +8,7 @@ export default function FormCard({
   return (
     <div
       className={[
-        "rounded-2xl bg-white p-8 shadow-xl",
+        "rounded-2xl bg-(--color-surface-lowest) p-8 shadow-(--shadow-xl)",
         className,
       ].join(" ")}
       {...props}
@@ -24,7 +24,7 @@ export default function FormCard({
           )}
 
           {subtitle && (
-            <p className="mt-2 text-sm text-[#76777d]">
+            <p className="mt-2 text-sm text-(--color-text-muted)">
               {subtitle}
             </p>
           )}

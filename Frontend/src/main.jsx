@@ -11,8 +11,6 @@ import "react-quill/dist/quill.snow.css";
 
 import "./styles/globals.css";
 
-import "~/styles/theme.css";
-
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>

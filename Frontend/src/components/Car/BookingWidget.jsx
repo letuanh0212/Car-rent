@@ -72,7 +72,7 @@ export default function BookingWidget({ car, onSubmit }) {
             </p>
           </div>
 
-          <div className="text-right text-sm font-bold text-emerald-600">
+          <div className="text-right text-sm font-bold text-(--color-success)">
             Available
           </div>
         </div>
@@ -123,12 +123,12 @@ export default function BookingWidget({ car, onSubmit }) {
               icon="person"
               className="col-span-1"
             >
-              <div className="flex items-center gap-3 text-gray-700">
+              <div className="flex items-center gap-3 text-(--color-text-secondary)">
                 <span className="material-symbols-outlined">badge</span>
                 <span className="font-medium">{user?.full_name || "N/A"}</span>
               </div>
 
-              <div className="flex items-center gap-3 text-gray-700">
+              <div className="flex items-center gap-3 text-(--color-text-secondary)">
                 <span className="material-symbols-outlined">call</span>
                 <span className="font-medium">{user?.phone || "N/A"}</span>
               </div>
@@ -148,7 +148,7 @@ export default function BookingWidget({ car, onSubmit }) {
           </div>
         </div>
         { availabilityMessage && (
-          <p className="text-sm font-semibold text-red-600">
+          <p className="text-sm font-semibold text-(--color-error)">
             {availabilityMessage}
           </p>
         )

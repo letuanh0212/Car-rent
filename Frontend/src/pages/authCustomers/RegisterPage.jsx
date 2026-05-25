@@ -16,7 +16,7 @@ export default function RegisterPage() {
   const { register, loading, error } = useCustomerRegister();
 
   const [formData, setFormData] = useState({
-    full_name: "",
+    fullname: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -40,7 +40,7 @@ export default function RegisterPage() {
 
     try {
       await register({
-        full_name: formData.fullName,
+        full_name: formData.full_name,
         email: formData.email,
         password: formData.password,
         phone: formData.phone,
@@ -53,7 +53,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#f5f5f7] px-4 pt-28 pb-10">
+    <div className="flex min-h-screen items-center justify-center bg-(--color-background) px-4 pt-28 pb-10">
       <FormCard
         title="Create an Account"
         subtitle="Join LuxeDrive today."
@@ -64,7 +64,7 @@ export default function RegisterPage() {
             <InputWithIcon
               type="text"
               name="fullName"
-              value={formData.fullName}
+              value={formData.full_name}
               onChange={handleChange}
               placeholder="Enter your full name"
               icon="person"

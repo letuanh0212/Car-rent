@@ -7,7 +7,7 @@ export default function FormSection({
   return (
     <section
       className={[
-        "border-t border-black/10 pt-8",
+        "border-t border-(--color-border) pt-8",
         className,
       ].join(" ")}
       {...props}

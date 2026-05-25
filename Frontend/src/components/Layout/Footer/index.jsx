@@ -4,14 +4,14 @@ import Input from "~/components/Inputs";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-[#c6c6cd] bg-[#d8dadc]">
+    <footer className="border-t border-(--color-border) bg-(--color-surface-dim)">
       <div className="mx-auto grid max-w-7xl  grid-cols-1 gap-6 px-8 py-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
-          <Link to="/" className="text-2xl font-extrabold text-black">
+          <Link to="/" className="text-2xl font-extrabold text-(--color-text-primary)">
             LuxeDrive
           </Link>
 
-          <p className="mt-4 max-w-xs text-base leading-6 text-[#45464d]">
+          <p className="mt-4 max-w-xs text-base leading-6 text-(--color-text-secondary)">
             Premium mobility reimagined for the modern world. Precision, power,
             and prestige in every mile.
           </p>
@@ -36,11 +36,11 @@ export default function Footer() {
         />
 
         <div>
-          <h4 className="mb-6 font-bold text-[#191c1e]">
+          <h4 className="mb-6 font-bold text-(--color-text-primary)">
             Newsletter
           </h4>
 
-          <p className="text-sm font-semibold text-[#45464d]">
+          <p className="text-sm font-semibold text-(--color-text-secondary)">
             Subscribe for exclusive offers.
           </p>
 
@@ -65,7 +65,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-[#c6c6cd]/40 py-6 text-center text-sm font-semibold text-[#45464d]">
+      <div className="border-t border-(--color-border) py-6 text-center text-sm font-semibold text-(--color-text-secondary)">
         © 2024 LuxeDrive Premium Mobility. All rights reserved.
       </div>
     </footer>
@@ -75,7 +75,7 @@ export default function Footer() {
 function FooterColumn({ title, links }) {
   return (
     <div>
-      <h4 className="mb-6 font-bold text-[#191c1e]">
+      <h4 className="mb-6 font-bold text-(--color-text-primary)">
         {title}
       </h4>
 
@@ -84,7 +84,7 @@ function FooterColumn({ title, links }) {
           <li key={link.to}>
             <Link
               to={link.to}
-              className="text-sm font-semibold text-[#45464d] transition hover:text-black"
+              className="text-sm font-semibold text-(--color-text-secondary) transition hover:text-(--color-text-primary)"
             >
               {link.label}
             </Link>

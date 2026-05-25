@@ -1,13 +1,10 @@
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
-
-const user = {
-  fullName: "Nguyen Van B",
-  email: "user@gmail.com",
-  phone: "0901234567",
-};
+import { useSelector } from "react-redux";
 
 export default function Profile() {
+   const { user } = useSelector((state) => state.auth);
+
   return (
     <section className="rounded-4xl bg-(--color-surface) p-6 shadow-(--shadow-lg) md:p-8">
       <div className="mb-8 flex flex-col gap-4 rounded-2xl bg-(--color-surface-lowest) p-6 shadow-(--shadow-sm) md:flex-row md:items-center md:justify-between">
@@ -61,7 +58,7 @@ export default function Profile() {
             <ProfileItem
               icon="person"
               label="Full Name"
-              value={user.fullName}
+              value={user.full_name}
             />
 
             <ProfileItem

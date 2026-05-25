@@ -29,7 +29,7 @@ export default function LoginPage() {
     };
 
     return (
-    <div className="flex min-h-screen items-center justify-center bg-[#f5f5f7] px-4">
+    <div className="flex min-h-screen items-center justify-center bg-(--color-background) px-4">
       <FormCard
         title="Login to Your Account"
         subtitle="Welcome back to LuxeDrive."
@@ -55,7 +55,7 @@ export default function LoginPage() {
             />
           </InputField>
           {error && (
-            <p className="text-sm text-red-500">
+            <p className="text-sm text-(--color-error)">
               {error}
             </p>
           )}

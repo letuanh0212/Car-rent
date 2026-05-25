@@ -6,7 +6,7 @@ export default function FormActions({
   return (
     <div
       className={[
-        "flex items-center justify-end gap-4 border-t border-black/10 pt-6",
+        "flex items-center justify-end gap-4 border-t border-(--color-border) pt-6",
         className,
       ].join(" ")}
       {...props}

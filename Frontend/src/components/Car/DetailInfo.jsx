@@ -66,12 +66,12 @@ export default function DetailInfo({ car }) {
               icon="person"
               className="col-span-1"
             >
-              <div className="flex items-center gap-3 text-gray-700">
+              <div className="flex items-center gap-3 text-(--color-text-secondary)">
                 <span className="material-symbols-outlined">badge</span>
                 <span className="font-medium">{car.owner_name || "N/A"}</span>
               </div>
 
-              <div className="flex items-center gap-3 text-gray-700">
+              <div className="flex items-center gap-3 text-(--color-text-secondary)">
                 <span className="material-symbols-outlined">call</span>
                 <span className="font-medium">{car.owner_phone || "N/A"}</span>
               </div>

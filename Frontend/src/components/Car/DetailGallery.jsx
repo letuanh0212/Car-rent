@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import Badge from "~/components/Badge";
 
@@ -25,11 +25,10 @@ export default function DetailGallery({ car }) {
     return [fallbackImage];
   }, [car]);
 
-  const [activeImage, setActiveImage] = useState(images[0]);
-
-  useEffect(() => {
-    setActiveImage(images[0]);
-  }, [images]);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const activeImage = images.includes(selectedImage)
+    ? selectedImage
+    : images[0];
 
   if (!car) return null;
 
@@ -59,7 +58,7 @@ export default function DetailGallery({ car }) {
               <button
                 key={image}
                 type="button"
-                onClick={() => setActiveImage(image)}
+                onClick={() => setSelectedImage(image)}
                 className={[
                   "relative aspect-video min-w-28 overflow-hidden rounded-lg border-2 transition",
                   isActive

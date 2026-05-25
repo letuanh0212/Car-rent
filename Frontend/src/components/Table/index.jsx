@@ -8,12 +8,12 @@ export default function Table({
   return (
     <div
       className={[
-        "overflow-x-auto rounded-2xl border border-[var(--color-border)]",
+        "overflow-x-auto rounded-2xl border border-(--color-border)",
         className,
       ].join(" ")}
     >
-      <table className="w-full min-w-[800px] text-left">
-        <thead className="bg-[var(--color-surface-low)]">
+      <table className="w-full min-w-200 text-left">
+        <thead className="bg-(--color-surface-low)">
           <tr>
             {columns.map((column) => (
               <th
@@ -21,7 +21,7 @@ export default function Table({
                 className="
                   px-4 py-4
                   text-sm font-semibold
-                  text-[var(--color-text-muted)]
+                  text-(--color-text-muted)
                 "
               >
                 {column.title}
@@ -33,7 +33,7 @@ export default function Table({
                 className="
                   px-4 py-4 text-right
                   text-sm font-semibold
-                  text-[var(--color-text-muted)]
+                  text-(--color-text-muted)
                 "
               >
                 Actions
@@ -42,7 +42,7 @@ export default function Table({
           </tr>
         </thead>
 
-        <tbody className="divide-y divide-[var(--color-border)]">
+        <tbody className="divide-y divide-(--color-border)">
           {data.length === 0 && (
             <tr>
               <td
@@ -53,7 +53,7 @@ export default function Table({
                 }
                 className="
                   px-4 py-10 text-center
-                  text-sm text-[var(--color-text-muted)]
+                  text-sm text-(--color-text-muted)
                 "
               >
                 {emptyText}
@@ -66,7 +66,7 @@ export default function Table({
               key={row.id || index}
               className="
                 transition
-                hover:bg-[var(--color-surface-low)]
+                hover:bg-(--color-surface-low)
               "
             >
               {columns.map((column) => (
@@ -75,7 +75,7 @@ export default function Table({
                   className="
                     px-4 py-4
                     text-sm
-                    text-[var(--color-text-primary)]
+                    text-(--color-text-primary)
                   "
                 >
                   {column.render

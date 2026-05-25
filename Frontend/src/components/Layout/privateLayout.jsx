@@ -6,12 +6,12 @@ export default function PrivateLayout() {
     <div className="flex h-screen overflow-hidden">
 
       {/* Sidebar */}
-      <aside className="w-64 shrink-0 border-r bg-white">
+      <aside className="w-64 shrink-0 border-r border-(--color-border) bg-(--color-surface-lowest)">
         <AdminSidebar />
       </aside>
 
       {/* Content */}
-      <main className="flex-1 overflow-y-auto bg-gray-100 p-6">
+      <main className="flex-1 overflow-y-auto bg-(--color-surface) p-6">
         <Outlet />
       </main>
 
