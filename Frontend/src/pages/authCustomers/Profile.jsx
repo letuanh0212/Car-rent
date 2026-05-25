@@ -1,148 +1,105 @@
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
-import InputField from "~/components/Inputs/InputField";
-import InputWithIcon from "~/components/Inputs/InputWithIcon";
+
+const user = {
+  fullName: "Nguyen Van B",
+  email: "user@gmail.com",
+  phone: "0901234567",
+};
 
 export default function Profile() {
   return (
-    <section className="space-y-8">
-      <header className="flex flex-col gap-2">
-        <h1 className="text-4xl font-bold text-(--color-text-primary)">
-          My Profile
-        </h1>
-        <p className="text-(--color-text-muted)">
-          Manage your account information and preferences.
-        </p>
-      </header>
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <InfoBox className="border border-(--color-border) bg-(--color-surface-lowest) shadow-(--shadow-sm)">
-          <div className="flex flex-col items-center">
-            <div className="flex h-28 w-28 items-center justify-center rounded-full bg-(--color-admin-primary-bg) text-(--color-admin-primary)]">
-              <span className="material-symbols-outlined text-[54px]">
+    <section className="rounded-4xl bg-(--color-surface) p-6 shadow-(--shadow-lg) md:p-8">
+      <div className="mb-8 flex flex-col gap-4 rounded-2xl bg-(--color-surface-lowest) p-6 shadow-(--shadow-sm) md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-4xl font-bold text-(--color-text-primary)">
+            My Profile
+          </h1>
+
+          <p className="mt-2 text-(--color-text-muted)">
+            View your account information.
+          </p>
+        </div>
+
+        <Button type="button" variant="admin" className="w-fit px-5">
+          <span className="material-symbols-outlined text-[20px]">
+            edit
+          </span>
+          Edit
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[320px_1fr]">
+        <InfoBox
+          title="Profile"
+          icon="person"
+          className="h-fit border border-(--color-border) bg-(--color-surface-lowest) shadow-(--shadow-sm)"
+        >
+          <div className="flex flex-col items-center text-center">
+            <div className="flex h-32 w-32 items-center justify-center rounded-full bg-(--color-secondary) text-(--color-on-secondary) shadow-(--shadow-md)">
+              <span className="material-symbols-outlined text-[72px]">
                 person
               </span>
             </div>
+
             <h2 className="mt-5 text-2xl font-bold text-(--color-text-primary)">
-              Admin User
+              {user.fullName}
             </h2>
-            <p className="mt-1 text-sm font-medium text-(--color-text-muted)">
-              admin@gmail.com
+
+            <p className="mt-1 text-sm text-(--color-text-muted)">
+              {user.email}
             </p>
-
-            <div className="mt-6 flex w-full flex-col gap-3">
-
-              <div className="rounded-xl bg-(--color-surface-low) p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-(--color-text-muted)">
-                  Role
-                </p>
-
-                <p className="mt-1 text-sm font-bold text-(--color-text-primary)">
-                  Administrator
-                </p>
-              </div>
-
-              <div className="rounded-xl bg-(--color-surface-low) p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-(--color-text-muted)">
-                  Status
-                </p>
-
-                <p className="mt-1 text-sm font-bold text-(--color-success)">
-                  Active
-                </p>
-              </div>
-
-            </div>
-
           </div>
-
         </InfoBox>
 
-        {/* RIGHT FORM */}
-        <div className="lg:col-span-2">
+        <InfoBox
+          title="Account Information"
+          icon="badge"
+          className="border border-(--color-border) bg-(--color-surface-lowest) shadow-(--shadow-sm)"
+        >
+          <div className="grid grid-cols-1 gap-4">
+            <ProfileItem
+              icon="person"
+              label="Full Name"
+              value={user.fullName}
+            />
 
-          <InfoBox
-            title="Profile Information"
-            className="border border-(--color-border) bg-(--color-surface-lowest) shadow-(--shadow-sm)"
-          >
+            <ProfileItem
+              icon="email"
+              label="Email"
+              value={user.email}
+            />
 
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+            <ProfileItem
+              icon="call"
+              label="Phone"
+              value={user.phone}
+            />
+          </div>
+        </InfoBox>
+      </div>
+    </section>
+  );
+}
 
-              <InputField label="First Name">
-                <InputWithIcon
-                  icon="badge"
-                  placeholder="John"
-                />
-              </InputField>
-
-              <InputField label="Last Name">
-                <InputWithIcon
-                  icon="badge"
-                  placeholder="Doe"
-                />
-              </InputField>
-
-              <InputField label="Email Address">
-                <InputWithIcon
-                  type="email"
-                  icon="email"
-                  placeholder="admin@gmail.com"
-                />
-              </InputField>
-
-              <InputField label="Phone Number">
-                <InputWithIcon
-                  icon="call"
-                  placeholder="+84 123 456 789"
-                />
-              </InputField>
-
-            </div>
-
-            <div className="mt-6">
-              <InputField label="Bio">
-                <textarea
-                  rows={5}
-                  placeholder="Write something about yourself..."
-                  className="
-                    w-full rounded-xl border border-(--color-border)
-                    bg-(--color-surface-lowest)
-                    px-4 py-3
-                    text-sm
-                    text-(--color-text-primary)
-                    outline-none
-                    transition
-                    focus:border-(--color-secondary)
-                  "
-                />
-              </InputField>
-            </div>
-
-            <div className="mt-8 flex flex-wrap gap-4">
-
-              <Button
-                type="button"
-                variant="admin"
-                className="px-6"
-              >
-                Save Changes
-              </Button>
-
-              <Button
-                type="button"
-                variant="ghost"
-                className="border border-(--color-border) px-6"
-              >
-                Cancel
-              </Button>
-
-            </div>
-
-          </InfoBox>
-
-        </div>
-
+function ProfileItem({ icon, label, value }) {
+  return (
+    <div className="flex items-center gap-4 rounded-2xl bg-(--color-surface-low) p-5">
+      <div className="flex h-11 w-11 items-center justify-center rounded-full bg-(--color-secondary)/10 text-(--color-secondary)">
+        <span className="material-symbols-outlined text-[22px]">
+          {icon}
+        </span>
       </div>
 
-    </section>
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wide text-(--color-text-muted)">
+          {label}
+        </p>
+
+        <p className="mt-1 wrap-break-word text-sm font-bold text-(--color-text-primary)">
+          {value}
+        </p>
+      </div>
+    </div>
   );
 }

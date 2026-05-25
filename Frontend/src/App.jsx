@@ -5,7 +5,7 @@ import LoginPage from '~/pages/authCustomers/LoginPage';
 import RegisterPage from '~/pages/authCustomers/RegisterPage';
 import CarDetailPage from '~/pages/Car/_id';
 import Profile from '~/pages/authCustomers/Profile';
-
+import BookingForm from '~/pages/Booking';
 
 import PrivateLayout from './components/Layout/privateLayout';
 import BookingsManagement from './pages/DashBoard/Booking';
@@ -22,7 +22,8 @@ function App() {
                     <Route path="/register" element={<RegisterPage />} />
                     <Route path="/cars/:id" element={<CarDetailPage />} />
                     <Route path='/profile' element={<Profile/>}/>
-                </Route>
+                    <Route path='/bookings' element={<BookingForm/>}/>
+                 </Route>
                 <Route element = {<PrivateLayout/>}>
                     <Route path='/dashboard' element={<Dashboard/>}></Route>
                     <Route path='/dashboard/cars' element={<CarManagement/>} />

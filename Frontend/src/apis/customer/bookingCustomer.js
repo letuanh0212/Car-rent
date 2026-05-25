@@ -32,6 +32,19 @@ const BookingCustomer =    {
             throw error.response?.data || new Error("Failed to check car availability");
         }
     },
+    async getBookingsByCustomerId(customerId) {
+        try {
+            const response = await CusInstance.get(`/bookings/customer/${customerId}`
+            );
+
+            return response.data;
+        } catch (error) {
+            throw (
+            error.response?.data ||
+            new Error("Failed to fetch customer bookings")
+            );
+        }
+    }
 };
 
 export default BookingCustomer;
