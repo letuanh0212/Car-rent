@@ -1,4 +1,5 @@
 import Button from "~/components/Button";
+import InfoBox from "~/components/InfoBox";
 
 const stats = [
   {
@@ -77,13 +78,14 @@ export default function Dashboard() {
         ))}
       </div>
 
-      <section className="rounded-2xl border border-(--color-border) bg-(--color-surface-lowest) p-6 shadow-(--shadow-sm) md:p-8">
-        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <InfoBox
+        title="Revenue Trends"
+        icon="monitoring"
+        className="p-6 md:p-8"
+      >
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-(--color-text-primary)">
-              Revenue Trends
-            </h2>
-            <p className="mt-1 text-sm font-medium text-(--color-text-muted)">
+            <p className="text-sm font-medium text-(--color-text-muted)">
               Weekly revenue performance across active bookings.
             </p>
           </div>
@@ -115,7 +117,7 @@ export default function Dashboard() {
             </div>
           ))}
         </div>
-      </section>
+      </InfoBox>
     </section>
   );
 }
@@ -128,14 +130,10 @@ function StatCard({
   positive,
 }) {
   return (
-    <article className="rounded-2xl border border-(--color-border) bg-(--color-surface-lowest) p-6 shadow-(--shadow-sm)">
+    <InfoBox title={label} icon={icon} className="p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-semibold text-(--color-text-muted)">
-            {label}
-          </p>
-
-          <h2 className="mt-2 text-3xl font-bold text-(--color-text-primary)">
+          <h2 className="text-3xl font-bold text-(--color-text-primary)">
             {value}
           </h2>
         </div>
@@ -157,6 +155,6 @@ function StatCard({
       >
         {trend}
       </p>
-    </article>
+    </InfoBox>
   );
 }

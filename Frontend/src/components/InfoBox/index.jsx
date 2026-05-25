@@ -6,9 +6,9 @@ export default function InfoBox({
 }) {
   return (
     <section
-      className={`space-y-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm ${className}`}
+      className={`space-y-4 rounded-2xl border border-(--color-border) bg-(--color-surface-lowest) p-5 shadow-(--shadow-sm) ${className}`}
     >
-      <div className="flex items-center gap-2 text-sm font-semibold text-(--color-secondary)">
+      <div className="flex items-center gap-2 text-sm font-semibold text-(--color-admin-primary)">
         <span className="material-symbols-outlined text-base">
           {icon}
         </span>

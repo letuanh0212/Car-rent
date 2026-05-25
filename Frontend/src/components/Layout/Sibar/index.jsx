@@ -23,7 +23,7 @@ const menuItems = [
   {
     label: "User Management",
     icon: "group",
-    to: "/dashboard/users",
+    to: "/dashboard/customers",
   },
 ];
 
