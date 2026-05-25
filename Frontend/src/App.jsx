@@ -6,6 +6,7 @@ import RegisterPage from '~/pages/authCustomers/RegisterPage';
 import CarDetailPage from '~/pages/Car/_id';
 import LoginPageSystem from '~/pages/authAccountSystem/LoginPageSystem';
 
+import PrivateLayout from './components/Layout/privateLayout';
 import Dashboard from './pages/DashBoard';
 function App() {
     return (
@@ -16,7 +17,9 @@ function App() {
                     <Route path="/register" element={<RegisterPage />} />
                     <Route path="/cars/:id" element={<CarDetailPage />} />
                 </Route>
+                <Route element = {<PrivateLayout/>}>
                     <Route path='/dashboard' element={<Dashboard/>}></Route>
+                </Route>
                 <Route path='/loginSystem' element={<LoginPageSystem/>} />
             </Routes>
     );   

@@ -7,6 +7,12 @@
     --color-secondary-hover: #2170e4;
     --color-on-secondary: #ffffff;
 
+    /* Admin */
+    --color-admin-primary: #2563eb;
+    --color-admin-primary-hover: #1d4ed8;
+    --color-admin-primary-bg: #eff6ff;
+    --color-on-admin-primary: #ffffff;
+
     /* Background */
     --color-background: #f7f9fb;
     --color-surface: #f7f9fb;
@@ -86,4 +92,5 @@
     --color-text-muted: #a9abb1;
     --color-border: rgba(255, 255, 255, 0.16);
     --color-border-strong: rgba(255, 255, 255, 0.32);
+    --color-admin-primary-bg: rgba(37, 99, 235, 0.16);
 }

@@ -6,16 +6,24 @@ export default function Button({
   ...props
 }) {
   const variants = {
-    primary: "bg-black text-white hover:opacity-90",
-    secondary: "bg-[#0058be] text-white hover:bg-[#2170e4]",
-    ghost: "bg-transparent text-[#45464d] hover:text-[#0058be]",
-    outline: "border border-black text-black hover:bg-black hover:text-white",
+    primary:
+      "bg-(--color-primary) text-(--color-on-primary) hover:opacity-90",
+    secondary:
+      "bg-(--color-secondary) text-(--color-on-secondary) hover:bg-(--color-secondary-hover)",
+    admin:
+      "bg-(--color-admin-primary) text-(--color-on-admin-primary) hover:bg-(--color-admin-primary-hover)",
+    ghost:
+      "bg-transparent text-(--color-text-secondary) hover:text-(--color-secondary)",
+    danger:
+      "bg-transparent text-(--color-error) hover:bg-(--color-error-bg) hover:text-(--color-error)",
+    outline:
+      "border border-(--color-primary) text-(--color-primary) hover:bg-(--color-primary) hover:text-(--color-on-primary)",
   };
 
   return (
     <button
       className={[
-        "inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-6 text-sm font-semibold uppercase transition active:scale-95",
+        "inline-flex min-h-12 items-center justify-center gap-2 rounded-md px-6 text-sm font-semibold uppercase transition active:scale-95",
         variants[variant],
         fullWidth ? "w-full" : "",
         className,

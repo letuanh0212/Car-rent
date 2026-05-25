@@ -34,10 +34,10 @@ function SidebarLink({ to, icon, children }) {
       end={to === "/dashboard"}
       className={({ isActive }) =>
         [
-          "flex items-center gap-3 rounded---radius-lg px-3 py-2 text-sm font-semibold transition-all duration-200",
+          "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold transition-all duration-200",
           isActive
-            ? "translate-x-1 bg-(--color-secondary) text-(--color-on-secondary)"
-            : "text-(--color-text-secondary) hover:bg-(--color-surface-high)",
+            ? "translate-x-1 bg-(--color-admin-primary) text-(--color-on-admin-primary)"
+            : "text-(--color-text-secondary) hover:bg-(--color-admin-primary-bg) hover:text-(--color-admin-primary)",
         ].join(" ")
       }
     >
@@ -59,9 +59,9 @@ export default function AdminSidebar() {
   };
 
   return (
-    <aside className="fixed left-0 top-0 z-50 hidden h-screen w-64 flex-col border-r border-(--color-border) bg-(--color-surface-low) px-4 py-8 md:flex">
+    <aside className="fixed left-0 top-0 z-50 hidden h-screen w-64 flex-col border-r border-(--color-border) bg-(--color-surface-lowest) px-4 py-8 md:flex">
       <div className="mb-8 px-2">
-        <h1 className="text-2xl font-bold text-(--color-primary)">
+        <h1 className="text-2xl font-bold text-(--color-admin-primary)">
           Admin Portal
         </h1>
         <p className="text-sm font-semibold text-(--color-text-secondary)">
@@ -83,9 +83,10 @@ export default function AdminSidebar() {
 
       <Button
         type="button"
+        variant="admin"
         onClick={() => navigate("/dashboard/cars/new")}
         fullWidth
-        className="mt-4 min-h-0 rounded--radius-lg bg-(--color-primary) px-4 py-3 text-sm font-bold normal-case text-(--color-on-primary)"
+        className="mt-4 min-h-0 rounded-lg px-4 py-3 text-sm font-bold normal-case shadow-(--shadow-sm)"
       >
         <span className="material-symbols-outlined text-[20px]">
           add
@@ -100,10 +101,10 @@ export default function AdminSidebar() {
 
         <Button
           type="button"
-          variant="ghost"
+          variant="danger"
           onClick={handleLogout}
           fullWidth
-          className="mt-2 min-h-0 justify-start rounded--radius-lg px-3 py-2 text-sm font-semibold normal-case text-(--color-error) hover:bg-(--color-error-bg) hover:text-(--color-error)"
+          className="mt-2 min-h-0 justify-start rounded-lg px-3 py-2 text-sm font-semibold normal-case"
         >
           <span className="material-symbols-outlined text-[20px]">
             logout
