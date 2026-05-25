@@ -2,9 +2,17 @@ export default function FormCard({
   title,
   subtitle,
   children,
+  className = "",
+  ...props
 }) {
   return (
-    <div className="rounded-2xl bg-white p-8 shadow-xl">
+    <div
+      className={[
+        "rounded-2xl bg-white p-8 shadow-xl",
+        className,
+      ].join(" ")}
+      {...props}
+    >
 
       {(title || subtitle) && (
         <div className="mb-8">

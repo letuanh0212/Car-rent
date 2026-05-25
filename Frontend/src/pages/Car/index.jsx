@@ -1,12 +1,13 @@
 import CardCar from "~/components/Car";
 import carApi from "~/hooks/Car/useCars";
 import { Link } from "react-router-dom";
-
+import Banner from "~/components/Banner";
 export default function CarListPage() {
   const { cars, loading, error } = carApi();
 
   return (
     <section className="bg-(--color-surface-lowest) py-24">
+      <Banner/>
       <div className="mx-auto max-w-7xl px-8">
         <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>

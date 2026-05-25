@@ -1,4 +1,4 @@
-export default function FormActions({
+export default function FormRow({
   children,
   className = "",
   ...props
@@ -6,7 +6,7 @@ export default function FormActions({
   return (
     <div
       className={[
-        "flex items-center justify-end gap-4 border-t border-black/10 pt-6",
+        "grid gap-6 md:grid-cols-2",
         className,
       ].join(" ")}
       {...props}
@@ -14,4 +14,4 @@ export default function FormActions({
       {children}
     </div>
   );
-}   
+}

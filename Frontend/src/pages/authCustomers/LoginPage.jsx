@@ -45,7 +45,6 @@ export default function LoginPage() {
               icon="email"
             />
           </InputField>
-
           {/* Password */}
           <InputField label="Password">
             <InputWithIcon
