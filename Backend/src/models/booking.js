@@ -260,7 +260,30 @@ const bookingRepository = {
 
         return rows;
     }, 
-        
+    async getTopCustomers(limit = 5) {
+        const query = `
+            SELECT
+                c.id,
+                c.full_name,
+                c.email,
+                COUNT(b.bk_id)::INT AS total_bookings,
+                COALESCE(SUM(b.total_price), 0)::NUMERIC AS total_spent
+            FROM customer c
+            JOIN bookings b
+                ON b.user_id = c.id
+            GROUP BY
+                c.id,
+                c.full_name,
+                c.email
+            ORDER BY total_bookings DESC
+            LIMIT $1
+        `;
+
+        const { rows } =
+            await db.query(query, [limit]);
+
+        return rows;
+    },
 
 };
 

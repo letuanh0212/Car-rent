@@ -188,6 +188,44 @@ const bookingController = {
             });
         }
     },
+    async getTopCustomers(req, res) {
+        try {
+
+            let limit =
+                parseInt(req.query.limit, 10);
+
+            if (
+                isNaN(limit) ||
+                limit <= 0
+            ) {
+                limit = 5;
+            }
+
+            if (limit > 20) {
+                limit = 20;
+            }
+
+            const data =
+                await BookService.getTopCustomers(limit);
+
+            return res.status(200).json({
+                success: true,
+                message:
+                    "Get top customers successfully",
+                data,
+            });
+
+        } catch (error) {
+
+            return res.status(500).json({
+                success: false,
+                message:
+                    error.message ||
+                    "Get top customers failed",
+            });
+
+        }
+    },
 };
 
 export default bookingController;

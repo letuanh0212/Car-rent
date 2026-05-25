@@ -22,5 +22,5 @@ router.get("/", authMiddleware, bookingController.getAllBookings);
 router.post("/check-availability",  bookingController.checkCarAvailability);
 
 
-
+router.get("/top-customers",bookingController.getTopCustomers);
 export default router;

@@ -33,6 +33,9 @@ const BookService = {
     async getTopBookedCars(limit) {
         return await bookRepository.getTopBooked(limit);
     },
+    async getTopCustomers(limit) {
+        return await bookRepository.getTopCustomers(limit);
+    },
 };
 
 export default BookService;
