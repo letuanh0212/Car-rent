@@ -23,4 +23,6 @@ router.post("/check-availability",  bookingController.checkCarAvailability);
 
 
 router.get("/top-customers",bookingController.getTopCustomers);
+
+router.get("/recent-bookings",bookingController.getRecentBookings);
 export default router;

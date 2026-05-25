@@ -284,7 +284,31 @@ const bookingRepository = {
 
         return rows;
     },
+    async getRecentBookings(limit = 10) {
+        const query = `
+            SELECT
+                b.bk_id,
+                cus.full_name,
+                c.title AS car_title,
+                b.start_date,
+                b.end_date,
+                b.total_price,
+                b.status,
+                b.created_at
+            FROM bookings b
+            JOIN customer cus
+                ON cus.id = b.user_id
+            JOIN car_listings c
+                ON c.id = b.listing_id
+            ORDER BY b.created_at DESC
+            LIMIT $1
+        `;
 
+        const { rows } =
+            await db.query(query, [limit]);
+
+        return rows;
+    },
 };
 
 export default bookingRepository;

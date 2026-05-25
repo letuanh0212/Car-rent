@@ -226,6 +226,46 @@ const bookingController = {
 
         }
     },
+    async getRecentBookings(req, res) {
+        try {
+
+            let limit =
+                parseInt(req.query.limit, 10);
+
+            if (
+                isNaN(limit) ||
+                limit <= 0
+            ) {
+                limit = 10;
+            }
+
+            if (limit > 50) {
+                limit = 50;
+            }
+
+            const data =
+                await BookService.getRecentBookings(
+                    limit
+                );
+
+            return res.status(200).json({
+                success: true,
+                message:
+                    "Get recent bookings successfully",
+                data,
+            });
+
+        } catch (error) {
+
+            return res.status(500).json({
+                success: false,
+                message:
+                    error.message ||
+                    "Get recent bookings failed",
+            });
+
+        }
+    },
 };
 
 export default bookingController;
