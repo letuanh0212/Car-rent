@@ -5,6 +5,7 @@ const bookingAccount = {
     const response = await accountInstance.get("/bookings");
     return response;
   },
+  
 };
 
 export default bookingAccount;

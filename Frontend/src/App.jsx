@@ -9,9 +9,9 @@ import BookingForm from '~/pages/Booking';
 import _id from './pages/Booking/_id';
 
 import PrivateLayout from './components/Layout/privateLayout';
-import BookingsManagement from './pages/DashBoard/Booking';
-import CarManagement from './pages/DashBoard/Car';
-import CustomersManagement from './pages/DashBoard/Customer';
+// import BookingsManagement from './pages/DashBoard/Booking';
+// import CarManagement from './pages/DashBoard/Car';
+// import CustomersManagement from './pages/DashBoard/Customer';
 import LoginPageSystem from '~/pages/authAccountSystem/LoginPageSystem';
 import Dashboard from './pages/DashBoard';
 function App() {
@@ -28,10 +28,10 @@ function App() {
                  </Route>
                 <Route element = {<PrivateLayout/>}>
                     <Route path='/dashboard' element={<Dashboard/>}></Route>
-                    <Route path='/dashboard/cars' element={<CarManagement/>} />
+                    {/* <Route path='/dashboard/cars' element={<CarManagement/>} />
                     <Route path='/dashboard/bookings' element={<BookingsManagement/>} />
-                    <Route path='/dashboard/customers' element={<CustomersManagement/>} />
-                </Route>s
+                    <Route path='/dashboard/customers' element={<CustomersManagement/>} /> */}
+                </Route>
                 <Route path='/loginSystem' element={<LoginPageSystem/>} />
             </Routes>
     );   

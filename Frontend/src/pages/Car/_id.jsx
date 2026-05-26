@@ -1,6 +1,6 @@
-import BookingWidget from "~/components/Car/BookingWidget";
-import DetailGallery from "~/components/Car/DetailGallery";
-import DetailInfo from "~/components/Car/DetailInfo";
+import BookingWidget from "~/components/CarCard/BookingWidget";
+import DetailGallery from "~/components/CarCard/DetailGallery";
+import DetailInfo from "~/components/CarCard/DetailInfo";
 import carDetailApi from "~/hooks/Car/useCarDetail";
 import { useParams } from "react-router-dom";
 

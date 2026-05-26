@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import authAccountSystem from "~/apis/admin/authAccountSystem";
 
 export const loginThunk = createAsyncThunk(
-  "accounts/login",
+  "/loginsystem",
   async (data, thunkAPI) => {
     try {
       const response = await authAccountSystem.login(data);
