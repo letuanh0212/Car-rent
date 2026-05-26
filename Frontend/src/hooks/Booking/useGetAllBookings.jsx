@@ -1,39 +1,38 @@
 import { useEffect, useState } from "react";
 
-import bookingApi from "~/apis/admin/bookingAccount";
+import bookingAccount from "~/apis/admin/bookingAccount";
 
-export default function useBookingDetail(id) {
-  const [booking, setBooking] = useState(null);
+export default function useGetAllBookings() {
+  const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!id) return;
-
-    const fetchBooking = async () => {
+    const fetchBookings = async () => {
       try {
         setLoading(true);
-        setError("");
 
-        const response = await bookingApi.getAllBookings;
-        const responseData = response.data;
+        const response =
+          await bookingAccount.getAllBookings();
 
-        setBooking(responseData);
+        // console.log(response);
+
+        setBookings(response.data || []);
       } catch (err) {
         setError(
-          err?.responseData?.data?.message ||
-          "Failed to fetch booking"
+          err?.response?.data?.message ||
+          "Failed to fetch bookings"
         );
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBooking();
-  }, [id]);
+    fetchBookings();
+  }, []);
 
   return {
-    booking,
+    bookings,
     loading,
     error,
   };

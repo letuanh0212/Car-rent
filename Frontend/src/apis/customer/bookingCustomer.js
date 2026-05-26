@@ -32,8 +32,10 @@ const BookingCustomer =    {
     },
     async checkCarAvailability(carId, startDate, endDate) {
         try {
-            const response = await CusInstance.get("/bookings/check-availability", {
-                params: { carId, startDate, endDate },
+            const response = await CusInstance.post("/bookings/check-availability", {
+                carId,
+                startDate,
+                endDate,
             });
             return response;
         }

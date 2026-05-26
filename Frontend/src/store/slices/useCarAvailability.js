@@ -1,54 +1,51 @@
 import { useEffect, useMemo, useState } from "react";
 
 import bookingApi from "~/apis/customer/bookingCustomer";
-import  {isBookingOverlap}  from "~/utils/bookingAvailability.js"; 
 
 export default function useCarAvailability({
   carId,
   checkIn,
   checkOut,
 }) {
-  const [bookedSlots, setBookedSlots] = useState([]);
+  const [isAvailable, setIsAvailable] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!carId) return;
+    if (!carId || !checkIn || !checkOut) {
+      setIsAvailable(null);
+      return;
+    }
 
-    const fetchBookedSlots = async () => {
+    const startDate = new Date(checkIn);
+    const endDate = new Date(checkOut);
+
+    if (endDate <= startDate) {
+      setIsAvailable(false);
+      return;
+    }
+
+    const checkAvailability = async () => {
       try {
         setLoading(true);
 
         const response =
-          await bookingApi.checkCarAvailability(carId);
+          await bookingApi.checkCarAvailability(
+            carId,
+            checkIn,
+            checkOut
+          );
 
-        setBookedSlots(response?.data?.data || []);
+        setIsAvailable(Boolean(response?.data?.isAvailable));
       } catch (error) {
-        console.error("Fetch booked slots error:", error);
-        setBookedSlots([]);
+        console.error("Check availability error:", error);
+        setIsAvailable(null);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBookedSlots();
-  }, [carId]);
-
-  const isAvailable = useMemo(() => {
-    if (!checkIn || !checkOut) return null;
-
-    const startDate = new Date(checkIn);
-    const endDate = new Date(checkOut);
-
-    if (endDate <= startDate) return false;
-
-    const overlap = isBookingOverlap({
-      checkIn,
-      checkOut,
-      bookedSlots,
-    });
-
-    return !overlap;
-  }, [checkIn, checkOut, bookedSlots]);
+    checkAvailability();
+  }, [carId, checkIn, checkOut]);
 
   const message = useMemo(() => {
     if (isAvailable === null) return "";
@@ -61,7 +58,6 @@ export default function useCarAvailability({
   }, [isAvailable]);
 
   return {
-    bookedSlots,
     loading,
     isAvailable,
     message,

@@ -100,51 +100,23 @@ export default function BookingManagement() {
           </p>
         )}
 
-        {!loading && !error && (
-          <>
-            <Table
-              columns={columns}
-              data={paginatedBookings}
-              emptyText="No bookings found."
-              renderActions={(row) => (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="border border-(--color-border) px-4"
-                  onClick={() => navigate(`/dashboard/bookings/${row.bk_id}`)}
-                >
-                  View
-                </Button>
-              )}
-            />
-
-            {totalPages > 1 && (
-              <div className="mt-6 flex items-center justify-between">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((page) => page - 1)}
-                >
-                  Previous
-                </Button>
-
-                <span className="text-sm text-(--color-text-muted)">
-                  Page {currentPage} of {totalPages}
-                </span>
-
-                <Button
-                  type="button"
-                  variant="ghost"
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage((page) => page + 1)}
-                >
-                  Next
-                </Button>
-              </div>
-            )}
-          </>
-        )}
+      {!loading && !error && paginatedBookings.length > 0 && (
+        <Table
+          columns={columns}
+          data={paginatedBookings}
+          emptyText="No bookings found."
+          renderActions={(row) => (
+            <Button
+              type="button"
+              variant="ghost"
+              className="border border-(--color-border) px-4"
+              onClick={() => navigate(`/dashboard/bookings/${row.bk_id}`)}
+            >
+              View
+            </Button>
+          )}
+        />
+      )}
       </InfoBox>
     </section>
   );

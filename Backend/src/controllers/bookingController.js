@@ -136,15 +136,36 @@ const bookingController = {
 
             const {
                 car_id,
+                carId,
                 start_date,
-                end_date
-            } = req.body;
+                startDate,
+                end_date,
+                endDate
+            } = {
+                ...req.query,
+                ...req.body
+            };
+
+            const listingId = car_id || carId;
+            const bookingStartDate = start_date || startDate;
+            const bookingEndDate = end_date || endDate;
+
+            if (
+                !listingId ||
+                !bookingStartDate ||
+                !bookingEndDate
+            ) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Missing required fields"
+                });
+            }
 
             const isAvailable =
                 await BookService.checkAvailability(
-                    car_id,
-                    start_date,
-                    end_date
+                    listingId,
+                    bookingStartDate,
+                    bookingEndDate
                 );
 
             return res.status(200).json({

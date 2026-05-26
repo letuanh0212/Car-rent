@@ -1,9 +1,9 @@
 # dependencies
 node_modules/
-
+.md
 # env
 .env
-
+doc
 # logs
 logs
 *.log

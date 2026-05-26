@@ -10,6 +10,10 @@ router.get("/topbooked",bookingController.getTopBookedCars);
 
 router.post("/", authMiddleware, bookingController.createBooking);
 router.get("/customer/:id", authMiddleware, bookingController.getBookingsByUserId);
+router.get("/check-availability",  bookingController.checkCarAvailability);
+router.post("/check-availability",  bookingController.checkCarAvailability);
+router.get("/top-customers",bookingController.getTopCustomers);
+router.get("/recent-bookings",bookingController.getRecentBookings);
 router.get("/:id", authMiddleware, bookingController.getBookingsById);
 // router.get("/listing/:listingId", bookingController.getBookingsByListingId);
 
@@ -19,7 +23,4 @@ router.get("/:id", authMiddleware, bookingController.getBookingsById);
 
 //admin routers
 router.get("/",accountMiddleware,requireAdmin,  bookingController.getAllBookings);
-router.post("/check-availability",  bookingController.checkCarAvailability);
-router.get("/top-customers",bookingController.getTopCustomers);
-router.get("/recent-bookings",bookingController.getRecentBookings);
 export default router;
