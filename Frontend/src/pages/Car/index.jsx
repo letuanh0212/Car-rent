@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
 
 import Banner from "~/components/Banner";
 import Button from "~/components/Button";
-import CardCar from "~/components/CarCard";
-import CarTable from "~/components/CarTable";
+import CardCar from "~/components/Car/CarCard";
+import CarTable from "~/components/Car/CarTable";
 
 import useCars from "~/hooks/Car/useCars";
 

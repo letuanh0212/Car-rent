@@ -1,6 +1,6 @@
 import Table from "~/components/Table";
 import Badge from "~/components/Badge";
-import CarActionsMenu from "~/components/CarActionsMenu";
+import CarActionsMenu from "~/components/Car/CarActionsMenu";
 
 import {
   carStatusLabel,

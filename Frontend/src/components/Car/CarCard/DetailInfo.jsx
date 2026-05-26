@@ -42,7 +42,7 @@ const specs = [
     getValue: (car) => car.location,
   },
 ];
-import InfoBox from "../InfoBox";
+import InfoBox from "~/components/InfoBox";
 export default function DetailInfo({ car }) {
   if (!car) return null;
 

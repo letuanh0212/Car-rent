@@ -8,8 +8,9 @@ import DateTimeField from "~/components/Inputs/DateTimeField";
 import {getDateValue,formatBookingDate} from "~/utils/date";
 import useCarAvailability from "~/hooks/Booking/useCarAvailability";
 import { calculateBookingPrice } from "~/utils/price";
-import InfoBox from "../InfoBox";
+import InfoBox from "~/components/InfoBox";
 import { useSelector } from "react-redux";
+
 
 export default function BookingWidget({ car, onSubmit }) {
   const [checkIn, setCheckIn] = useState(getDateValue());
