@@ -1,5 +1,4 @@
-// controllers/car.controller.js
-import carService from "../services/car.service.js";
+import TransactionService from "../services/transaction.js";
 
 const createCar = async (req, res) => {
   try {
@@ -23,7 +22,7 @@ const createCar = async (req, res) => {
       });
     }
 
-    const car = await carService.createListingWithMedia({
+    const car = await TransactionService.createTransaction({
       carData,
       images,
       videos,

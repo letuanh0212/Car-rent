@@ -81,20 +81,25 @@ const createListingWithMedia = async ({
     const insertedVideos = [];
 
     for (const vid of videos) {
+      const embedding =
+        vid.embedding ||
+        JSON.stringify({
+          video_url: vid.video_url,
+          metadata: vid.metadata || null,
+        });
+
       const videoResult = await client.query(
         `
         INSERT INTO car_embedding_videos (
           listing_id,
-          video_url,
-          metadata
+          embedding
         )
-        VALUES ($1, $2, $3)
+        VALUES ($1, $2)
         RETURNING *;
         `,
         [
           car.id,
-          vid.video_url,
-          vid.metadata || null,
+          embedding,
         ]
       );
 

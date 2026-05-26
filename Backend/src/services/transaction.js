@@ -1,4 +1,4 @@
-import CreatedTransaction from "../models/CreatedTransaction";
+import CreatedTransaction from "../models/CreatedTransaction.js";
 
 const TransactionService = {
     async createTransaction(carData) {

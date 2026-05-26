@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Button from "~/components/Button";
@@ -23,7 +23,6 @@ const initialForm = {
   description: "",
   price_per_day: "",
   location: "",
-  image_urls: "",
   embedding: "",
 };
 
@@ -40,16 +39,26 @@ export default function CreatedCar() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState(initialForm);
+  const [imageFiles, setImageFiles] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
   const [features, setFeatures] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const imageUrls = useMemo(() => {
-    return formData.image_urls
-      .split("\n")
-      .map((url) => url.trim())
-      .filter(Boolean);
-  }, [formData.image_urls]);
+  useEffect(() => {
+    const previews = imageFiles.map((file) => ({
+      name: file.name,
+      url: URL.createObjectURL(file),
+    }));
+
+    setImagePreviews(previews);
+
+    return () => {
+      previews.forEach((preview) => {
+        URL.revokeObjectURL(preview.url);
+      });
+    };
+  }, [imageFiles]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -65,6 +74,11 @@ export default function CreatedCar() {
       ...prev,
       [key]: !prev[key],
     }));
+  };
+
+  const handleImageFilesChange = (event) => {
+    const files = Array.from(event.target.files || []);
+    setImageFiles(files);
   };
 
   const handleSubmit = async (event) => {
@@ -105,6 +119,16 @@ export default function CreatedCar() {
         description: descriptionParts.join("\n"),
         price_per_day: Number(formData.price_per_day),
         location: formData.location,
+        videos: formData.embedding.trim()
+          ? [
+              {
+                video_url: formData.embedding.trim(),
+                metadata: {
+                  title: formData.title || "Vehicle video",
+                },
+              },
+            ]
+          : [],
       };
 
       const response = await carAccount.createCar(payload);
@@ -114,21 +138,8 @@ export default function CreatedCar() {
         throw new Error("Create car succeeded but car id was missing");
       }
 
-      if (imageUrls.length > 0) {
-        await Promise.all(
-          imageUrls.map((imageUrl, index) =>
-            carAccount.addImage(carId, {
-              image_url: imageUrl,
-              is_thumbnail: index === 0,
-            })
-          )
-        );
-      }
-
-      if (formData.embedding.trim()) {
-        await carAccount.addVideoEmbedding(carId, {
-          embedding: formData.embedding.trim(),
-        });
+      if (imageFiles.length > 0) {
+        await carAccount.uploadImages(carId, imageFiles);
       }
 
       navigate("/dashboard/cars");
@@ -381,19 +392,35 @@ export default function CreatedCar() {
             <Panel icon="photo_library" title="Media Assets">
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 <div className="space-y-4">
-                  <InputField label="Image URLs">
-                    <textarea
-                      name="image_urls"
-                      value={formData.image_urls}
-                      onChange={handleChange}
-                      placeholder="One image URL per line. First image becomes thumbnail."
-                      rows={7}
-                      className="min-h-44 w-full rounded-lg border border-dashed border-(--color-border) bg-(--color-surface-low) px-4 py-3 text-base text-(--color-text-primary) outline-none transition focus:border-(--color-secondary) focus:ring-2 focus:ring-(--color-secondary)/20"
-                    />
+                  <InputField label="Vehicle Images">
+                    <label className="flex min-h-44 cursor-pointer flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-(--color-border) bg-(--color-surface-low) px-4 py-8 text-center transition hover:border-(--color-secondary)">
+                      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-(--color-secondary)/10 text-(--color-secondary)">
+                        <span className="material-symbols-outlined text-[32px]">
+                          cloud_upload
+                        </span>
+                      </span>
+
+                      <span>
+                        <span className="block text-base font-bold text-(--color-text-primary)">
+                          Choose images from your device
+                        </span>
+                        <span className="mt-1 block text-sm font-semibold text-(--color-text-muted)">
+                          Select multiple JPG, PNG, or WEBP files. First image becomes thumbnail.
+                        </span>
+                      </span>
+
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        className="sr-only"
+                        onChange={handleImageFilesChange}
+                      />
+                    </label>
                   </InputField>
 
                   <p className="text-sm font-semibold text-(--color-text-muted)">
-                    {imageUrls.length} image URL{imageUrls.length === 1 ? "" : "s"} ready to save.
+                    {imageFiles.length} image file{imageFiles.length === 1 ? "" : "s"} ready to upload.
                   </p>
                 </div>
 
@@ -416,20 +443,20 @@ export default function CreatedCar() {
               </div>
 
               <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
-                {imageUrls.slice(0, 6).map((imageUrl) => (
+                {imagePreviews.slice(0, 6).map((preview) => (
                   <div
-                    key={imageUrl}
+                    key={preview.url}
                     className="aspect-square overflow-hidden rounded-lg border border-(--color-border) bg-(--color-surface-low)"
                   >
                     <img
-                      src={imageUrl}
-                      alt="Vehicle preview"
+                      src={preview.url}
+                      alt={preview.name}
                       className="h-full w-full object-cover"
                     />
                   </div>
                 ))}
 
-                {imageUrls.length === 0 && (
+                {imagePreviews.length === 0 && (
                   <div className="col-span-full flex min-h-32 items-center justify-center rounded-lg border border-dashed border-(--color-border) bg-(--color-surface-low) text-(--color-text-muted)">
                     <span className="material-symbols-outlined text-[40px] opacity-40">
                       image

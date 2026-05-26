@@ -2,7 +2,7 @@ import accountInstance from "~/apis/Client/axiosAccountClient";
 
 const carAccount = {
   async createCar(data) {
-    const response = await accountInstance.post("/cars", data);
+    const response = await accountInstance.post("/cars/transactions", data);
     return response;
   },
 
@@ -13,6 +13,26 @@ const carAccount = {
 
   async addVideoEmbedding(carId, data) {
     const response = await accountInstance.post(`/cars/${carId}/videos`, data);
+    return response;
+  },
+
+  async uploadImages(carId, files = []) {
+    const formData = new FormData();
+
+    files.forEach((file) => {
+      formData.append("images", file);
+    });
+
+    const response = await accountInstance.post(
+      `/cars/${carId}/images/upload`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
     return response;
   },
 };
