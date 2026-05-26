@@ -1,9 +1,18 @@
 import Table from "~/components/Table";
-import Button from "~/components/Button";
-// import 
+import Badge from "~/components/Badge";
+import CarActionsMenu from "~/components/CarActionsMenu";
+
+import {
+  carStatusLabel,
+  carStatusVariant,
+} from "~/config/carStatus";
+
+import { formatCurrency } from "~/utils/currency";
+
 export default function CarTable({
   cars = [],
   isAdmin = false,
+  onView,
   onEdit,
   onDelete,
   onAddImage,
@@ -13,82 +22,76 @@ export default function CarTable({
       key: "title",
       title: "Car",
       render: (row) => (
-        <div className="flex flex-col">
-          <span className="font-semibold">
-            {row.brand} {row.model}
-          </span>
+        <div className="flex items-center gap-3">
+          <img
+            src={row.thumbnail}
+            alt={row.title || `${row.brand} ${row.model}`}
+            className="h-12 w-16 rounded object-cover"
+          />
 
-          <span className="text-xs text-(--color-text-muted)">
-            {row.title}
-          </span>
+          <div className="flex flex-col">
+            <span className="font-semibold">
+              {row.title || `${row.brand} ${row.model}`}
+            </span>
+
+            <span className="text-xs text-(--color-text-muted)">
+              {row.brand} {row.model}
+            </span>
+          </div>
         </div>
       ),
     },
-
     {
       key: "license_plate",
       title: "Plate",
+      render: (row) => row.license_plate || "-",
     },
-
     {
       key: "year",
       title: "Year",
     },
-
     {
       key: "seats",
       title: "Seats",
+      render: (row) => row.seat_count || row.seats || "-",
     },
-
     {
       key: "transmission",
       title: "Transmission",
     },
-
     {
       key: "fuel_type",
       title: "Fuel",
     },
-
     {
       key: "mileage",
       title: "Mileage",
       render: (row) => (
         <span>
-          {Number(row.mileage).toLocaleString()} km
+          {Number(row.odometer || row.mileage || 0).toLocaleString()} km
         </span>
       ),
     },
-
     {
       key: "price_per_day",
       title: "Price / Day",
       render: (row) => (
         <span className="font-semibold text-(--color-primary)">
-          {Number(row.price_per_day).toLocaleString()}₫
+          {formatCurrency(row.price_per_day)}
         </span>
       ),
     },
-
     {
       key: "location",
       title: "Location",
     },
-
     {
       key: "status",
       title: "Status",
       render: (row) => (
-        <span
-          className={[
-            "rounded-full px-3 py-1 text-xs font-semibold capitalize",
-            row.status === "available"
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700",
-          ].join(" ")}
-        >
-          {row.status}
-        </span>
+        <Badge variant={carStatusVariant[row.status] || "warning"}>
+          {carStatusLabel[row.status] || row.status || "Unknown"}
+        </Badge>
       ),
     },
   ];
@@ -101,35 +104,16 @@ export default function CarTable({
       renderActions={
         isAdmin
           ? (row) => (
-              <div className="flex justify-end gap-2">
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => onEdit?.(row)}
-                >
-                  Edit
-                </Button>
-
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => onAddImage?.(row)}
-                >
-                  Images
-                </Button>
-
-                <Button
-                  size="sm"
-                  variant="danger"
-                  onClick={() => onDelete?.(row)}
-                >
-                  Delete
-                </Button>
-              </div>
+              <CarActionsMenu
+                car={row}
+                onView={onView}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onAddImage={onAddImage}
+              />
             )
           : undefined
       }
     />
   );
 }
-

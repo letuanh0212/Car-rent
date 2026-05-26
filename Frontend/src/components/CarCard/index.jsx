@@ -8,8 +8,17 @@ import {
 
 import { formatCurrency } from "~/utils/currency";
 
-export default function CardCar({ car }) {
+export default function CardCar({
+  car,
+  variant = "public",
+  onView,
+  onEdit,
+  onDelete,
+  onAddImage,
+}) {
   if (!car) return null;
+
+  const isAdmin = variant === "admin";
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-xl border border-(--color-border) bg-(--color-surface-lowest) shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl">
@@ -61,7 +70,7 @@ export default function CardCar({ car }) {
           {car.description}
         </p>
 
-        <div className="flex items-center justify-between gap-4 border-t border-(--color-border) pt-4">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-(--color-border) pt-4">
           <p className="m-0 text-lg font-extrabold text-(--color-secondary)">
             {formatCurrency(car.price_per_day)}
             <span className="text-sm font-normal text-(--color-text-secondary)">
@@ -69,9 +78,51 @@ export default function CardCar({ car }) {
             </span>
           </p>
 
-          <Button size="compact">
-            Book Now
-          </Button>
+          {!isAdmin && (
+            <Button className="min-h-10 px-4">
+              Book Now
+            </Button>
+          )}
+
+          {isAdmin && (
+            <div className="grid w-full grid-cols-2 gap-2">
+              <Button
+                type="button"
+                variant="admin"
+                className="min-h-9 px-3 text-xs normal-case"
+                onClick={() => onView?.(car)}
+              >
+                View
+              </Button>
+
+              <Button
+                type="button"
+                variant="outline"
+                className="min-h-9 px-3 text-xs normal-case"
+                onClick={() => onEdit?.(car)}
+              >
+                Edit
+              </Button>
+
+              <Button
+                type="button"
+                variant="ghost"
+                className="min-h-9 border border-(--color-border) px-3 text-xs normal-case"
+                onClick={() => onAddImage?.(car)}
+              >
+                Images
+              </Button>
+
+              <Button
+                type="button"
+                variant="danger"
+                className="min-h-9 border border-(--color-error-bg) px-3 text-xs normal-case"
+                onClick={() => onDelete?.(car)}
+              >
+                Delete
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </article>

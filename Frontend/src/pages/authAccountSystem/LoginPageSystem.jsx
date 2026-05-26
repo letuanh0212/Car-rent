@@ -33,7 +33,9 @@ export default function LoginSystem() {
 
       console.log(result);
 
-      navigate("/dashboard");
+      if (result.success) {
+        navigate("/dashboard/cars");
+      }
     } catch (err) {
       console.log(err);
     }
