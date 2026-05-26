@@ -7,7 +7,9 @@ import InputField from "~/components/Inputs/InputField";
 export default function CarGeneralInfo({
   formData,
   handleChange,
+  carTypes=[],
 }) {
+    
   return (
     <FormSection
       icon="info"
@@ -43,14 +45,27 @@ export default function CarGeneralInfo({
           />
         </InputField>
 
-        <InputField label="Type ID">
-          <Input
+        <InputField label="Car Type">
+        <select
             name="type_id"
             value={formData.type_id}
             onChange={handleChange}
-            placeholder="UUID Type ID"
             required
-          />
+            className="w-full min-h-12 rounded-lg border border-(--color-border) bg-(--color-surface-low) px-4 text-base text-(--color-text-primary) outline-none transition focus:border-(--color-secondary) focus:ring-2 focus:ring-(--color-secondary)/20"
+        >
+            <option value="">
+            Select car type
+            </option>
+
+            {carTypes.map((type) => (
+            <option
+                key={type.id}
+                value={type.id}
+            >
+                {type.name}
+            </option>
+            ))}
+        </select>
         </InputField>
 
         <InputField label="Owner Name">
@@ -87,3 +102,4 @@ export default function CarGeneralInfo({
     </FormSection>
   );
 }
+

@@ -13,6 +13,9 @@ import CarSpecifications from "./Components/CarSpecifications";
 import CarPricing from "./Components/CarPricing";
 import CarFeatures from "./Components/CarFeatures";
 import CarMedia from "./Components/CarMedia";
+import useGetAllType from "~/hooks/Booking/useGetAllType";
+
+
 
 const initialForm = {
   type_id: "",
@@ -44,6 +47,7 @@ const featureOptions = [
 
 export default function CreateCarPage() {
   const navigate = useNavigate();
+  const { types } = useGetAllType();
 
   const [formData, setFormData] = useState(initialForm);
   const [imageFiles, setImageFiles] = useState([]);
@@ -209,6 +213,7 @@ export default function CreateCarPage() {
               <CarGeneralInfo
                 formData={formData}
                 handleChange={handleChange}
+                carTypes={types}
               />
 
               <CarSpecifications

@@ -76,7 +76,24 @@ const CarRepository = {
     },
     async getAll() {
         try{
-            const query = 'SELECT * FROM car_listings';
+            const query = `SELECT
+                            c.*,
+
+                            img.image_url AS thumbnail,
+
+                            vid.youtube_url AS video_url
+
+                            FROM car_listings c
+
+                            LEFT JOIN car_images img
+                            ON img.listing_id = c.id
+                            AND img.is_thumbnail = true
+
+                            LEFT JOIN car_embedding_videos vid
+                            ON vid.listing_id = c.id
+                            AND vid.is_thumbnail = true
+
+                            ORDER BY c.created_at DESC;`;
             const result = await db.query(query);
             return result.rows;
         }catch (error) {

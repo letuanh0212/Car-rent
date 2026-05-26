@@ -10,16 +10,41 @@ import {
 const fallbackImage =
   "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop";
 
+function getImageUrl(image) {
+  const value =
+    typeof image === "string"
+      ? image
+      : image?.image_url || image?.url || image?.src;
+
+  if (!value) return null;
+
+  if (
+    value.startsWith("http://") ||
+    value.startsWith("https://") ||
+    value.startsWith("/uploads/")
+  ) {
+    return value;
+  }
+
+  if (value.startsWith("src/public/")) {
+    return `/${value}`;
+  }
+
+  return value;
+}
+
 export default function DetailGallery({ car }) {
   const images = useMemo(() => {
     if (!car) return [fallbackImage];
 
     if (Array.isArray(car.images) && car.images.length > 0) {
-      return car.images;
+      return car.images
+        .map(getImageUrl)
+        .filter(Boolean);
     }
 
     if (car.thumbnail) {
-      return [car.thumbnail];
+      return [getImageUrl(car.thumbnail)].filter(Boolean);
     }
 
     return [fallbackImage];

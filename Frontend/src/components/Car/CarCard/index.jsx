@@ -66,9 +66,9 @@ export default function CardCar({
           </Meta>
         </div>
 
-        <p className="mb-6 text-base leading-6 text-(--color-text-secondary)">
+        {/* <p className="mb-6 text-base leading-6 text-(--color-text-secondary)">
           {car.description}
-        </p>
+        </p> */}
 
         <div className="flex flex-wrap items-center justify-between gap-4 border-t border-(--color-border) pt-4">
           <p className="m-0 text-lg font-extrabold text-(--color-secondary)">
