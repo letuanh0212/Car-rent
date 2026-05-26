@@ -14,7 +14,7 @@ function getBookingsFromResponse(response) {
   return [];
 }
 
-export default function useGetAllBookingCus(customerId) {
+export default function useGetAllBookingByCus(customerId) {
   const [bookings, setBookings] = useState([]);
 
   const [loading, setLoading] = useState(false);

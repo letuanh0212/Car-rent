@@ -1,7 +1,9 @@
 import accountInstance from "../Client/axiosAccountClient";
 
 const bookingAccount = {
-    async 
+    async getAllBookings() {
+        return await accountInstance.get("/bookings");
+    }
 
 }
 

@@ -6,7 +6,7 @@ import InfoBox from "~/components/InfoBox";
 import Table from "~/components/Table";
 import { useNavigate } from "react-router-dom";
 
-import useGetAllBookingCus from "~/hooks/Booking/useGetAllBookingCus";
+import useGetAllBookingCus from "~/hooks/Booking/useGetAllBookingByCus";
 import { formatDate, formatMoney } from "~/utils/format";
 import { useMemo, useState } from "react";
 
