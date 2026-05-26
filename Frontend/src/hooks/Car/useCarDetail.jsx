@@ -29,7 +29,7 @@ export default function useCarDetail(carId) {
                 const response = await carApi.getCarDetails(carId);
 
             if (isMounted) {
-                dispatch(setSelectedCar(response));
+                dispatch(setSelectedCar(response.data || null));
             }
             } catch (err) {
                 if (isMounted) {

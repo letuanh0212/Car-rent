@@ -24,9 +24,9 @@ export default function useCustomerLogin() {
 
       dispatch(
         loginSuccess({
-          accessToken: response.accessToken,
+          accessToken: response.data?.accessToken,
 
-          refreshToken: response.refreshToken,
+          refreshToken: response.data?.refreshToken,
 
           authType: "customer",
         })

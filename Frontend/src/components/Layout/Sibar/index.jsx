@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import Button from "~/components/Button";
-import { logout } from "~/store/slices/customerAuthSlice";
+import { accountLogout } from "~/store/slices/accountSlice";
 
 const menuItems = [
   {
@@ -54,7 +54,7 @@ export default function AdminSidebar() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(accountLogout());
     navigate("/loginSystem");
   };
 

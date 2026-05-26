@@ -26,7 +26,7 @@ export default function useCars() {
 
       const response = await carApi.getCarList();
 
-      dispatch(setCars(response));
+      dispatch(setCars(response.data || []));
     } catch (err) {
       dispatch(
         setCarError(

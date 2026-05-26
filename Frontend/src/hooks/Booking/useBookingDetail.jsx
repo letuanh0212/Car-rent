@@ -16,9 +16,8 @@ export default function useBookingDetail(id) {
         setError("");
 
         const response = await bookingApi.getBookingDetails(id);
-        const responseData = response.data;
 
-        setBooking(responseData);
+        setBooking(response.data || null);
       } catch (err) {
         setError(
           err?.responseData?.data?.message ||

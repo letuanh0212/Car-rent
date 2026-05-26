@@ -7,7 +7,7 @@ const BookingCustomer =    {
             return response;
         }
         catch (error) {
-            throw error.response?.data || new Error("Failed to create booking");
+            throw error;
         }
 
 
@@ -18,7 +18,7 @@ const BookingCustomer =    {
             return response;
         }
         catch (error) {
-            throw error.response?.data || new Error("Failed to fetch booking details");
+            throw error;
         }
     },
     async getBooikngsById(bookingId) {
@@ -27,7 +27,7 @@ const BookingCustomer =    {
             return response;
         }
         catch (error) {
-            throw error.response?.data || new Error("Failed to fetch booking details");
+            throw error;
         }
     },
     async checkCarAvailability(carId, startDate, endDate) {
@@ -40,7 +40,7 @@ const BookingCustomer =    {
             return response;
         }
         catch (error) {
-            throw error.response?.data || new Error("Failed to check car availability");
+            throw error;
         }
     },
     async getBookingsByCustomerId(customerId) {
@@ -48,12 +48,9 @@ const BookingCustomer =    {
             const response = await CusInstance.get(`/bookings/customer/${customerId}`
             );
 
-            return response.data;
+            return response;
         } catch (error) {
-            throw (
-            error.response?.data ||
-            new Error("Failed to fetch customer bookings")
-            );
+            throw error;
         }
     }
 };

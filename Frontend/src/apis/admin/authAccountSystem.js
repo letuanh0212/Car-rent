@@ -3,9 +3,9 @@ const authAccountSystem = {
     async login(data) {
         try {
             const response = await AccountIntance.post("/accounts/login", data);
-            return response.data;
+            return response;
         } catch (error) {
-            throw error.response?.data || new Error("Login failed");
+            throw error;
         }
     },
     async logout() {
@@ -14,10 +14,10 @@ const authAccountSystem = {
     async registerSystem (data){ 
         try{
             const response = await AccountIntance.post("/accounts/register", data);
-            return response.data  
+            return response  
 
         }catch (error){
-            throw error.response?.data || new Error("Register failed");
+            throw error;
     
         }
     }

@@ -16,7 +16,7 @@ export default function RegisterPage() {
   const { register, loading, error } = useCustomerRegister();
 
   const [formData, setFormData] = useState({
-    fullname: "",
+    full_name: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -63,7 +63,7 @@ export default function RegisterPage() {
           <InputField label="Full Name">
             <InputWithIcon
               type="text"
-              name="fullName"
+              name="full_name"
               value={formData.full_name}
               onChange={handleChange}
               placeholder="Enter your full name"

@@ -5,20 +5,21 @@ const authCustomer = {
     async loginAccountSystem  (formData)  {
         try {
             const response = await customerInstance.post("/customer/login", formData);
-            return response.data;
+            return response;
         } catch (error) {
-            throw error.response?.data || new Error("Login failed");
+            throw error;
         }
     },
     async logout() {
-        localStorage.removeItem("CustomerAccessToken");
+        localStorage.removeItem("customerAccessToken");
+        localStorage.removeItem("customerRefreshToken");
     },
     async register(formData) {
         try {
             const response = await customerInstance.post("/customer/register", formData);
-            return response.data;
+            return response;
         } catch (error) {
-            throw error.response?.data || new Error("Registration failed");
+            throw error;
         }
     }   
 };

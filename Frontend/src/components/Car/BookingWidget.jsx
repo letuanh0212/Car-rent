@@ -6,7 +6,7 @@ import InputField from "~/components/Inputs/InputField";
 import { formatCurrency } from "~/utils/currency";
 import DateTimeField from "~/components/Inputs/DateTimeField";
 import {getDateValue,formatBookingDate} from "~/utils/date";
-import useCarAvailability from "~/store/slices/useCarAvailability";
+import useCarAvailability from "~/hooks/Booking/useCarAvailability";
 import { calculateBookingPrice } from "~/utils/price";
 import InfoBox from "../InfoBox";
 import { useSelector } from "react-redux";

@@ -4,21 +4,21 @@ const carCustomer = {
     async getCarList() {
         try {
             const response = await cusInstance.get("/cars");
-            return response.data;
+            return response;
         }
         catch (error) {
-            throw error.response?.data || new Error("Failed to fetch car list");
+            throw error;
         }   
     },
     async getCarDetails(carId) {
         try {
             const response = await cusInstance.get(`/cars/${carId}`);
-            return response.data;
+            return response;
         }
         catch (error) {
-            throw error.response?.data || new Error("Failed to fetch car details");
+            throw error;
         }
     }
-};
+};  
 
 export default carCustomer;

@@ -13,24 +13,14 @@ const customerToken = localStorage.getItem(
   "customerAccessToken"
 );
 
-const adminToken = localStorage.getItem(
-  "accountAccessToken"
-);
-
-const token = customerToken || adminToken;
-
 const initialState = {
-  token: token || null,
+  token: customerToken || null,
 
-  user: token ? decodeJWT(token) : null,
+  user: customerToken ? decodeJWT(customerToken) : null,
 
-  authType: adminToken
-    ? "admin"
-    : customerToken
-    ? "customer"
-    : null,
+  authType: customerToken ? "customer" : null,
 
-  isAuthenticated: Boolean(token),
+  isAuthenticated: Boolean(customerToken),
 };
 
 const authSlice = createSlice({
@@ -54,27 +44,13 @@ const authSlice = createSlice({
 
       state.isAuthenticated = true;
 
-        if (authType === "customer") {
-            localStorage.removeItem("accountAccessToken");
-            localStorage.removeItem("accountRefreshToken");
+      if (authType === "customer") {
+        localStorage.setItem("customerAccessToken", accessToken);
 
-            localStorage.setItem("customerAccessToken", accessToken);
-
-            if (refreshToken) {
-                localStorage.setItem("customerRefreshToken", refreshToken);
-            }
+        if (refreshToken) {
+          localStorage.setItem("customerRefreshToken", refreshToken);
         }
-
-        if (authType === "admin") {
-            localStorage.removeItem("customerAccessToken");
-            localStorage.removeItem("customerRefreshToken");
-
-            localStorage.setItem("accountAccessToken", accessToken);
-
-            if (refreshToken) {
-                localStorage.setItem("accountRefreshToken", refreshToken);
-            }
-        }
+      }
     },
 
     logout: (state) => {
@@ -94,13 +70,6 @@ const authSlice = createSlice({
         "customerRefreshToken"
       );
 
-      localStorage.removeItem(
-        "accountAccessToken"
-      );
-
-      localStorage.removeItem(
-        "accountRefreshToken"
-      );
     },
   },
 });
