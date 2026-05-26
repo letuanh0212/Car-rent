@@ -195,6 +195,19 @@ const bookingRepository = {
 
         }
     },
+    async getBookingById(id) {
+        const query = `
+            SELECT *
+            FROM bookings
+            WHERE bk_id = $1
+        `;
+        try {
+            const res = await db.query(query, [id]);
+            return res.rows[0];
+        } catch (err) {
+            throw err;
+        }
+    },
     async checkCarAvailability(car_id, start_date, end_date) {
         const result = await db.query(
             `

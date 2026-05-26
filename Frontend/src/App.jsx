@@ -6,6 +6,7 @@ import RegisterPage from '~/pages/authCustomers/RegisterPage';
 import CarDetailPage from '~/pages/Car/_id';
 import Profile from '~/pages/authCustomers/Profile';
 import BookingForm from '~/pages/Booking';
+import _id from './pages/Booking/_id';
 
 import PrivateLayout from './components/Layout/privateLayout';
 import BookingsManagement from './pages/DashBoard/Booking';
@@ -23,13 +24,14 @@ function App() {
                     <Route path="/cars/:id" element={<CarDetailPage />} />
                     <Route path='/profile' element={<Profile/>}/>
                     <Route path='/bookings' element={<BookingForm/>}/>
+                    <Route path='/booking/:id' element={<_id/>}/>
                  </Route>
                 <Route element = {<PrivateLayout/>}>
                     <Route path='/dashboard' element={<Dashboard/>}></Route>
                     <Route path='/dashboard/cars' element={<CarManagement/>} />
                     <Route path='/dashboard/bookings' element={<BookingsManagement/>} />
                     <Route path='/dashboard/customers' element={<CustomersManagement/>} />
-                </Route>
+                </Route>s
                 <Route path='/loginSystem' element={<LoginPageSystem/>} />
             </Routes>
     );   

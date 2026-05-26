@@ -114,6 +114,22 @@ const bookingController = {
             });
         }
     },
+    async getBookingsById(req, res) {
+        try {
+            const { id } = req.params;
+            const booking = await BookService.getBookingsById(id);
+            return res.status(200).json({
+                success: true,
+                data: booking
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            });
+        }  
+    },
 
     async checkCarAvailability(req, res) {
         try {

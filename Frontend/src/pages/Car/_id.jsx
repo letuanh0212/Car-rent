@@ -6,8 +6,6 @@ import { useParams } from "react-router-dom";
 
 import useCreateBooking from "~/hooks/Booking/useBookingCreate";
 
-
-
 export default function CarDetailPage() {
     const {id} = useParams();
     const { car} = carDetailApi(id);

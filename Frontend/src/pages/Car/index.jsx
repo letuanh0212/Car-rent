@@ -14,26 +14,22 @@ export default function CarListPage() {
             <h1 className="text-4xl font-bold tracking-tight text-(--color-text-primary)">
               Browse Cars
             </h1>
-
             <p className="mt-2 max-w-2xl text-base leading-6 text-(--color-text-secondary)">
               Choose a vehicle that fits your trip,
               budget, and driving style.
             </p>
           </div>
         </div>
-
         {loading && (
           <p className="text-(--color-text-secondary)">
             Loading cars...
           </p>
         )}
-
         {error && (
           <p className="text-(--color-error)">
             {error}
           </p>
         )}
-
         {!loading && !error && (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
             {cars.map((car) => (

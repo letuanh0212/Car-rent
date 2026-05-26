@@ -4,24 +4,22 @@ const BookService = {
     async createBook(data) {
         return await bookRepository.create(data);
     },
-
     async getAllBooks() {
         return await bookRepository.getAllBookings();
     },
-
     async updateBook(id, data) {
         return await bookRepository.update(id, data);
     },
-
     async deleteBook(id) {
         await bookRepository.delete(id);
         return;
     },
-
     async getBookingsByUserId(user_id) {
         return await bookRepository.getBookingsByUserId(user_id);
     },
-
+    async getBookingsById(id) {
+        return await bookRepository.getBookingById(id);
+    },
     async checkAvailability(car_id, start_date, end_date) {
         return await bookRepository.checkCarAvailability(
             car_id,
@@ -29,7 +27,6 @@ const BookService = {
             end_date
         );
     },
-
     async getTopBookedCars(limit) {
         return await bookRepository.getTopBooked(limit);
     },

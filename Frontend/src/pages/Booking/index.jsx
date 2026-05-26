@@ -4,16 +4,28 @@ import BookingStatus from "~/components/BookingStatus";
 import Button from "~/components/Button";
 import InfoBox from "~/components/InfoBox";
 import Table from "~/components/Table";
+import { useNavigate } from "react-router-dom";
 
 import useGetAllBookingCus from "~/hooks/Booking/useGetAllBookingCus";
 import { formatDate, formatMoney } from "~/utils/format";
+import { useMemo, useState } from "react";
 
 export default function MyBookings() {
+
   const { user } = useSelector((state) => state.auth);
-
   const customerId = user?.id ;  
-
+  const navigate = useNavigate();
   const { bookings, loading, error } = useGetAllBookingCus(customerId);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 5;
+
+  const totalPages = Math.ceil(bookings.length / pageSize);
+
+  const paginatedBookings = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return bookings.slice(start, start + pageSize);
+  }, [bookings, currentPage]);
 
   const columns = [
     {
@@ -89,19 +101,45 @@ export default function MyBookings() {
         {customerId && !loading && !error && (
           <Table
             columns={columns}
-            data={bookings}
+            data={paginatedBookings}
             emptyText="You have no bookings yet."
             renderActions={(row) => (
               <Button
                 type="button"
                 variant="ghost"
-                className="border border(--color-border) px-4"
-                onClick={() => console.log(row)}
+                className="border border-(--color-border) px-4"
+                // onClick={() => console.log(row)}
+                onClick={() => navigate(`/booking/${row.bk_id}`)}
               >
                 View
               </Button>
             )}
           />
+        )}
+        {totalPages > 1 && (
+          <div className="mt-6 flex items-center justify-between">
+            <Button
+              type="button"
+              variant="ghost"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((page) => page - 1)}
+            >
+              Previous
+            </Button>
+
+            <span className="text-sm text-(--color-text-muted)">
+              Page {currentPage} of {totalPages}
+            </span>
+
+            <Button
+              type="button"
+              variant="ghost"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((page) => page + 1)}
+            >
+              Next
+            </Button>
+          </div>
         )}
       </InfoBox>
     </section>
