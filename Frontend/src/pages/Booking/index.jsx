@@ -12,7 +12,8 @@ import { useMemo, useState } from "react";
 
 export default function MyBookings() {
 
-  const { user } = useSelector((state) => state.auth);
+  // Customer auth is registered in the Redux store under `customer`.
+  const { user } = useSelector((state) => state.customer || {});
   const customerId = user?.id ;  
   const navigate = useNavigate();
   const { bookings, loading, error } = useGetAllBookingCus(customerId);

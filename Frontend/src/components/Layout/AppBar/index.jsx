@@ -3,15 +3,16 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import Button from "~/components/Button";
-import { logout } from "~/store/slices/authSlice";
+import { logout } from "~/store/slices/customerAuthSlice";
 
 export default function AppBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
 
+  // Customer auth is registered in the Redux store under `customer`.
   const { user, isAuthenticated } = useSelector(
-    (state) => state.auth
+    (state) => state.customer || {}
   );
 
   const handleLogout = () => {

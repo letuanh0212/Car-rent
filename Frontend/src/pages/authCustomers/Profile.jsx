@@ -3,7 +3,8 @@ import InfoBox from "~/components/InfoBox";
 import { useSelector } from "react-redux";
 
 export default function Profile() {
-   const { user } = useSelector((state) => state.auth);
+   // Customer auth is registered in the Redux store under `customer`.
+   const { user } = useSelector((state) => state.customer || {});
 
   return (
     <section className="rounded-4xl bg-(--color-surface) p-6 shadow-(--shadow-lg) md:p-8">
@@ -40,11 +41,11 @@ export default function Profile() {
             </div>
 
             <h2 className="mt-5 text-2xl font-bold text-(--color-text-primary)">
-              {user.fullName}
+              {user?.fullName || user?.full_name || "N/A"}
             </h2>
 
             <p className="mt-1 text-sm text-(--color-text-muted)">
-              {user.email}
+              {user?.email || "N/A"}
             </p>
           </div>
         </InfoBox>
@@ -58,19 +59,19 @@ export default function Profile() {
             <ProfileItem
               icon="person"
               label="Full Name"
-              value={user.full_name}
+              value={user?.full_name || user?.fullName || "N/A"}
             />
 
             <ProfileItem
               icon="email"
               label="Email"
-              value={user.email}
+              value={user?.email || "N/A"}
             />
 
             <ProfileItem
               icon="call"
               label="Phone"
-              value={user.phone}
+              value={user?.phone || "N/A"}
             />
           </div>
         </InfoBox>

@@ -5,65 +5,102 @@ import {
   registerSystemThunk,
 } from "../thunks/authAccountThunk";
 
+function decodeJWT(token) {
+  try {
+    const payload = token.split(".")[1];
+    return JSON.parse(atob(payload));
+  } catch {
+    return null;
+  }
+}
+
+const accountToken = localStorage.getItem("accountAccessToken");
+
 const initialState = {
-  account: null,
-  accessToken: localStorage.getItem("accountAccessToken") || null,
+  account: accountToken ? decodeJWT(accountToken) : null,
+  accessToken: accountToken || null,
+  isAuthenticated: Boolean(accountToken),
   loading: false,
   error: null,
   success: false,
 };
 
-const authSlice = createSlice({
-  name: "auth",
+const accountAuthSlice = createSlice({
+  name: "accountAuth",
   initialState,
   reducers: {
-    clearAuthError: (state) => {
+    clearAccountAuthError: (state) => {
       state.error = null;
     },
-    resetAuthSuccess: (state) => {
+
+    resetAccountAuthSuccess: (state) => {
       state.success = false;
+    },
+
+    accountLogout: (state) => {
+      state.account = null;
+      state.accessToken = null;
+      state.isAuthenticated = false;
+      state.loading = false;
+      state.error = null;
+      state.success = false;
+
+      localStorage.removeItem("accountAccessToken");
+      localStorage.removeItem("accountRefreshToken");
     },
   },
   extraReducers: (builder) => {
     builder
-      // LOGIN
       .addCase(loginThunk.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
+
       .addCase(loginThunk.fulfilled, (state, action) => {
+        const accessToken =
+          action.payload?.accessToken ||
+          action.payload?.accessTokenaccount ||
+          action.payload?.data?.accessToken ||
+          action.payload?.data?.accessTokenaccount;
+
         state.loading = false;
         state.success = true;
+        state.accessToken = accessToken || null;
+        state.account = accessToken ? decodeJWT(accessToken) : null;
+        state.isAuthenticated = Boolean(accessToken);
 
-        state.account = action.payload?.account || action.payload?.data || null;
-        state.accessToken = action.payload?.accessToken || null;
+        if (accessToken) {
+          localStorage.setItem("accountAccessToken", accessToken);
+        }
       })
+
       .addCase(loginThunk.rejected, (state, action) => {
         state.loading = false;
         state.error =
           action.payload?.message || action.payload || "Login failed";
       })
 
-      // REGISTER
       .addCase(registerSystemThunk.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
+
       .addCase(registerSystemThunk.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.account = action.payload?.account || action.payload?.data || null;
+          action.payload?.message || action.payload || "Register success";
       })
+
       .addCase(registerSystemThunk.rejected, (state, action) => {
         state.loading = false;
         state.error =
           action.payload?.message || action.payload || "Register failed";
       })
 
-      // LOGOUT
       .addCase(logoutThunk.fulfilled, (state) => {
         state.account = null;
         state.accessToken = null;
+        state.isAuthenticated = false;
         state.loading = false;
         state.error = null;
         state.success = false;
@@ -71,6 +108,10 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearAuthError, resetAuthSuccess } = authSlice.actions;
+export const {
+  clearAccountAuthError,
+  resetAccountAuthSuccess,
+  accountLogout,
+} = accountAuthSlice.actions;
 
-export default authSlice.reducer;
+export default accountAuthSlice.reducer;

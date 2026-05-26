@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 
 import authApi from "~/apis/customer/authCustomer";
 
-import { loginSuccess } from "~/store/slices/authSlice";
+import { loginSuccess } from "~/store/slices/customerAuthSlice";
 
 export default function useCustomerLogin() {
   const dispatch = useDispatch();

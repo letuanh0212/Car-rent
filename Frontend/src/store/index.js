@@ -1,14 +1,16 @@
 import {configureStore } from "@reduxjs/toolkit";
-import autheReducer from "./slices/authSlice";
 import carReducer from "./slices/carSlice";
 import bookingReducer from "./slices/bookingSlice";
 import accountReducer from "./slices/accountSlice";
+import customerReducer from "./slices/customerAuthSlice";
+
 const store = configureStore({
     reducer: {
-        auth: autheReducer,
+        customer: customerReducer,
+        account: accountReducer,
         cars: carReducer,
         booking: bookingReducer,
-        account: accountReducer,
+
     },
 });
 export default store;

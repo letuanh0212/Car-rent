@@ -16,8 +16,9 @@ export default function BookingWidget({ car, onSubmit }) {
   const [checkOut, setCheckOut] = useState(getDateValue(1));
   const [returnLocation, setReturnLocation] = useState("");
 
-  const { user} = useSelector(
-    (state) => state.auth
+  // Customer auth is registered in the Redux store under `customer`.
+  const { user } = useSelector(
+    (state) => state.customer || {}
   );
 
   const pricePerDay = Number(car?.price_per_day);

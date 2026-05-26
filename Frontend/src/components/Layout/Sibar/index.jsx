@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import Button from "~/components/Button";
-import { logout } from "~/store/slices/authSlice";
+import { logout } from "~/store/slices/customerAuthSlice";
 
 const menuItems = [
   {
