@@ -158,7 +158,7 @@ export default function CreateCarPage() {
         videos: formData.embedding.trim()
           ? [
               {
-                youtube_url:
+                video_url:
                   formData.embedding.trim(),
                 is_thumbnail: true,
               },
@@ -166,8 +166,10 @@ export default function CreateCarPage() {
           : [],
       };
 
-      const response =
-        await carAccount.createCar(payload);
+      const response = await carAccount.createCar(
+        payload,
+        imageFiles.map((image) => image.file)
+      );
 
       const carId =
         response?.data?.id || response?.id;
@@ -175,13 +177,6 @@ export default function CreateCarPage() {
       if (!carId) {
         throw new Error(
           "Create car succeeded but car id missing"
-        );
-      }
-
-      if (imageFiles.length > 0) {
-        await carAccount.uploadImages(
-          carId,
-          imageFiles.map((image) => image.file)
         );
       }
 

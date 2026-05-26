@@ -1,11 +1,28 @@
+import fs from "fs";
+import path from "path";
+
 import DB from "../config/db.js";
+
+const uploadRoot = path.resolve("uploads", "cars");
+
+const sanitizeFileName = (fileName) => {
+  const ext = path.extname(fileName);
+  const baseName = path
+    .basename(fileName, ext)
+    .replace(/[^a-zA-Z0-9-_]/g, "-")
+    .toLowerCase();
+
+  return `${Date.now()}-${baseName}${ext}`;
+};
 
 const createListingWithMedia = async ({
   carData,
   images = [],
   videos = [],
+  uploadBaseUrl = "",
 }) => {
   const client = await DB.connect();
+  const writtenFilePaths = [];
 
   try {
     await client.query("BEGIN");
@@ -58,6 +75,24 @@ const createListingWithMedia = async ({
     const insertedImages = [];
 
     for (const img of images) {
+      let imageUrl = img.image_url;
+
+      if (!imageUrl && img.file) {
+        const uploadDir = path.join(uploadRoot, car.id);
+        const filename = sanitizeFileName(img.file.originalname);
+        const filePath = path.join(uploadDir, filename);
+
+        fs.mkdirSync(uploadDir, { recursive: true });
+        fs.writeFileSync(filePath, img.file.buffer);
+
+        writtenFilePaths.push(filePath);
+        imageUrl = `${uploadBaseUrl}/${car.id}/${filename}`;
+      }
+
+      if (!imageUrl) {
+        continue;
+      }
+
       const imageResult = await client.query(
         `
         INSERT INTO car_images (
@@ -70,7 +105,7 @@ const createListingWithMedia = async ({
         `,
         [
           car.id,
-          img.image_url,
+          imageUrl,
           Boolean(img.is_thumbnail),
         ]
       );
@@ -81,10 +116,11 @@ const createListingWithMedia = async ({
     const insertedVideos = [];
 
     for (const vid of videos) {
+      const videoUrl = vid.video_url || vid.youtube_url;
       const embedding =
         vid.embedding ||
         JSON.stringify({
-          video_url: vid.video_url,
+          video_url: videoUrl,
           metadata: vid.metadata || null,
         });
 
@@ -115,6 +151,13 @@ const createListingWithMedia = async ({
     };
   } catch (err) {
     await client.query("ROLLBACK");
+
+    for (const filePath of writtenFilePaths) {
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+
     throw err;
   } finally {
     client.release();

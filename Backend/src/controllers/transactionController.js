@@ -1,5 +1,16 @@
 import TransactionService from "../services/transaction.js";
 
+const parseJsonField = (value, fallback) => {
+  if (!value) return fallback;
+  if (Array.isArray(value)) return value;
+
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+};
+
 const createCar = async (req, res) => {
   try {
     const {
@@ -7,6 +18,14 @@ const createCar = async (req, res) => {
       videos = [],
       ...carData
     } = req.body;
+
+    const uploadedImages = (req.files || []).map((file, index) => ({
+      file,
+      is_thumbnail: index === 0,
+    }));
+
+    const bodyImages = parseJsonField(images, []);
+    const bodyVideos = parseJsonField(videos, []);
 
     if (
       !carData.type_id ||
@@ -24,8 +43,12 @@ const createCar = async (req, res) => {
 
     const car = await TransactionService.createTransaction({
       carData,
-      images,
-      videos,
+      images: [
+        ...bodyImages,
+        ...uploadedImages,
+      ],
+      videos: bodyVideos,
+      uploadBaseUrl: `${req.protocol}://${req.get("host")}/uploads/cars`,
     });
 
     return res.status(201).json({
