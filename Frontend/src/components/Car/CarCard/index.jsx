@@ -8,6 +8,21 @@ import {
 
 import { formatCurrency } from "~/utils/currency";
 
+function getImageUrl(image) {
+  const value =
+    typeof image === "string"
+      ? image
+      : image?.image_url || image?.url || image?.src;
+
+  if (!value) return "";
+
+  if (value.startsWith("src/public/")) {
+    return `/${value}`;
+  }
+
+  return value;
+}
+
 export default function CardCar({
   car,
   variant = "public",
@@ -19,15 +34,24 @@ export default function CardCar({
   if (!car) return null;
 
   const isAdmin = variant === "admin";
+  const thumbnail = getImageUrl(car.thumbnail);
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-xl border border-(--color-border) bg-(--color-surface-lowest) shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl">
       <div className="relative h-64 overflow-hidden">
-        <img
-          className="h-full w-full object-cover transition duration-700 hover:scale-110"
-          src={car.thumbnail}
-          alt={car.title}
-        />
+        {thumbnail ? (
+          <img
+            className="h-full w-full object-cover transition duration-700 hover:scale-110"
+            src={thumbnail}
+            alt={car.title}
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-(--color-surface-low) text-(--color-text-muted)">
+            <span className="material-symbols-outlined text-5xl">
+              directions_car
+            </span>
+          </div>
+        )}
 
         <Badge
           variant={carStatusVariant[car.status] || "warning"}

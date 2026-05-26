@@ -9,6 +9,21 @@ import {
 
 import { formatCurrency } from "~/utils/currency";
 
+function getImageUrl(image) {
+  const value =
+    typeof image === "string"
+      ? image
+      : image?.image_url || image?.url || image?.src;
+
+  if (!value) return "";
+
+  if (value.startsWith("src/public/")) {
+    return `/${value}`;
+  }
+
+  return value;
+}
+
 export default function CarTable({
   cars = [],
   isAdmin = false,
@@ -21,25 +36,37 @@ export default function CarTable({
     {
       key: "title",
       title: "Car",
-      render: (row) => (
-        <div className="flex items-center gap-3">
-          <img
-            src={row.thumbnail}
-            alt={row.title || `${row.brand} ${row.model}`}
-            className="h-12 w-16 rounded object-cover"
-          />
+      render: (row) => {
+        const thumbnail = getImageUrl(row.thumbnail);
 
-          <div className="flex flex-col">
-            <span className="font-semibold">
-              {row.title || `${row.brand} ${row.model}`}
-            </span>
+        return (
+          <div className="flex items-center gap-3">
+            {thumbnail ? (
+              <img
+                src={thumbnail}
+                alt={row.title || `${row.brand} ${row.model}`}
+                className="h-12 w-16 rounded object-cover"
+              />
+            ) : (
+              <div className="flex h-12 w-16 items-center justify-center rounded bg-(--color-surface-low) text-(--color-text-muted)">
+                <span className="material-symbols-outlined text-xl">
+                  directions_car
+                </span>
+              </div>
+            )}
 
-            <span className="text-xs text-(--color-text-muted)">
-              {row.brand} {row.model}
-            </span>
+            <div className="flex flex-col">
+              <span className="font-semibold">
+                {row.title || `${row.brand} ${row.model}`}
+              </span>
+
+              <span className="text-xs text-(--color-text-muted)">
+                {row.brand} {row.model}
+              </span>
+            </div>
           </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       key: "license_plate",
