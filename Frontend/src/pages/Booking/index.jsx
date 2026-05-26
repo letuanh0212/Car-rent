@@ -109,7 +109,6 @@ export default function MyBookings() {
                 type="button"
                 variant="ghost"
                 className="border border-(--color-border) px-4"
-                // onClick={() => console.log(row)}
                 onClick={() => navigate(`/booking/${row.bk_id}`)}
               >
                 View

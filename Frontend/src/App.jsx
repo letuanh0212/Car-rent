@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import PublicLayout from './components/Layout/publicLayout';
 import Car from '~/pages/Car';
+import CreatedCar from '~/pages/Car/CreatedCar';
 import LoginPage from '~/pages/authCustomers/LoginPage';
 import RegisterPage from '~/pages/authCustomers/RegisterPage';
 import CarDetailPage from '~/pages/Car/_id';
@@ -26,6 +27,7 @@ function App() {
                 <Route element = {<PrivateLayout/>}>
                     <Route path='/dashboard' element={<Dashboard/>}></Route>
                     <Route path='/dashboard/cars' element={<Car />} />
+                    <Route path='/dashboard/cars/new' element={<CreatedCar />} />
                 </Route>
                 <Route path='/loginSystem' element={<LoginPageSystem/>} />
             </Routes>

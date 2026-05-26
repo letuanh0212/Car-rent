@@ -2,7 +2,7 @@ import car_embeddingService from '../services/car_embedding_vd.js';
 const CarEmbeddingController = {
     async createCarEmbedding(req, res) {
         try {
-            const { listing_id } = req.params;
+            const listing_id = req.params.id || req.params.listing_id || req.body.listing_id;
             const { embedding } = req.body;
             if (!listing_id || !embedding) {
                 return res.status(400).json({ error: 'listing_id and embedding are required' });
@@ -15,7 +15,7 @@ const CarEmbeddingController = {
     },
     async getEmbeddingByListingId(req, res) {
         try {
-            const { listing_id } = req.params;
+            const listing_id = req.params.id || req.params.listing_id;
             const embedding = await car_embeddingService.getEmbeddingByListingId(listing_id);
             if (!embedding) {
                 return res.status(404).json({ error: 'Embedding not found' });
