@@ -24,15 +24,10 @@ router.get('/search', CarController.searchCarsController);
 router.get('/:id/videos', car_embeddingController.getEmbeddingByListingId);
 
 router.get('/:id',  CarController.getCarByIdController);
-router.put('/:id', authMiddleware, CarController.updateCarController);
+router.patch('/:id',  CarController.updateCarController);
 router.delete('/:id', authMiddleware, CarController.deleteCarController);
 
 router.post('/transactions',  accountMiddleware,  authAdmin,  uploadCarTransactionImages.array("images", 12),  transactionController.createCar);
 router.post(  '/:id/images/upload',  accountMiddleware,  authAdmin,  uploadCarImages.array("images", 12),CarImagesController.uploadImages);
-// router.get('/transactions', authMiddleware, transactionController.getAllTransactionsController);
-// router.get('/transactions/:id', authMiddleware, transactionController.getTransactionByIdController);
-// router.put('/transactions/:id', authMiddleware, transactionController.updateTransactionController);
-// router.delete('/transactions/:id', authMiddleware, transactionController.deleteTransactionController);
-
 
 export default router;

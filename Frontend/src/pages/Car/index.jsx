@@ -8,13 +8,14 @@ import CardCar from "~/components/Car/CarCard";
 import CarTable from "~/components/Car/CarTable";
 
 import useCars from "~/hooks/Car/useCars";
+import carApi from "~/apis/customer/carCustomer";
 
 import EditCarModal from "~/pages/Car/Model/EditGeneralInfoModal" ;
 import CarImagesModal from "~/pages/Car/Model/EditMediaModal" ;
 
 export default function CarListPage() {
   const navigate = useNavigate();
-  const { cars, loading, error } = useCars();
+  const { cars, loading, error, refetch } = useCars();
 
   const { account, isAuthenticated } = useSelector(
     (state) => state.account || {}
@@ -23,13 +24,14 @@ export default function CarListPage() {
   const accountRole = account?.role?.toLowerCase();
   const isAdmin =
     isAuthenticated && accountRole === "admin";
-
+  console.log("ADMIN is ",isAdmin);
   const [viewMode, setViewMode] = useState("card");
   
   {/*const [selectedCar, setSelectedCar] = useState(null);*/}
     const [selectedCar, setSelectedCar] = useState(null);
 
     const [openEdit, setOpenEdit] = useState(false);
+    const [editLoading, setEditLoading] = useState(false);
 
     const [openImages, setOpenImages] = useState(false);
 
@@ -44,9 +46,22 @@ export default function CarListPage() {
     navigate(`/cars/${car.id}`);
   };
 
-  const handleEdit = (car) => {
-    setSelectedCar(car);   
-    setOpenEdit(true);
+  const handleEdit = async (car) => {
+    if (!car?.id) return;
+
+    try {
+      setEditLoading(true);
+      const response = await carApi.getCarDetails(car.id);
+
+      setSelectedCar(response.data || car);
+      setOpenEdit(true);
+    } catch (err) {
+      console.error("Failed to fetch car detail:", err);
+      setSelectedCar(car);
+      setOpenEdit(true);
+    } finally {
+      setEditLoading(false);
+    }
   };
 
   const handleAddImage = (car) => {
@@ -54,10 +69,10 @@ export default function CarListPage() {
     setOpenImages(true);
   };
 
-  // const handleDelete = (car) => {
-  //   setSelectedCar(car);
-  //   setOpenD(true);
-  // };
+  const handleDelete = (car) => {
+    setSelectedCar(car);
+    setOpenEdit(true);
+  };
   const handleVD = (car) => {
     setSelectedCar(car);
     setOpenVideo(true);
@@ -70,7 +85,7 @@ export default function CarListPage() {
       variant="admin"
       onView={handleView}
       onEdit={handleEdit}
-      // onDelete={handleDelete}
+      onDelete={handleDelete}
       onAddImage={handleAddImage}
       onVD={handleVD}
     />
@@ -117,6 +132,12 @@ export default function CarListPage() {
           </p>
         )}
 
+        {editLoading && (
+          <p className="mb-4 text-sm text-(--color-text-secondary)">
+            Loading car detail...
+          </p>
+        )}
+
         {error && (
           <p className="text-(--color-error)">
             {error}
@@ -129,7 +150,7 @@ export default function CarListPage() {
             isAdmin={isAdmin}
             onView={handleView}
             onEdit={handleEdit}
-            // onDelete={handleDelete}
+            onDelete={handleDelete}
             onAddImage={handleAddImage}
             onVD={handleVD}
           />
@@ -145,6 +166,7 @@ export default function CarListPage() {
           open={openEdit}
           onClose={() => setOpenEdit(false)}
           car={selectedCar}
+          onUpdated={refetch}
         />
 
         <CarImagesModal

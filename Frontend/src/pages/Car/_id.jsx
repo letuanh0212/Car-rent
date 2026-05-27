@@ -20,6 +20,10 @@ export default function CarDetailPage() {
             submitBooking,
             loading: bookingLoading,
     } = useCreateBooking();
+
+
+
+
     const handleBookingSubmit = async (payload) => {
         const result = await submitBooking(payload);
 
@@ -29,6 +33,7 @@ export default function CarDetailPage() {
             alert(result.error || "Create booking failed");
         }
     };
+
     if (!car) {
         return <>loading</>;
         }
@@ -50,13 +55,15 @@ export default function CarDetailPage() {
                 </div>
 
                 <button
-                type="button"
-                onClick={() => window.location.href = "/dashboard/cars"}
-                className="rounded-xl bg-(--color-primary) px-5 py-3 font-semibold text-(--color-on-primary) transition hover:opacity-90"
-                >
-                ← Dashboard
+                    type="button"
+                    onClick={() => window.location.href = "/dashboard/cars"}
+                    className="rounded-xl bg-(--color-primary) px-5 py-3 font-semibold text-(--color-on-primary) transition hover:opacity-90"
+                    >
+                    ← Dashboard
                 </button>
+
             </div>
+            
             )}
 
             <div className="grid gap-12 lg:grid-cols-2">

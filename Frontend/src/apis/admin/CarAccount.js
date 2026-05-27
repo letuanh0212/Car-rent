@@ -61,6 +61,11 @@ const carAccount = {
 
     return response;
   },
+
+  async updateCar(carId, data) {
+    const response = await accountInstance.patch(`/cars/${carId}`, data);
+    return response;
+  },
 };
 
 export default carAccount;
