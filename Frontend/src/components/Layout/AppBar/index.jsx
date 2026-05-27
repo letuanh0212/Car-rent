@@ -6,8 +6,10 @@ import Button from "~/components/Button";
 import { logout } from "~/store/slices/customerAuthSlice";
 
 export default function AppBar() {
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const [open, setOpen] = useState(false);
 
   // Customer auth is registered in the Redux store under `customer`.

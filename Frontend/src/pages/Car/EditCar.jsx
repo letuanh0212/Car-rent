@@ -1,17 +1,6 @@
-export default function YoutubePlayer() {
-  return (
-<iframe 
-  width="560" 
-  height="315" 
-  src="https://www.youtube-nocookie.com/embed/da1KtfPvzco?si=f4ZAzw-RTB4d_12i" 
-  title="YouTube video player" frameborder="0" 
-  allow="accelerometer; autoplay; 
-  clipboard-write; encrypted-media; 
-  gyroscope; picture-in-picture; web-share" 
-  referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+import { useParams } from "react-router-dom";
 
-</iframe>
-  );
+export default function EditCar() {
+  const { id } = useParams();
+  return <div>edit car {id}</div>;
 }
-
-

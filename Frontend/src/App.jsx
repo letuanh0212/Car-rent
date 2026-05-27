@@ -27,8 +27,8 @@ function App() {
                     <Route path='/booking/:id' element={<_id/>}/>
                  </Route>
                 <Route element = {<PrivateLayout/>}>
-                    <Route path='/dashboard/car/edit' element={<Edit/>}></Route>
-                    <Route path='/dashboard' element={<Dashboard/>}></Route>
+                    <Route path='/dashboard/cars/:id/edit' element={<Edit/>}/>
+                    <Route path='/dashboard' element={<Dashboard/>}/>
                     <Route path='/dashboard/cars' element={<Car />} />
                     <Route path='/dashboard/cars/new' element={<CreatedCar />} />
                 </Route>
