@@ -12,6 +12,8 @@ import _id from './pages/Booking/_id';
 import PrivateLayout from './components/Layout/privateLayout';
 import LoginPageSystem from '~/pages/authAccountSystem/LoginPageSystem';
 import Dashboard from './pages/DashBoard';
+import Edit from './pages/Car/EditCar';
+
 function App() {
     return (
             <Routes>
@@ -25,6 +27,7 @@ function App() {
                     <Route path='/booking/:id' element={<_id/>}/>
                  </Route>
                 <Route element = {<PrivateLayout/>}>
+                    <Route path='/dashboard/car/edit' element={<Edit/>}></Route>
                     <Route path='/dashboard' element={<Dashboard/>}></Route>
                     <Route path='/dashboard/cars' element={<Car />} />
                     <Route path='/dashboard/cars/new' element={<CreatedCar />} />

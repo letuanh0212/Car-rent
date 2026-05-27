@@ -104,8 +104,31 @@ export default function DetailInfo({ car }) {
           {car.description ||
             "This vehicle is available for rental. Check the booking panel for date availability and estimated pricing."}
         </p>
+
+          {/* {car.videos?.length > 0 && (
+              <section className="space-y-4">
+                  <h2 className="text-2xl font-bold text-(--color-text-primary)">
+                    Vehicle Video
+                  </h2>
+
+                <div className="overflow-hidden rounded-2xl border border-(--color-border)">
+                  <div className="aspect-video">
+                    <iframe
+                      src={car.videos[0].youtube_url}
+                      title="Vehicle Video"
+                      className="h-full w-full"
+                      frameBorder="0"
+                      allowFullScreen
+                    />
+                  </div>
+                </div>
+                </section>
+          )} */}
+
       </section>
+            
     </div>
+    
   );
 }
 

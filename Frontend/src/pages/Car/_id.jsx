@@ -3,6 +3,7 @@ import DetailGallery from "~/components/Car/CarCard/DetailGallery";
 import DetailInfo from "~/components/Car/CarCard/DetailInfo";
 import carDetailApi from "~/hooks/Car/useCarDetail";
 import { useParams } from "react-router-dom";
+import CarVD from "~/components/Car/CarCard/CarVD";
 
 import useCreateBooking from "~/hooks/Booking/useBookingCreate";
 
@@ -22,6 +23,9 @@ export default function CarDetailPage() {
             alert(result.error || "Create booking failed");
         }
     };
+    if (!car) {
+        return <>loading</>;
+        }
     return (
         <section className="bg-(--color-surface-lowest) py-24">
             <div className="mx-auto max-w-7xl px-8">
@@ -36,6 +40,7 @@ export default function CarDetailPage() {
                         loading={bookingLoading}
                         />
                 </div>
+              <CarVD videos={car?.videos} />
             </div>
         </section>
     );

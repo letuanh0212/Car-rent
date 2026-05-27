@@ -103,6 +103,32 @@ export default function CarMedia({
           </div>
         )}
       </div>
+      <div className="space-y-4">
+        <InputField label="Youtube Embed URL">
+          <textarea
+            name="embedding"
+            value={formData.embedding}
+            onChange={handleChange}
+            rows={7}
+            placeholder="https://youtube.com/embed/..."
+            className="min-h-44 w-full rounded-lg border border-dashed border-(--color-border) bg-(--color-surface-low) px-4 py-3 font-mono text-sm text-(--color-text-primary) outline-none transition focus:border-(--color-secondary) focus:ring-2 focus:ring-(--color-secondary)/20"
+          />
+        </InputField>
+
+        {formData.embedding && (
+          <div className="overflow-hidden rounded-xl border border-(--color-border)">
+            <div className="aspect-video">
+              <iframe
+                src={formData.embedding}
+                title="Youtube Preview"
+                className="h-full w-full"
+                frameBorder="0"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        )}
+      </div>
     </FormSection>
   );
 }

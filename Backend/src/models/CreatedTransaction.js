@@ -115,33 +115,53 @@ const createListingWithMedia = async ({
 
     const insertedVideos = [];
 
+    // for (const vid of videos) {
+    //   const videoUrl = vid.video_url || vid.youtube_url;
+    //   const embedding =
+    //     vid.embedding ||
+    //     JSON.stringify({
+    //       video_url: videoUrl,
+    //       metadata: vid.metadata || null,
+    //     });
+
+    //   const videoResult = await client.query(
+    //     `
+    //     INSERT INTO car_embedding_videos (
+    //       listing_id,
+    //       embedding
+    //     )
+    //     VALUES ($1, $2)
+    //     RETURNING *;
+    //     `,
+    //     [
+    //       car.id,
+    //       embedding,
+    //     ]
+    //   );
+
+    //   insertedVideos.push(videoResult.rows[0]);
+    // }
     for (const vid of videos) {
-      const videoUrl = vid.video_url || vid.youtube_url;
-      const embedding =
-        vid.embedding ||
-        JSON.stringify({
-          video_url: videoUrl,
-          metadata: vid.metadata || null,
-        });
+      const videoUrl =
+        vid.video_url || vid.youtube_url;
 
       const videoResult = await client.query(
         `
         INSERT INTO car_embedding_videos (
           listing_id,
-          embedding
+          youtube_url
         )
         VALUES ($1, $2)
         RETURNING *;
         `,
         [
           car.id,
-          embedding,
+          videoUrl,
         ]
       );
 
       insertedVideos.push(videoResult.rows[0]);
     }
-
     await client.query("COMMIT");
 
     return {
