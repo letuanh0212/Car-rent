@@ -31,6 +31,7 @@ export default function CarTable({
   onEdit,
   onDelete,
   onAddImage,
+  onVD,
 }) {
   const columns = [
     {
@@ -137,6 +138,7 @@ export default function CarTable({
                 onEdit={onEdit}
                 onDelete={onDelete}
                 onAddImage={onAddImage}
+                onVD={onVD}
               />
             )
           : undefined

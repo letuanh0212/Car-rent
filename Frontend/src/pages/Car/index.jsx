@@ -9,6 +9,9 @@ import CarTable from "~/components/Car/CarTable";
 
 import useCars from "~/hooks/Car/useCars";
 
+import EditCarModal from "~/pages/Car/Model/EditGeneralInfoModal" ;
+import CarImagesModal from "~/pages/Car/Model/EditMediaModal" ;
+
 export default function CarListPage() {
   const navigate = useNavigate();
   const { cars, loading, error } = useCars();
@@ -22,7 +25,15 @@ export default function CarListPage() {
     isAuthenticated && accountRole === "admin";
 
   const [viewMode, setViewMode] = useState("card");
+  
+  {/*const [selectedCar, setSelectedCar] = useState(null);*/}
+    const [selectedCar, setSelectedCar] = useState(null);
 
+    const [openEdit, setOpenEdit] = useState(false);
+
+    const [openImages, setOpenImages] = useState(false);
+
+    const [openVideo, setOpenVideo] = useState(false);  
   useEffect(() => {
     if (isAdmin) {
       setViewMode("table");
@@ -34,16 +45,23 @@ export default function CarListPage() {
   };
 
   const handleEdit = (car) => {
-    navigate(`/dashboard/cars/${car.id}/edit`);
+    setSelectedCar(car);   
+    setOpenEdit(true);
   };
 
   const handleAddImage = (car) => {
-    navigate(`/dashboard/cars/${car.id}/images`);
+    setSelectedCar(car);
+    setOpenImages(true);
   };
 
-  const handleDelete = (car) => {
-    console.log("delete car", car.id);
-  };
+  // const handleDelete = (car) => {
+  //   setSelectedCar(car);
+  //   setOpenD(true);
+  // };
+  const handleVD = (car) => {
+    setSelectedCar(car);
+    setOpenVideo(true);
+  }
 
   const renderAdminCard = (car) => (
     <CardCar
@@ -52,8 +70,9 @@ export default function CarListPage() {
       variant="admin"
       onView={handleView}
       onEdit={handleEdit}
-      onDelete={handleDelete}
+      // onDelete={handleDelete}
       onAddImage={handleAddImage}
+      onVD={handleVD}
     />
   );
 
@@ -110,8 +129,9 @@ export default function CarListPage() {
             isAdmin={isAdmin}
             onView={handleView}
             onEdit={handleEdit}
-            onDelete={handleDelete}
+            // onDelete={handleDelete}
             onAddImage={handleAddImage}
+            onVD={handleVD}
           />
         )}
 
@@ -120,6 +140,24 @@ export default function CarListPage() {
             {cars.map(renderAdminCard)}
           </div>
         )}
+                {/* popups */}
+        <EditCarModal
+          open={openEdit}
+          onClose={() => setOpenEdit(false)}
+          car={selectedCar}
+        />
+
+        <CarImagesModal
+          open={openImages}
+          onClose={() => setOpenImages(false)}
+          car={selectedCar}
+        />
+
+        {/* <CarVideoModal
+          open={openVideo}
+          onClose={() => setOpenVideo(false)}
+          car={selectedCar}
+        /> */}
       </section>
     );
   }
@@ -160,6 +198,7 @@ export default function CarListPage() {
             {cars.map(renderPublicCard)}
           </div>
         )}
+
       </div>
     </section>
   );

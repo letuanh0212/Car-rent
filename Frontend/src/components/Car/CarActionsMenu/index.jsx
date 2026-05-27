@@ -6,6 +6,7 @@ export default function CarActionsMenu({
   onEdit,
   onDelete,
   onAddImage,
+  onVD,
 }) {
   const [open, setOpen] = useState(false);
 
@@ -46,13 +47,18 @@ export default function CarActionsMenu({
             label="Images"
             onClick={() => handleAction(onAddImage)}
           />
-
+          <MenuItem
+            icon="video_library"
+            label="Video"
+            onClick={() => handleAction(onVD)}
+          />
           <MenuItem
             icon="delete"
             label="Delete"
             danger
             onClick={() => handleAction(onDelete)}
           />
+
         </div>
       )}
     </div>
