@@ -76,7 +76,24 @@ const CarRepository = {
     },
     async getAll() {
         try{
-            const query = 'SELECT * FROM car_listings';
+            const query = `SELECT
+                            c.*,
+
+                            img.image_url AS thumbnail,
+
+                            vid.youtube_url AS video_url
+
+                            FROM car_listings c
+
+                            LEFT JOIN car_images img
+                            ON img.listing_id = c.id
+                            AND img.is_thumbnail = true
+
+                            LEFT JOIN car_embedding_videos vid
+                            ON vid.listing_id = c.id
+                            AND vid.is_thumbnail = true
+
+                            ORDER BY c.created_at DESC;`;
             const result = await db.query(query);
             return result.rows;
         }catch (error) {
@@ -122,70 +139,52 @@ const CarRepository = {
         }
     },
     async update(id, data) {
-        try {
-            const {
-                type_id,
-                owner_name,
-                owner_phone,
-                brand,
-                model,
-                year,
-                license_plate,
-                seat_count,
-                transmission,
-                fuel_type,
-                odometer,
-                title,
-                description,
-                price_per_day,
-                location
-            } = data;
+    const allowedFields = [
+        "owner_name",
+        "price_per_day",
+        "location",
+        "description",
+        "title",
+        "fuel_type",
+        "transmission",
+    ];
 
-            const query = `
-                UPDATE car_listings
-                SET
-                    type_id = $1,
-                    owner_name = $2,
-                    owner_phone = $3,
-                    brand = $4,
-                    model = $5,
-                    year = $6,
-                    license_plate = $7,
-                    seat_count = $8,
-                    transmission = $9,
-                    fuel_type = $10,
-                    odometer = $11,
-                    title = $12,
-                    description = $13,
-                    price_per_day = $14,
-                    location = $15
-                WHERE id = $16
-                RETURNING *;
-            `;
+    const filtered = {};
 
-            const values = [
-                type_id,
-                owner_name,
-                owner_phone,
-                brand,
-                model,
-                year,
-                license_plate,
-                seat_count,
-                transmission,
-                fuel_type,
-                odometer,
-                title,
-                description,
-                price_per_day,
-                location,
-                id
-            ];
-            const result = await db.query(query, values);
-            return result.rows[0];
-        } catch (error) {
-            throw error;
+    for (const key of allowedFields) {
+        if (data[key] !== undefined) {
+        filtered[key] = data[key];
         }
+    }
+
+    const fields = Object.keys(filtered);
+    const values = Object.values(filtered);
+
+    if (fields.length === 0) {
+        throw new Error("No valid fields to update");
+    }
+    console.log(fields, values);
+    console.log(data);
+    console.log(id);
+
+    const setQuery = fields
+        .map((f, index) => `${f} = $${index + 1}`)
+        .join(", ");
+
+    const sql = `
+        UPDATE car_listings
+        SET ${setQuery}
+        WHERE id = $${fields.length + 1}
+    `;
+
+    const result = await db.query(sql, [...values, id]);
+
+    const { rows } = await db.query(
+        "SELECT * FROM car_listings WHERE id = $1",
+        [id]
+    );
+
+    return rows[0];
     },
     async delete(id) {
         try {
@@ -281,6 +280,7 @@ const CarRepository = {
         } catch (error) {
             throw error;
         }
-    }
+    },
+    
 };
 export default CarRepository;

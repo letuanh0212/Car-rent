@@ -5,6 +5,7 @@ import { errorResponse } from '../Utils/response.js';
 dotenv.config();
 
 const authMiddleware = (req, res, next) => {
+
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {

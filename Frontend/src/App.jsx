@@ -1,194 +1,40 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route } from 'react-router-dom';
+import PublicLayout from './components/Layout/publicLayout';
+import Car from '~/pages/Car';
+import CreatedCar from '~/pages/Car/CreatedCar';
+import LoginPage from '~/pages/authCustomers/LoginPage';
+import RegisterPage from '~/pages/authCustomers/RegisterPage';
+import CarDetailPage from '~/pages/Car/_id';
+import Profile from '~/pages/authCustomers/Profile';
+import BookingForm from '~/pages/Booking';
+import _id from './pages/Booking/_id';
 
-import "./App.css";
-
-import { AuthProvider } from "./AuthContext.jsx";
-import ProtectedRoute from "./components/ProtectedRoute";
-
-import MainLayout from "./layouts/MainLayouts.jsx";
-import AdminLayout from "./layouts/AdminLayout.jsx";
-
-import Login from "./page/customer/login.jsx";
-import Register from "./page/customer/register.jsx";
-
-import CarList from "./page/car_articles/carlist.jsx";
-import CreatedCar from "./components/board/createdCar.jsx";
-import CarDetail from "./page/car_articles/cardetail.jsx";
-import CarSearch from "./components/search/CarSearch.jsx";
-import Bookings from "./page/bookings/booking.jsx";
-import ProfilePage from "./page/customer/profile.jsx";
-import CustomerBooking from "./page/bookings/customerBooking.jsx";
-import EditMyBooking from "./components/from/editMyBooking.jsx";
-
-
-
-import LoginSystem from "./page/accountsystem/Login.jsx";
-import RegisterSystem from "./page/accountsystem/createManagerSystem.jsx";
-import Carlist from "./page/System/fleetmanagement.jsx";
-import Dashboard from "./page/System/dashboard.jsx";
-import AddVD from "./components/board/addVD.jsx";
-import AddImages from "./components/board/addImages.jsx";
+import PrivateLayout from './components/Layout/privateLayout';
+import LoginPageSystem from '~/pages/authAccountSystem/LoginPageSystem';
+import Dashboard from './pages/DashBoard';
+import Edit from './pages/Car/EditCar';
 
 function App() {
     return (
-        <AuthProvider>
             <Routes>
-
-                {/* PUBLIC using with customer */}
-
-                <Route
-                    path="/login"
-                    element={<Login />}
-                />
-
-                <Route
-                    path="/register"
-                    element={<Register />}
-                />
-
-
-                {/* PRIVATE using with customer */}
-                <Route
-                    path="/loginsystem"
-                    element={<LoginSystem />}
-                />
-                <Route 
-                    path="/addmanager"
-                    element={<RegisterSystem />}
-                />  
-                <Route
-                    path="/management/cars"
-                    element={
-                    <ProtectedRoute>
-                        <AdminLayout>
-                            <Carlist/>
-                        </AdminLayout>
-                    </ProtectedRoute>}
-                />
-                {/* DASHBOARD */}
-                <Route
-                    path="/dashboard"
-                    element={
-                        <ProtectedRoute>
-                            <AdminLayout>
-                                <Dashboard />
-                            </AdminLayout>
-                        </ProtectedRoute>
-                    }
-                />
-                {/* ADD VD */}
-                <Route
-                    path="/add-vd"
-                    element={
-                        <ProtectedRoute>
-                            <AdminLayout>
-                                <AddVD />
-                            </AdminLayout>
-                        </ProtectedRoute>
-                    }
-                />
-                {/* ADD IMAGES */}
-                <Route
-                    path="/add-images"
-                    element={
-                        <ProtectedRoute>
-                            <AdminLayout>
-                                <AddImages />
-                            </AdminLayout>
-                        </ProtectedRoute>
-                    }
-                />
-                                {/* CREATE CAR */}
-
-                <Route
-                    path="/create-car"
-                    element={
-                        <ProtectedRoute>
-                            <MainLayout>
-                                <CreatedCar />
-                            </MainLayout>
-                        </ProtectedRoute>
-                    }
-                />
-                <Route 
-                    path="/my-bookings/:id"
-                    element={
-                        <ProtectedRoute>
-                            <MainLayout>
-                                <EditMyBooking />
-                            </MainLayout>
-                        </ProtectedRoute>
-                    }
-                />
-                {/* HOME */}
-
-                <Route
-                    path="/"
-                    element={
-                        <MainLayout>
-                            <CarList />
-                        </MainLayout>
-                    }
-                />
-                {/* PROFILE */}
-                <Route
-                    path="/profile"
-                    element={
-                        <ProtectedRoute>
-                            <MainLayout>
-                                <ProfilePage />
-                            </MainLayout>
-                        </ProtectedRoute>
-                    }
-                />
-                {/* BOOKING */}
-                <Route
-                    path="/my-bookings"
-                    element={
-                        <ProtectedRoute>
-                            <MainLayout>
-                                <CustomerBooking />
-                            </MainLayout>
-                        </ProtectedRoute>
-                    }
-                />
-
-                {/* SEARCH CARS */}
-
-                <Route
-                    path="/search"
-                    element={
-                        <MainLayout>
-                            <CarSearch />
-                        </MainLayout>
-                    }
-                />
-
-                {/* CAR DETAIL */}
-
-                <Route
-                    path="/cars/:id"
-                    element={
-                        <MainLayout>
-                            <CarDetail />
-                        </MainLayout>
-                    }
-                />
-                <Route
-                    path="/booking/:id"
-                    element={
-                        <ProtectedRoute>
-                            <MainLayout>
-                                <Bookings />
-                            </MainLayout>
-                        </ProtectedRoute>
-                    }
-                />
-
-
+                <Route element={<PublicLayout />}>
+                    <Route path="/" element={<Car />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/cars/:id" element={<CarDetailPage />} />
+                    <Route path='/profile' element={<Profile/>}/>
+                    <Route path='/bookings' element={<BookingForm/>}/>
+                    <Route path='/booking/:id' element={<_id/>}/>
+                 </Route>
+                <Route element = {<PrivateLayout/>}>
+                    <Route path='/dashboard/cars/:id/edit' element={<Edit/>}/>
+                    <Route path='/dashboard' element={<Dashboard/>}/>
+                    <Route path='/dashboard/cars' element={<Car />} />
+                    <Route path='/dashboard/cars/new' element={<CreatedCar />} />
+                </Route>
+                <Route path='/loginSystem' element={<LoginPageSystem/>} />
             </Routes>
-        </AuthProvider>
-    );
+    );   
 }
 
 export default App;

@@ -5,8 +5,9 @@ import jwt from "jsonwebtoken";
 import { generateAccessToken, generateRefreshToken } from "../utils/generateToken.js";
 dotenv.config();
 const CustomerService = {
-    async registerCustomerService({ full_name, email, password, phone}) {
-        if (!full_name || !email || !password || !phone) {
+    async registerCustomerService({ full_name, fullName, full_Name, email, password, phone}) {
+        const customerFullName = full_name || fullName || full_Name;
+        if (!customerFullName || !email || !password || !phone) {
             throw new Error('MISSING_REQUIRED_FIELDS');
         }
         
@@ -16,7 +17,7 @@ const CustomerService = {
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const customer = await CustomerRepository.create({
-            full_name,
+            full_name: customerFullName,
             email,
             password: hashedPassword,
             phone

@@ -90,7 +90,6 @@ const bookingRepository = {
 
         }
     },
-
     async getAllBookings() {
 
         const query = `
@@ -111,48 +110,22 @@ const bookingRepository = {
 
         }
     },
+    // async getBookingsByListingId(listing_id) {
+    //     const query = `
+    //         SELECT *
+    //         FROM bookings
+    //         WHERE listing_id = $1
+    //         AND (status IN ('pending', 'confirmed') OR status IS NULL)
+    //         ORDER BY start_date ASC
+    //     `;
 
-    async getBookingsByListingId(listing_id) {
-        const query = `
-            SELECT *
-            FROM bookings
-            WHERE listing_id = $1
-            AND (status IN ('pending', 'confirmed') OR status IS NULL)
-            ORDER BY start_date ASC
-        `;
-
-        try {
-            const res = await db.query(query, [listing_id]);
-            return res.rows;
-        } catch (err) {
-            throw err;
-        }
-    },
-
-    async findById(id) {
-
-        const query = `
-            SELECT *
-            FROM bookings
-            WHERE bk_id = $1
-        `;
-
-        try {
-
-            const res = await db.query(
-                query,
-                [id]
-            );
-
-            return res.rows[0];
-
-        } catch (err) {
-
-            throw err;
-
-        }
-    },
-
+    //     try {
+    //         const res = await db.query(query, [listing_id]);
+    //         return res.rows;
+    //     } catch (err) {
+    //         throw err;
+    //     }
+    // },
     async update(id, data) {
 
         const {
@@ -203,7 +176,6 @@ const bookingRepository = {
 
         }
     },
-
     async delete(id) {
 
         const query = `
@@ -221,6 +193,19 @@ const bookingRepository = {
 
             throw err;
 
+        }
+    },
+    async getBookingById(id) {
+        const query = `
+            SELECT *
+            FROM bookings
+            WHERE bk_id = $1
+        `;
+        try {
+            const res = await db.query(query, [id]);
+            return res.rows[0];
+        } catch (err) {
+            throw err;
         }
     },
     async checkCarAvailability(car_id, start_date, end_date) {
@@ -260,9 +245,83 @@ const bookingRepository = {
         } catch (err) {
             throw err;
         }
-    }    
-    
+    },
+    async getTopBooked(limit = 5) {
+        const query = `
+            SELECT
+                c.id,
+                c.title,
+                c.brand,
+                c.model,
+                COUNT(b.bk_id)::INT AS total_bookings
+            FROM car_listings c
+            JOIN bookings b
+                ON b.listing_id = c.id
+            GROUP BY
+                c.id,
+                c.title,
+                c.brand,
+                c.model
+            ORDER BY total_bookings DESC
+            LIMIT $1
+        `;
 
+        const values = [Number(limit)];
+
+        const { rows } =
+            await db.query(query, values);
+
+        return rows;
+    }, 
+    async getTopCustomers(limit = 5) {
+        const query = `
+            SELECT
+                c.id,
+                c.full_name,
+                c.email,
+                COUNT(b.bk_id)::INT AS total_bookings,
+                COALESCE(SUM(b.total_price), 0)::NUMERIC AS total_spent
+            FROM customer c
+            JOIN bookings b
+                ON b.user_id = c.id
+            GROUP BY
+                c.id,
+                c.full_name,
+                c.email
+            ORDER BY total_bookings DESC
+            LIMIT $1
+        `;
+
+        const { rows } =
+            await db.query(query, [limit]);
+
+        return rows;
+    },
+    async getRecentBookings(limit = 10) {
+        const query = `
+            SELECT
+                b.bk_id,
+                cus.full_name,
+                c.title AS car_title,
+                b.start_date,
+                b.end_date,
+                b.total_price,
+                b.status,
+                b.created_at
+            FROM bookings b
+            JOIN customer cus
+                ON cus.id = b.user_id
+            JOIN car_listings c
+                ON c.id = b.listing_id
+            ORDER BY b.created_at DESC
+            LIMIT $1
+        `;
+
+        const { rows } =
+            await db.query(query, [limit]);
+
+        return rows;
+    },
 };
 
 export default bookingRepository;

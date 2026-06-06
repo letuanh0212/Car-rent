@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
+import path from "path";
 
 import userRouter from "./routers/accountRouter.js";
 import customerRouter from "./routers/customerRouter.js";
@@ -16,6 +17,7 @@ import rateLimit from "./middleware/ratelimit.js";
 const app = express();
 
 app.use(express.json());
+app.use("/uploads", express.static(path.resolve("uploads")));
 
 // CORS FIX
 app.use(cors({

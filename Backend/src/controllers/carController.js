@@ -32,16 +32,32 @@ const carController = {
     async updateCarController(req, res) {
         try {
             const { id } = req.params;
+
             const data = req.body;
-            const updatedCar = await carService.updateCar(id, data);
-            if (!updatedCar) {
-                return res.status(404).json({ success: false, message: 'Car not found' });
+
+            if (!data || Object.keys(data).length === 0) {
+            return res.status(400).json({
+                message: "No data to update",
+            });
             }
-            res.status(200).json({ success: true, data: updatedCar });
+
+            const updated = await carService.updateCar(id, data);
+
+            if (!updated) {
+            return res.status(404).json({
+                message: "Car not found",
+            });
+            }
+
+            return res.json({
+            message: "Update success",
+            data: updated,
+            });
+        } catch (err) {
+            return res.status(500).json({
+            message: err.message,
+            });
         }
-            catch (error)   {
-            res.status(500).json({ success: false, message: error.message });
-           }
     },
     async deleteCarController(req, res) {
         try {            

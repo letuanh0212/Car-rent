@@ -17,6 +17,45 @@ const CarImagesController = {
             res.status(500).json({ error: "Failed to add image" });
         }
     },
+    async uploadImages(req, res) {
+        try {
+            const listing_id = req.params.id;
+            const files = req.files || [];
+
+            if (!listing_id || files.length === 0) {
+                return res.status(400).json({
+                    error: "listing_id and images are required"
+                });
+            }
+
+            const insertedImages = [];
+
+            for (const [index, file] of files.entries()) {
+                const imageUrl =
+                    `${req.protocol}://${req.get("host")}/uploads/cars/${listing_id}/${file.filename}`;
+
+                const newImage =
+                    await CarImagesService.addImage(
+                        listing_id,
+                        imageUrl,
+                        index === 0
+                    );
+
+                insertedImages.push(newImage);
+            }
+
+            res.status(201).json({
+                success: true,
+                data: insertedImages
+            });
+        } catch (error) {
+            console.error("Upload images error:", error);
+            res.status(500).json({
+                success: false,
+                message: error.message || "Failed to upload images"
+            });
+        }
+    },
     async getImagesByListingId(req, res) {
         try {
             const { listing_id } = req.params;
